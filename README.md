@@ -102,10 +102,25 @@ cp .env.example .env                       # fill in MIST_ORG_ID / MIST_API_KEY
 .venv/bin/python scripts/mist_site_create.py --yes      # create the three sites
 .venv/bin/python scripts/push_mist.py --all             # claim all 24 switches
 .venv/bin/python scripts/push_dns_fix.py --all          # REQUIRED - see below
+.venv/bin/python scripts/push_dns_fix.py --all --verify-only   # confirm it landed
+
+# adoption completes ~45s after the DNS fix; then:
 .venv/bin/python scripts/mist_rename.py --site thermopylae --yes
 .venv/bin/python scripts/mist_rename.py --site troy --yes
 .venv/bin/python scripts/mist_rename.py --site marathon --yes
 ```
+
+Run the `--verify-only` pass. A Junos commit that runs long returns nothing,
+which older versions of `push_dns_fix.py` read as success - one switch silently
+got no config while the script reported `commit=ok`, and the only symptom was
+that node never adopting. The script now reads the config back and reports
+`applied=` separately from `commit=`, but the verify pass is still the cheap way
+to be sure before moving on to the renames.
+
+`mist_rename.py` is safe to re-run: it prints `site=ok name=ok` for anything
+already correct and only acts on what has changed. If a node shows
+`not adopted yet (no device-id)`, re-run `push_dns_fix.py <ip>` for it and give
+it a minute.
 
 ### The DNS fix is not optional
 
