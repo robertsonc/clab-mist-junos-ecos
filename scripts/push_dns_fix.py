@@ -21,9 +21,9 @@ from inet.0:
     set groups top system name-server 8.8.8.8 routing-instance mgmt_junos
     set apply-groups top
 
-Note this keeps `management-instance` rather than deleting it. Site 1 works only
-because the instance was removed there, which the runbook explicitly warns
-against because it fights Mist post-adoption.
+Note this KEEPS `management-instance` rather than deleting it. Deleting the
+instance and moving the default into inet.0 also makes DNS work, but it fights
+Mist once the switch is adopted and Dedicated Management VRF is enabled.
 
     python3 scripts/push_dns_fix.py 172.30.44.21          # one switch
     python3 scripts/push_dns_fix.py --all                 # every switch in labnodes
@@ -110,9 +110,19 @@ def main():
         try:
             out = apply_fix(ip)
             bad = any(w in out.lower() for w in ("error", "failed", "invalid"))
-            print("  %-17s %-14s commit=%s" % (name, ip, "ERROR" if bad else "ok"))
-            if bad:
-                print("      %s" % out.replace("\n", " ")[:200])
+            # Do NOT trust the commit output alone. A commit that runs past the
+            # wait returns empty, which contains none of the words above and so
+            # reads as success - that silently skipped a switch once, and the
+            # only symptom was that node never adopting. Read the config back.
+            applied, resolved, _ = verify(ip)
+            ok = applied and not bad
+            print("  %-17s %-14s commit=%-5s applied=%-5s dns=%s"
+                  % (name, ip, "ERR" if bad else "ok", applied,
+                     "OK" if resolved else "?"))
+            if not ok:
+                print("      NOT APPLIED - re-run this host")
+                if bad:
+                    print("      %s" % out.replace("\n", " ")[:200])
         except Exception as exc:
             print("  %-17s %-14s EXCEPTION (%s)" % (name, ip, type(exc).__name__))
         sys.stdout.flush()
