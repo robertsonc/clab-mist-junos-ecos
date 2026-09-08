@@ -63,16 +63,29 @@ def apply_fix(ip):
 
 
 def verify(ip):
-    """Report whether the group is applied and DNS now resolves."""
+    """Report whether the group is applied and the Mist session is actually up.
+
+    Checks the outbound-ssh SESSION, not DNS. Two earlier attempts at a DNS
+    check were both worthless:
+
+      * matching "oc-term" in the output matched the ECHOED COMMAND, so an
+        empty result read as success - a false positive;
+      * `ping <host> routing-instance mgmt_junos` is a false NEGATIVE. It uses
+        the system resolver on inet.0, which is dead by design here, so it
+        reports "cannot resolve" even on a switch with a healthy, ESTABLISHED
+        session to Mist. It says nothing about what outbound-ssh can resolve
+        inside the VRF.
+
+    An ESTABLISHED connection to port 2200 is the only signal that means the
+    thing we actually care about is working.
+    """
     out = junos.cli(ip, [
-        "show configuration apply-groups | display set",
-        "show configuration groups top system name-server | display set",
-        "show host oc-term.ac2.mist.com",
+        "show configuration apply-groups | display set | no-more",
+        "show system connections inet | match 2200 | no-more",
     ], JUNOS_USER, JUNOS_PASSWORD)
     applied = "apply-groups top" in out
-    resolved = "oc-term" in out and (
-        "not found" not in out.lower() and "lookup failure" not in out.lower())
-    return applied, resolved, out
+    session = "ESTABLISHED" in out
+    return applied, session, out
 
 
 def main():
@@ -100,8 +113,8 @@ def main():
         if args.verify_only:
             try:
                 applied, resolved, _ = verify(ip)
-                print("  %-17s %-14s apply-groups=%-5s dns=%s"
-                      % (name, ip, applied, "OK" if resolved else "FAIL"))
+                print("  %-17s %-14s apply-groups=%-5s mist-session=%s"
+                      % (name, ip, applied, "UP" if resolved else "DOWN"))
             except Exception as exc:
                 print("  %-17s %-14s UNREACHABLE (%s)" % (name, ip, type(exc).__name__))
             sys.stdout.flush()
@@ -116,9 +129,9 @@ def main():
             # only symptom was that node never adopting. Read the config back.
             applied, resolved, _ = verify(ip)
             ok = applied and not bad
-            print("  %-17s %-14s commit=%-5s applied=%-5s dns=%s"
+            print("  %-17s %-14s commit=%-5s applied=%-5s mist-session=%s"
                   % (name, ip, "ERR" if bad else "ok", applied,
-                     "OK" if resolved else "?"))
+                     "UP" if resolved else "down"))
             if not ok:
                 print("      NOT APPLIED - re-run this host")
                 if bad:
