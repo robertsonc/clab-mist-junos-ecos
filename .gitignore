@@ -1,0 +1,27 @@
+# ---------------------------------------------------------------------------
+# SECRETS - never commit. This repo is public.
+# ---------------------------------------------------------------------------
+.env
+*.env
+!.env.example
+configs/ecos.env
+
+# The Mist claim snippet carries the org device-id, the outbound-ssh secret,
+# a password hash and an SSH key. Anyone holding it could claim devices into
+# the org. Template only.
+mist_claim_set.cfg
+!mist_claim_set.cfg.example
+
+# ---------------------------------------------------------------------------
+# Runtime / generated
+# ---------------------------------------------------------------------------
+.venv/
+__pycache__/
+*.pyc
+clab-*/
+*.log
+
+# containerlab writes per-node state and inventories at deploy time
+.clab.yml.bak
+ansible-inventory.yml
+topology-data.json

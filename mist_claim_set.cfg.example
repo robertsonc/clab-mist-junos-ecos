@@ -1,0 +1,21 @@
+# Mist adoption snippet - TEMPLATE ONLY.
+#
+# The real file is gitignored: it carries the org device-id, the outbound-ssh
+# secret, a password hash and an SSH key. Anyone holding those could claim
+# devices into the org. Export the real snippet from the Mist portal
+# (Organization > Inventory > Claim) and save it as mist_claim_set.cfg.
+#
+# Two edits are required for a vrnetlab-built vJunos node, both applied by
+# scripts/push_mist.py - see that file and scripts/push_dns_fix.py:
+#   1. outbound-ssh must use the mgmt_junos routing instance
+#   2. `delete system phone-home` errors - the node is pre-provisioned
+set system services ssh protocol-version v2
+set system authentication-order password
+set system login user mist class super-user
+set system login user mist authentication encrypted-password <REDACTED>
+set system login user mist authentication ssh-rsa "<REDACTED>"
+set system services outbound-ssh client mist device-id <ORG-UUID>
+set system services outbound-ssh client mist secret <REDACTED>
+set system services outbound-ssh client mist services netconf keep-alive retry 12 timeout 5
+set system services outbound-ssh client mist oc-term.ac2.mist.com port 2200 timeout 60 retry 1000
+delete system phone-home
