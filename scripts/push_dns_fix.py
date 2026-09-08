@@ -25,6 +25,29 @@ Note this KEEPS `management-instance` rather than deleting it. Deleting the
 instance and moving the default into inet.0 also makes DNS work, but it fights
 Mist once the switch is adopted and Dedicated Management VRF is enabled.
 
+THE STATIC HOST MAPPINGS ARE NOT OPTIONAL EITHER
+------------------------------------------------
+The name-server line gets the FIRST resolution done, so a switch adopts fine
+and looks healthy. But outbound-ssh's reconnect path calls getaddrinfo(), which
+is libc reading /var/etc/resolv.conf - a file with no routing-instance
+annotation, so the query leaves via inet.0, which has no routes here. The first
+connection therefore works and every reconnection fails:
+
+    outbound_ssh_connect_to_server: (mist) Connecting to server: oc-term...:2200
+    outbound_ssh_populate_address_info: (mist) getaddrinfo() failed for:
+        oc-term.ac2.mist.com: error 8 (Name does not resolve)
+
+The failure mode is nasty because it is invisible until something drops the
+session - then every switch that lost its connection retries every 60s forever
+and never recovers. Pinning the ELB addresses removes DNS from the reconnect
+path entirely.
+
+Diagnosing this needs /var/log/outbound-ssh.log (the traceoptions file Mist
+configures), NOT /var/log/messages - outbound-ssh writes nothing to the latter.
+Note also that `ping <host> routing-instance mgmt_junos` and `show host <host>`
+both query via inet.0 and fail even on a perfectly healthy switch, so neither
+is evidence of anything.
+
     python3 scripts/push_dns_fix.py 172.30.44.21          # one switch
     python3 scripts/push_dns_fix.py --all                 # every switch in labnodes
     python3 scripts/push_dns_fix.py --all --verify-only   # no config, just report
@@ -37,11 +60,21 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import junos
 from labnodes import SWITCHES, JUNOS_USER, JUNOS_PASSWORD
 
+# oc-term.ac2.mist.com sits behind an AWS ELB with several addresses. They are
+# pinned here as static host mappings because outbound-ssh's RECONNECT path
+# cannot resolve DNS at all - see the long comment below.
+OC_TERM = "oc-term.ac2.mist.com"
+OC_TERM_IPS = ["3.218.167.152", "98.94.119.178", "44.218.238.151"]
+
 CONFIG_LINES = [
     "set groups top system commit no-delta-synchronize",
     "set groups top system services outbound-ssh routing-instance mgmt_junos",
     "set groups top system management-instance",
     "set groups top system name-server 8.8.8.8 routing-instance mgmt_junos",
+] + [
+    "set groups top system static-host-mapping %s inet %s" % (OC_TERM, ip)
+    for ip in OC_TERM_IPS
+] + [
     "set apply-groups top",
 ]
 

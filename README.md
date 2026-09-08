@@ -151,10 +151,54 @@ set groups top system name-server 8.8.8.8 routing-instance mgmt_junos
 set apply-groups top
 ```
 
-Applied via `scripts/push_dns_fix.py`. Adoption then completes in under a minute.
-
 Note this **keeps** `management-instance`. Deleting it also works, but it fights
 Mist once the switch is adopted and Dedicated Management VRF is enabled.
+
+### …and neither are the static host mappings
+
+The name-server line above gets the **first** resolution done, so a switch adopts
+fine and looks completely healthy. But outbound-ssh's *reconnect* path calls
+`getaddrinfo()` — libc, reading `/var/etc/resolv.conf`, a file with no
+routing-instance annotation. That query leaves via `inet.0`, which has no routes
+here. So the first connection works and every reconnection fails:
+
+```
+outbound_ssh_connect_to_server: (mist) Connecting to server: oc-term.ac2.mist.com:2200
+outbound_ssh_populate_address_info: (mist) getaddrinfo() failed for:
+    oc-term.ac2.mist.com: error 8 (Name does not resolve)
+```
+
+This is latent until something drops a session — then that switch retries every
+60s forever and never returns. It took out all 23 adopted switches at once when
+their sessions dropped together, hours after everything looked green.
+
+`oc-term.ac2.mist.com` is an AWS ELB with several addresses, pinned to remove DNS
+from the reconnect path entirely:
+
+```
+set groups top system static-host-mapping oc-term.ac2.mist.com inet 3.218.167.152
+set groups top system static-host-mapping oc-term.ac2.mist.com inet 98.94.119.178
+set groups top system static-host-mapping oc-term.ac2.mist.com inet 44.218.238.151
+```
+
+If Mist ever moves that endpoint, refresh these from `getent hosts oc-term.ac2.mist.com`.
+
+All of it is applied by `scripts/push_dns_fix.py`.
+
+### Debugging this
+
+Evidence lives in **`/var/log/outbound-ssh.log`** — the traceoptions file Mist
+configures. `/var/log/messages` contains none of it, which makes the switch look
+silent rather than failing.
+
+Do **not** trust these as tests, they fail on perfectly healthy switches because
+both query via the dead `inet.0`:
+
+* `ping <host> routing-instance mgmt_junos`
+* `show host <host>`
+
+The only signal that means anything is an ESTABLISHED connection to port 2200,
+which is what `push_dns_fix.py --verify-only` reports as `mist-session`.
 
 ### Renaming
 
