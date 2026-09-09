@@ -185,6 +185,19 @@ If Mist ever moves that endpoint, refresh these from `getent hosts oc-term.ac2.m
 
 All of it is applied by `scripts/push_dns_fix.py`.
 
+### Verify the group's CONTENT, not just that it is applied
+
+`apply-groups top` being present says nothing about what is *inside* the group.
+A commit that only partly lands leaves the group applied but the static host
+mappings missing — and the switch then works fine until its next session drop,
+at which point it can never come back.
+
+That is exactly how MARATHON came back **0/8 with zero mappings** while
+THERMOPYLAE and TROY held 8/8 with three each, roughly two hours after a rollout
+that had reported `applied=True` for every switch. `push_dns_fix.py --verify-only`
+now checks for the mappings and the name-server line, not just the group
+reference.
+
 ### Debugging this
 
 Evidence lives in **`/var/log/outbound-ssh.log`** — the traceoptions file Mist

@@ -114,9 +114,19 @@ def verify(ip):
     """
     out = junos.cli(ip, [
         "show configuration apply-groups | display set | no-more",
+        "show configuration groups top | display set | no-more",
         "show system connections inet | match 2200 | no-more",
     ], JUNOS_USER, JUNOS_PASSWORD)
-    applied = "apply-groups top" in out
+    # Check the CONTENT, not just that the group is referenced. `apply-groups
+    # top` being present says nothing about what is inside the group: a commit
+    # that only partly landed leaves the group applied but the static host
+    # mappings missing, and the switch then works until its next session drop.
+    # That is exactly how MARATHON came back 0/8 with 0 mappings while
+    # THERMOPYLAE and TROY held 8/8 with 3 each - and the rollout had reported
+    # applied=True for every one of them.
+    applied = ("apply-groups top" in out
+               and out.count("static-host-mapping %s" % OC_TERM) >= len(OC_TERM_IPS)
+               and "name-server" in out)
     session = "ESTABLISHED" in out
     return applied, session, out
 
