@@ -4,40 +4,48 @@
 WHY PRECONFIGS
 --------------
 A preconfig is staged on Orchestrator BEFORE an appliance registers and is
-matched by hostname tag as it comes up, so the EC-V self-configures on first
-contact instead of needing a second pass. Deployment profiles are a largely
-dead concept in current Orchestrator; preconfig is the supported path.
+matched by tag as it comes up, so the EC-V self-configures on first contact.
+Deployment profiles are a largely dead concept in current Orchestrator;
+preconfig is the supported path.
+
+A MINIMAL PRECONFIG IS WORSE THAN USELESS
+-----------------------------------------
+The first version of this file emitted only applianceInfo (hostname, role) and
+four interfaces. It validated cleanly and told you nothing was wrong - but with
+no businessIntentOverlays the SD-WAN fabric never forms a single tunnel, and
+with no segmentBgpSystems the site's prefixes are never learned. An appliance
+can sit at state=Normal, fully "onboarded", carrying no traffic at all.
+
+Every section below earns its place:
+
+    applianceInfo.group        appliance lands in the right Orchestrator group
+    templateGroups             template application
+    businessIntentOverlays     WITHOUT THIS THERE ARE NO OVERLAY TUNNELS
+    ecLicensing                bandwidth tier
+    deploymentInfo             interfaces, with segment/zone/role per interface
+    segmentBgpSystems          LAN-side eBGP to the border switches
+    loopbackInterface          stable router-id
+    segmentLocalRoutes         default route out
 
 WHERE THE SCHEMA CAME FROM
 --------------------------
-Not guesswork - `GET /gms/appliance/preconfiguration/default` returns a fully
-commented 3500-line template documenting every section. Fetch it again if
-anything here stops validating:
+`GET /gms/appliance/preconfiguration/default` returns a ~3600-line commented
+template - fetch it with `ecv_onboard.py template`. Validate every change with
+`ecv_onboard.py validate`; the endpoint names the exact offending field.
 
-    GET https://<orch>/gms/rest/gms/appliance/preconfiguration/default
-    -> {"configData": "<base64 YAML>"}
+ADDRESSING (idx = site index: TH=5, TR=6, MA=7)
+    lan0/lan1   10.<idx>.<n>.0/31   EC takes .0, the border switch takes .1
+                ecv-01: lan0 .0.0/31 (bd-01), lan1 .1.0/31 (bd-02)
+                ecv-02: lan0 .2.0/31 (bd-01), lan1 .3.0/31 (bd-02)
+    wan0/wan1   DHCP from the site's own isp-a / isp-b routers
+    loopback    198.19.<idx>.<1|2>/32, also the BGP router-id
+    BGP         EC asn 65500+idx, border switches asn 64500+idx
 
-Three things that are easy to get wrong and cost a round trip each:
-
-  * WAN interfaces that use DHCP need `addressingMode: dhcpv4` with
-    `ipAddressMask:` and `nextHop:` left EMPTY. Writing `ipAddressMask: dhcp`
-    is rejected.
-  * The field is `behindNat` (lowercase "at"), even though the template's own
-    comment block spells it `behindNAT`. The comment is wrong; the parser is
-    not.
-  * `interfaceLabel` must be a label NAME that already exists in Orchestrator
-    (GET /gms/interfaceLabels), not an id. Ours: wan INET1/INET2, lan Data.
-
-ALWAYS validate before pushing - the endpoint tells you exactly which field is
-wrong, which is how this schema was mapped in the first place:
-
-    POST /gms/appliance/preconfiguration/validate {name, configData}
-
-INTERFACE ROLES (mirrors the working S1-ecv-01 deployment)
-    lan0 -> bd-01 ge-0/0/3      static /31, appliance takes .1
-    lan1 -> bd-02 ge-0/0/3      static /31, appliance takes .1
-    wan0 -> isp-a (Internet)    DHCP from the site's own dnsmasq
-    wan1 -> isp-b (MPLS)        DHCP from the site's own dnsmasq
+HA MODEL
+    ecv-02 is FAILOVER ONLY - asPrependCount 2 against ecv-01's 1, so it carries
+    no traffic while ecv-01 is healthy. NOTE the schema documents asPrependCount
+    for ECOS 8.1.6.0-8.2.0.x and these run 9.6.3.0; if it proves inert the
+    prepend has to come from an outbound route-map, which is UI-only.
 
     python3 scripts/gen_ecv_preconfigs.py
 """
@@ -47,49 +55,99 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "preconfigs")
 
-# site -> (prefix, host-subnet second octet). The second octet is the site
-# index, same value the topology generator uses for 10.<idx>.10.0/24.
+# site -> (prefix, site index). The index drives every address below and is the
+# same value the topology generator uses for 10.<idx>.10.0/24.
 SITES = {
     "thermopylae": ("TH", 5),
     "troy":        ("TR", 6),
     "marathon":    ("MA", 7),
 }
 
-BANDWIDTH = 1000000          # kbps, matches the EC-V's licensed capacity
+BANDWIDTH = 500000            # kbps total, matching the reference deployment
+WAN_BANDWIDTH = 200000        # kbps per WAN interface
+PASSTHROUGH_BW = 1000000
+
+# Overlay names must ALREADY EXIST in Orchestrator (GET /gms/overlays/config).
+# This fabric attaches DEFAULT only; the tiered overlays (Platinum/Gold/Silver/
+# Bronze/Best_Effort) also exist if this is extended later.
+OVERLAYS = ["DEFAULT"]
+
+# Interface labels are NAMES from GET /gms/interfaceLabels, never numeric ids.
 LAN_LABEL = "Data"
-WAN0_LABEL = "INET1"         # isp-a / Internet
-WAN1_LABEL = "INET2"         # isp-b / MPLS
+WAN_LABELS = ["INET1", "INET2"]   # wan0 -> isp-a Internet, wan1 -> isp-b MPLS
 
 TEMPLATE = """\
-# {site_upper} {ecv} - EC-V preconfiguration
+# EdgeConnect preconfiguration - {ecv}   GENERATED, do not hand-edit
 #
-# GENERATED by scripts/gen_ecv_preconfigs.py - edit the generator, not this file.
+# Generated by scripts/gen_ecv_preconfigs.py - edit the generator, not this file.
+# Validate any change with `python3 scripts/ecv_onboard.py validate` before
+# pushing; the Orchestrator validate endpoint names the exact offending field.
 #
-# Schema is from GET /gms/appliance/preconfiguration/default. Validate any change
-# with POST /gms/appliance/preconfiguration/validate before pushing; it names the
-# offending field, which is far faster than reading the 3500-line template.
-#
-# lan0/lan1 are static /31s to the two border switches. wan0/wan1 take DHCP from
-# this site's own isp-a / isp-b routers, so they carry no static addressing:
-# addressingMode dhcpv4 REQUIRES ipAddressMask and nextHop to be empty.
+# MATCH TAG: discovered with tag "{ecv}" (applianceInfo.site at discovery).
+# Role: {ha_note}
 applianceInfo:
+  softwareVersion:
   hostname: {ecv}
+  group: {group}
+  site: {ecv}
+  clusterProfile:
   networkRole: non-hub
+  region:
+  location:
+    address: {site_upper} campus site
+    address2:
+    city:
+    state:
+    zipCode:
+    country: US
+    latitude:
+    longitude:
+  contact:
+    name: ContainerLab
+    email:
+    phoneNumber:
+
+templateGroups:
+  groups:
+    - Default Template Group
+
+# WITHOUT THIS SECTION NO OVERLAY TUNNELS ARE BUILT and the appliance sits
+# "onboarded" but carrying nothing. Names must already exist in Orchestrator.
+businessIntentOverlays:
+  overlays:
+{overlay_lines}
+
+ecLicensing:
+  useDefaultAccount: true
+  bandwidthLevel: unlimited
+  boost: 0
+
 deploymentInfo:
   deploymentMode: inline-router
   totalOutboundBandwidth: {bw}
   totalInboundBandwidth: {bw}
+  passThroughShapedTraffic:
+    outboundMaxBandwidth: {pass_bw}
+
   deploymentInterfaces:
     - interfaceName: lan0
       interfaceLabel: {lan_label}
       interfaceType: lan
-      interfaceComment: to {prefix}-vjunos-bd-01 ge-0/0/{p1}
-      ipAddressMask: {lan0}/31
+      interfaceComment: "/31 to {prefix}-vjunos-bd-01 ge-0/0/{port} (peer {lan0_peer})"
+      ipAddressMask: {lan0_ip}/31
+      nextHop:
+      segment: Default
+      zone: Default
+      role: default
     - interfaceName: lan1
       interfaceLabel: {lan_label}
       interfaceType: lan
-      interfaceComment: to {prefix}-vjunos-bd-02 ge-0/0/{p1}
-      ipAddressMask: {lan1}/31
+      interfaceComment: "/31 to {prefix}-vjunos-bd-02 ge-0/0/{port} (peer {lan1_peer})"
+      ipAddressMask: {lan1_ip}/31
+      nextHop:
+      segment: Default
+      zone: Default
+      role: default
     - interfaceName: wan0
       interfaceLabel: {wan0_label}
       interfaceType: wan
@@ -97,10 +155,13 @@ deploymentInfo:
       addressingMode: dhcpv4
       ipAddressMask:
       nextHop:
-      outboundMaxBandwidth: {bw}
-      inboundMaxBandwidth: {bw}
+      inboundMaxBandwidth: {wan_bw}
+      outboundMaxBandwidth: {wan_bw}
       firewallMode: statefulSNAT
-      behindNat: auto
+      behindNat: none
+      segment: Default
+      zone: Default
+      role: default
     - interfaceName: wan1
       interfaceLabel: {wan1_label}
       interfaceType: wan
@@ -108,25 +169,96 @@ deploymentInfo:
       addressingMode: dhcpv4
       ipAddressMask:
       nextHop:
-      outboundMaxBandwidth: {bw}
-      inboundMaxBandwidth: {bw}
+      inboundMaxBandwidth: {wan_bw}
+      outboundMaxBandwidth: {wan_bw}
       firewallMode: statefulSNAT
-      behindNat: auto
+      behindNat: none
+      segment: Default
+      zone: Default
+      role: default
+
+# LAN-side eBGP to both border switches. lan0/lan1 are /31 uplinks; the site's
+# host subnet 10.{idx}.10.0/24 is LEARNED, not connected. BGP is SEGMENT-scoped
+# (segment == VRF).
+#
+# asPrependCount makes ecv-01 preferred (1) over ecv-02 (2), so ecv-02 is
+# standby. See the HA MODEL note in the module docstring - this knob is
+# documented for ECOS 8.1.6.0-8.2.0.x and these run 9.6.3.0.
+segmentBgpSystems:
+  - segment: Default
+    enable: true
+    asn: {ec_asn}
+    routerId: {loopback}
+    enableGracefulRestart: false
+    redistToSilverPeak: true
+    propagateAsPath: true
+    neighbors:
+      - peerIpAddress: {lan0_peer}
+        peerAsn: {peer_asn}
+        peerType: PE-router
+        sourceIpInterface: lan0
+        enableNeighbor: true
+        nextHopSelf: false
+        asPrependCount: {prepend}
+        keepAlive: 30
+        holdTime: 90
+      - peerIpAddress: {lan1_peer}
+        peerAsn: {peer_asn}
+        peerType: PE-router
+        sourceIpInterface: lan1
+        enableNeighbor: true
+        nextHopSelf: false
+        asPrependCount: {prepend}
+        keepAlive: 30
+        holdTime: 90
+
+loopbackInterface:
+  loopbacks:
+    - interfaceId: lo0
+      adminStatus: Up
+      ipAddressMask: {loopback}/32
+      zone: Default
+      role: default
+      segment: Default
+
+segmentLocalRoutes:
+  - segment: Default
+    routes:
+      - routeIpSubnet: 0.0.0.0/0
+        nextHop:
+        interfaceName:
+        metric: 50
+        advertise: true
+        advertiseToBgp: true
+        advertiseToOspf: false
+        tag: ANY
+        zone:
+        comment: Default route
+        routeLabel: Internet
 """
 
 
 def build(site, num):
     prefix, idx = SITES[site]
     ecv = "%s-ecv-%02d" % (prefix, num)
-    # ecv-01 takes 10.<idx>.0.1 / 10.<idx>.1.1, ecv-02 takes .2.1 / .3.1 -
-    # distinct /31s per appliance per border switch, no overlap between the pair.
-    base = (num - 1) * 2
+    base = (num - 1) * 2          # ecv-01 -> nets 0,1   ecv-02 -> nets 2,3
+    lan0_ip = "10.%d.%d.0" % (idx, base)
+    lan1_ip = "10.%d.%d.0" % (idx, base + 1)
     return ecv, TEMPLATE.format(
-        site_upper=site.upper(), ecv=ecv, prefix=prefix, bw=BANDWIDTH,
-        lan_label=LAN_LABEL, wan0_label=WAN0_LABEL, wan1_label=WAN1_LABEL,
-        lan0="10.%d.%d.1" % (idx, base),
-        lan1="10.%d.%d.1" % (idx, base + 1),
-        p1=3 if num == 1 else 4)
+        ecv=ecv, prefix=prefix, idx=idx, site_upper=site.upper(),
+        group=site.upper(), bw=BANDWIDTH, wan_bw=WAN_BANDWIDTH,
+        pass_bw=PASSTHROUGH_BW,
+        overlay_lines="\n".join("    - %s" % o for o in OVERLAYS),
+        lan_label=LAN_LABEL, wan0_label=WAN_LABELS[0], wan1_label=WAN_LABELS[1],
+        port=3 if num == 1 else 4,
+        lan0_ip=lan0_ip, lan1_ip=lan1_ip,
+        lan0_peer="10.%d.%d.1" % (idx, base),
+        lan1_peer="10.%d.%d.1" % (idx, base + 1),
+        loopback="198.19.%d.%d" % (idx, num),
+        ec_asn=65500 + idx, peer_asn=64500 + idx,
+        prepend=num,   # ecv-01 -> 1 (preferred), ecv-02 -> 2 (standby)
+        ha_note=("primary, carries traffic" if num == 1
+                 else "FAILOVER ONLY - no traffic while ecv-01 is healthy"))
 
 
 def main():

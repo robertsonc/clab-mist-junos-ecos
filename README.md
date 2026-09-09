@@ -222,9 +222,43 @@ another host should not require it.
 python3 scripts/gen_ecv_preconfigs.py       # generate the six YAMLs
 python3 scripts/ecv_onboard.py validate     # check against Orchestrator, no writes
 python3 scripts/ecv_onboard.py push         # create/update, validates each first
-python3 scripts/ecv_onboard.py approve --dry-run
-python3 scripts/ecv_onboard.py approve
+python3 scripts/ecv_onboard.py approve      # approve discovered EC-Vs
+python3 scripts/ecv_onboard.py apply        # only needed if approve happened first
+python3 scripts/ecv_onboard.py status --detail
 ```
+
+**Order matters.** `autoApply` only fires when the appliance is discovered or
+approved *while a matching preconfig already exists*. Push the preconfigs
+**before** approving. If you approve first, nothing binds and you need the
+explicit `apply` step.
+
+### A preconfig that is too small is worse than none
+
+The first version of these preconfigs carried only `applianceInfo` and four
+interfaces. It validated cleanly, applied without error, and produced an
+appliance at `state=Normal` that carried no traffic whatsoever — because with
+no `businessIntentOverlays` there are **no overlay tunnels**, and with no
+`segmentBgpSystems` the site's prefixes are never learned. Nothing looks wrong
+until you check `GET /deployment?nePk=X` and find only `mgmt0`.
+
+A complete preconfig needs all of:
+
+| Section | Without it |
+|---|---|
+| `applianceInfo.group` | appliance lands ungrouped |
+| `templateGroups` | no template application |
+| `businessIntentOverlays` | **no overlay tunnels — the fabric never forms** |
+| `ecLicensing` | no bandwidth tier |
+| `deploymentInfo` | no data-plane interfaces |
+| `segmentBgpSystems` | LAN prefixes never learned |
+| `loopbackInterface` | no stable router-id |
+| `segmentLocalRoutes` | no default route out |
+
+### Silent-failure checks
+
+`taskstatus=0`, `completionstatus=False`, `nepk=None`, `result=[]` on a preconfig
+means it never bound to an appliance — it was never applied, regardless of how
+healthy the appliance looks. That is the check that catches this.
 
 A preconfig is staged **before** the appliance registers and matched by hostname
 tag, so the EC-V self-configures on first contact. Stage them while the lab is
@@ -250,6 +284,16 @@ it `behindNAT`, and the comments are wrong.
 
 **`interfaceLabel` is a label NAME** that must already exist in Orchestrator
 (`GET /gms/interfaceLabels`), not a numeric id. Ours: wan `INET1`/`INET2`, lan `Data`.
+
+**Updating a preconfig uses `preconfigId`, not `id`** — `PUT ...?id=` returns 400.
+
+**Apply is multi-stage and reboots the appliance.** Watch it with
+`GET /gms/appliance/preconfiguration/apply?preconfigId=X`, which returns a
+per-section list. Order: Appliance Info -> Zones/labels/Segments -> license ->
+deployment (interfaces) -> **reboot** -> template -> overlays -> routes -> BGP ->
+loopback. The top-level `completionstatus` stays `False` until the last section
+lands, and `GET /deployment` returns nothing at all mid-reboot — normal, not a
+failure.
 
 **Approval requires an empty JSON body.** This one is genuinely obscure:
 

@@ -46,7 +46,27 @@ HARD-WON API NOTES - each of these cost a failed request to discover
    fault rather than a malformed request. It returns the new nePk on success.
    The `id` comes from GET /appliance/discovered (NOT the serial or nePk).
 
-7. AFTER A containerlab destroy/redeploy, appliances re-register with NEW
+7. autoApply ONLY FIRES AT DISCOVERY/APPROVAL TIME. If the appliance was
+   discovered before the preconfig existed - or approved first - nothing ever
+   binds. The preconfig sits at taskstatus=0, completionstatus=False,
+   nepk=None, result=[] while the appliance reaches state=Normal carrying NO
+   data-plane config at all. Nothing looks wrong until you inspect
+   GET /deployment?nePk=X and find only mgmt0. Recovery is an explicit apply:
+       POST /gms/appliance/preconfiguration/apply?preconfigId=X&nePk=Y  body {}
+   (`ecv_onboard.py apply`). The `discovered` variant takes discoveredId.
+
+8. UPDATING A PRECONFIG USES `preconfigId`, NOT `id`. PUT with ?id= returns 400.
+
+9. APPLY IS MULTI-STAGE AND REBOOTS THE APPLIANCE. Watch it with
+       GET /gms/appliance/preconfiguration/apply?preconfigId=X
+   which returns a per-section result list. Order is: Appliance Info -> Zones/
+   labels/Segments -> license -> deployment (interfaces) -> REBOOT -> template
+   -> overlays -> routes -> BGP -> loopback. The top-level completionstatus
+   stays False until every section finishes, and GET /deployment returns
+   nothing at all while the appliance is rebooting - that is normal, not a
+   failure. `ecv_onboard.py status --detail` shows the sections.
+
+10. AFTER A containerlab destroy/redeploy, appliances re-register with NEW
    serials, so `discovered` accumulates ghosts. Match on discoveredTime against
    the container creation time; approving a ghost creates a dead appliance.
    This script refuses duplicates unless --allow-duplicates is given.
@@ -195,9 +215,12 @@ def cmd_push(env, args):
                    "tag": name, "comment": "greek-fabric ecv_onboard.py"}
         if name in by_name:
             pid = by_name[name].get("id")
+            # NOTE: the query param is `preconfigId`, NOT `id` - `id` returns 400.
             r = call(env, "PUT", "gms/appliance/preconfiguration",
-                     payload, params={"id": pid})
-            print("  %-12s updated (id=%s) %s" % (name, pid, err(r) or ""))
+                     payload, params={"preconfigId": pid})
+            e = err(r)
+            print("  %-12s updated (id=%s)%s" % (name, pid,
+                  (" FAILED %s %s" % (e, r.get("_body", "")[:120])) if e else ""))
         else:
             r = call(env, "POST", "gms/appliance/preconfiguration", payload)
             print("  %-12s created -> %s" % (name, err(r) or r))
@@ -254,6 +277,55 @@ def cmd_approve(env, args):
     return 0
 
 
+def cmd_apply(env, args):
+    """Apply preconfigs to ALREADY-APPROVED appliances.
+
+    autoApply only fires when the appliance is discovered/approved while a
+    matching preconfig already exists. If the appliance was discovered first -
+    or approved before the preconfig was written - nothing ever binds, and the
+    preconfig sits with taskstatus=0, completionstatus=False, nepk=None. The
+    appliance reaches state=Normal while carrying no data-plane config at all,
+    so nothing looks wrong until you go looking. This is the recovery path.
+    """
+    pre = {p.get("name"): p for p in (call(env, "GET", "gms/appliance/preconfiguration") or [])}
+    apps = {a.get("hostName"): a for a in (call(env, "GET", "appliance") or [])}
+    for name in sorted(ALLOWED):
+        p, a = pre.get(name), apps.get(name)
+        if not p or not a:
+            print("  %-12s skipped (preconfig=%s appliance=%s)" % (name, bool(p), bool(a)))
+            continue
+        if args.dry_run:
+            print("  would apply preconfigId=%s -> %s (%s)" % (p.get("id"), name, a.get("nePk")))
+            continue
+        r = call(env, "POST", "gms/appliance/preconfiguration/apply",
+                 body={}, params={"preconfigId": p.get("id"), "nePk": a.get("nePk")})
+        e = err(r)
+        print("  %-12s preconfigId=%-3s nePk=%-7s %s"
+              % (name, p.get("id"), a.get("nePk"),
+                 ("FAILED %s %s" % (e, r.get("_body", "")[:120])) if e else "applied"))
+        time.sleep(2)
+    return 0
+
+
+def cmd_status(env, args):
+    pre = call(env, "GET", "gms/appliance/preconfiguration") or []
+    for p in sorted(pre, key=lambda x: x.get("name") or ""):
+        print("  %-12s taskstatus=%-4s completion=%-6s nepk=%s"
+              % (p.get("name"), p.get("taskstatus"), p.get("completionstatus"),
+                 p.get("nepk")))
+        if not args.detail:
+            continue
+        # The per-section view is the only useful progress signal - the
+        # top-level completionstatus stays False until the last section lands.
+        r = call(env, "GET", "gms/appliance/preconfiguration/apply",
+                 params={"preconfigId": p.get("id")})
+        for sec in (r.get("result") or []):
+            done = sec.get("completionStatus")
+            print("      %-46s %s" % (str(sec.get("name"))[:46],
+                                      "ok" if done else "pending/running"))
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -262,6 +334,11 @@ def main():
     sub.add_parser("validate", help="validate local preconfig YAML, change nothing")
     sub.add_parser("list", help="list preconfigs and discovered appliances")
     sub.add_parser("push", help="create/update preconfigs (validates each first)")
+    ap2 = sub.add_parser("apply", help="apply preconfigs to already-approved appliances")
+    ap2.add_argument("--dry-run", action="store_true")
+    st = sub.add_parser("status", help="show preconfig apply status")
+    st.add_argument("--detail", action="store_true",
+                    help="per-section progress (the useful view)")
     a = sub.add_parser("approve", help="approve discovered EC-Vs")
     a.add_argument("--dry-run", action="store_true")
     a.add_argument("--allow-duplicates", action="store_true",
@@ -269,7 +346,8 @@ def main():
     args = ap.parse_args()
     env = load_env()
     return {"template": cmd_template, "validate": cmd_validate, "list": cmd_list,
-            "push": cmd_push, "approve": cmd_approve}[args.cmd](env, args)
+            "push": cmd_push, "approve": cmd_approve, "apply": cmd_apply,
+            "status": cmd_status}[args.cmd](env, args)
 
 
 if __name__ == "__main__":
