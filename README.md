@@ -211,6 +211,63 @@ join key. Chassis MAC and `fxp0` MAC are both unrelated to what Mist displays.
 `--site` is required and has no "all": an unscoped run against an org-wide API key
 is how you touch devices you did not mean to.
 
+## EC-V onboarding (preconfigs + approval)
+
+`scripts/ecv_onboard.py` is self-contained (stdlib only) and does the whole
+sequence. It deliberately does **not** depend on the external EC_SD-WAN_Expert
+repo — that tool was used to discover this API, but redeploying this lab on
+another host should not require it.
+
+```bash
+python3 scripts/gen_ecv_preconfigs.py       # generate the six YAMLs
+python3 scripts/ecv_onboard.py validate     # check against Orchestrator, no writes
+python3 scripts/ecv_onboard.py push         # create/update, validates each first
+python3 scripts/ecv_onboard.py approve --dry-run
+python3 scripts/ecv_onboard.py approve
+```
+
+A preconfig is staged **before** the appliance registers and matched by hostname
+tag, so the EC-V self-configures on first contact. Stage them while the lab is
+still booting and the appliances land fully built.
+
+### API notes that each cost a failed request
+
+**The schema is self-documenting — do not guess it.**
+`GET /gms/appliance/preconfiguration/default` returns a ~3600-line YAML template
+with inline comments for every field. `ecv_onboard.py template` saves it.
+
+**Validate before pushing.** `POST /gms/appliance/preconfiguration/validate`
+names the exact offending field (`YAML invalid, Unrecognized field: "hostname"`).
+That error loop is how the schema was mapped. Top-level keys are only
+`applianceInfo`, `deploymentInfo`, `templateGroups` and the other documented
+sections — **not** `deployment`, `modeIfs`, `sysConfig`, `interfaces`, `hostname`.
+
+**DHCP WAN interfaces** need `addressingMode: dhcpv4` with `ipAddressMask` and
+`nextHop` left empty. `ipAddressMask: dhcp` is rejected.
+
+**The field is `behindNat`**, lowercase "at" — the template's own comments spell
+it `behindNAT`, and the comments are wrong.
+
+**`interfaceLabel` is a label NAME** that must already exist in Orchestrator
+(`GET /gms/interfaceLabels`), not a numeric id. Ours: wan `INET1`/`INET2`, lan `Data`.
+
+**Approval requires an empty JSON body.** This one is genuinely obscure:
+
+```
+POST /appliance/discovered/approve?id=<id>            -> HTTP 500
+POST /appliance/discovered/approve?id=<id>  body {}   -> HTTP 200 "22.NE"
+```
+
+Same URL, same headers. Without a body it returns "There was an internal server
+error", which reads like an Orchestrator fault rather than a malformed request.
+On success it returns the new nePk. The `id` comes from
+`GET /appliance/discovered` — not the serial, not the nePk.
+
+**After a `containerlab destroy` + redeploy**, appliances re-register with new
+serials and `discovered` accumulates ghosts. Approving one creates an appliance
+that can never connect. `ecv_onboard.py approve` refuses when it sees duplicate
+hostnames and prints their discovery times so you can tell live from stale.
+
 ## EC-V sizing
 
 Do not trim it. At the vrnetlab default of 1 vCPU / 4 GB the appliances lose their
