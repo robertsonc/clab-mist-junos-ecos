@@ -66,16 +66,30 @@ from labnodes import SWITCHES, JUNOS_USER, JUNOS_PASSWORD
 OC_TERM = "oc-term.ac2.mist.com"
 OC_TERM_IPS = ["3.218.167.152", "98.94.119.178", "44.218.238.151"]
 
+# Our OWN configuration group. Do NOT move this content into `top`.
+# `top` belongs to Mist - it is the group Mist uses for Dedicated Management
+# VRF, and Mist re-pushes it. When it does, it rewrites the group wholesale and
+# silently DROPS anything it does not manage. The static host mappings lived in
+# `top` for ten days, then vanished from all 24 switches; MARATHON happened to
+# drop a session afterwards and could never reconnect, while THERMOPYLAE and
+# TROY survived only because their sessions stayed up. See README.
+OUR_GROUP = "greek-dns"
+
+# These four are safe in `top`: Mist sets equivalent values itself for
+# Dedicated Management VRF, so they survive its re-pushes.
 CONFIG_LINES = [
     "set groups top system commit no-delta-synchronize",
     "set groups top system services outbound-ssh routing-instance mgmt_junos",
     "set groups top system management-instance",
     "set groups top system name-server 8.8.8.8 routing-instance mgmt_junos",
 ] + [
-    "set groups top system static-host-mapping %s inet %s" % (OC_TERM, ip)
+    # The mappings go in OUR group so a Mist re-push cannot strip them.
+    "set groups %s system static-host-mapping %s inet %s" % (OUR_GROUP, OC_TERM, ip)
     for ip in OC_TERM_IPS
 ] + [
     "set apply-groups top",
+    # Listed last so it is inherited after Mist's groups.
+    "set apply-groups %s" % OUR_GROUP,
 ]
 
 
@@ -114,7 +128,7 @@ def verify(ip):
     """
     out = junos.cli(ip, [
         "show configuration apply-groups | display set | no-more",
-        "show configuration groups top | display set | no-more",
+        "show configuration groups %s | display set | no-more" % OUR_GROUP,
         "show system connections inet | match 2200 | no-more",
     ], JUNOS_USER, JUNOS_PASSWORD)
     # Check the CONTENT, not just that the group is referenced. `apply-groups
@@ -124,9 +138,8 @@ def verify(ip):
     # That is exactly how MARATHON came back 0/8 with 0 mappings while
     # THERMOPYLAE and TROY held 8/8 with 3 each - and the rollout had reported
     # applied=True for every one of them.
-    applied = ("apply-groups top" in out
-               and out.count("static-host-mapping %s" % OC_TERM) >= len(OC_TERM_IPS)
-               and "name-server" in out)
+    applied = ("apply-groups %s" % OUR_GROUP in out
+               and out.count("static-host-mapping %s" % OC_TERM) >= len(OC_TERM_IPS))
     session = "ESTABLISHED" in out
     return applied, session, out
 

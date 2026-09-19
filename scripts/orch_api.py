@@ -1,15 +1,23 @@
 """Minimal Orchestrator REST helper - stdlib only.
 
-FALLBACK PATH. The ec-sdwan-expert skill normally routes everything through the
-edgeconnect-sdwan MCP server and forbids direct API calls. It is bypassed here
-deliberately and for one specific reason: that server resolved its Orchestrator
-from config/config.json, which pinned it to the HPE Discover instance rather
-than the lab declared in .mcp.json, so writes would have hit the wrong system.
-See the load_settings() precedence fix in ec_sdwan_mcp/settings.py.
+THIS IS THE SUPPORTED PATH, not a workaround.
 
-Because this path has none of the MCP server's guard rails (MCP_MODE gating,
-input validation, automatic audit trail), every write helper built on it must
-be explicit, dry-run by default, and scoped by ALLOWED_HOSTNAMES below.
+It did start as one. The ec-sdwan-expert skill used to route everything through
+the edgeconnect-sdwan MCP server and forbid direct API calls, and we bypassed it
+for one specific reason: that server resolved its Orchestrator from
+config/config.json, which pydantic-settings ranks ABOVE os.environ, so it stayed
+pinned to the HPE Discover instance rather than the lab declared in .mcp.json.
+Writes would have hit the wrong system.
+
+Upstream has since reached the same conclusion. EC_SD-WAN_Expert commit bb596f3
+("Restore direct-API runtime as the primary path; archive the MCP layer") moves
+the whole MCP server to archive/mcp-server/ and rewrites the skill around direct
+API calls. So do not "fix" this file by pointing it back at an MCP server.
+
+What that costs us is real, though: none of the MCP server's guard rails
+(MCP_MODE gating, input validation, automatic audit trail) exist here. Every
+write helper built on this must be explicit, dry-run by default, and scoped by
+ALLOWED_HOSTNAMES below.
 
 Credentials come from greek-fabric/.env:  ORCH_URL, ORCH_API_KEY
 """

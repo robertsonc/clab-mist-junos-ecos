@@ -138,10 +138,11 @@ the system resolver queries via `inet.0`, which is dead. So `oc-term.ac2.mist.co
 never resolves, outbound-ssh has nothing to dial, and adoption silently never
 starts. The switch reports "claimed" and then sits there.
 
-The working fix puts everything in configuration group `top` — the same group Mist
-uses for Dedicated Management VRF — and points the resolver at a **public** address
-reachable *through the VRF*, rather than the QEMU SLIRP forwarder at `10.0.0.3`
-that is only reachable from `inet.0`:
+The working fix points the resolver at a **public** address reachable *through the
+VRF*, rather than the QEMU SLIRP forwarder at `10.0.0.3` that is only reachable
+from `inet.0`. These four go in configuration group `top` — the same group Mist
+uses for Dedicated Management VRF — because Mist sets equivalent values itself,
+so they survive when it rewrites that group:
 
 ```
 set groups top system commit no-delta-synchronize
@@ -176,27 +177,66 @@ their sessions dropped together, hours after everything looked green.
 from the reconnect path entirely:
 
 ```
-set groups top system static-host-mapping oc-term.ac2.mist.com inet 3.218.167.152
-set groups top system static-host-mapping oc-term.ac2.mist.com inet 98.94.119.178
-set groups top system static-host-mapping oc-term.ac2.mist.com inet 44.218.238.151
+set groups greek-dns system static-host-mapping oc-term.ac2.mist.com inet 3.218.167.152
+set groups greek-dns system static-host-mapping oc-term.ac2.mist.com inet 98.94.119.178
+set groups greek-dns system static-host-mapping oc-term.ac2.mist.com inet 44.218.238.151
+set apply-groups greek-dns
 ```
+
+The group name is **load-bearing** — these must not go in `top`. See below.
 
 If Mist ever moves that endpoint, refresh these from `getent hosts oc-term.ac2.mist.com`.
 
 All of it is applied by `scripts/push_dns_fix.py`.
 
+### `top` is Mist's group — our statements need our own
+
+This is the one that cost the most time, because the failure arrives **days** after
+the change looks successful.
+
+`top` is not a neutral name. It is the group Mist itself pushes for Dedicated
+Management VRF, and Mist re-pushes it on its own schedule. When it does, it
+rewrites the group **wholesale** and silently drops every statement it does not
+manage. No commit error, no log line, no Mist alarm — the statements are simply
+gone the next time you read the config back.
+
+The static host mappings lived in `top` for about ten days and then vanished from
+all 24 switches at once. Nothing appeared to happen, because removing the mappings
+breaks only the *reconnect* path: every switch with a live session stayed up.
+MARATHON happened to drop a session afterwards, could not re-resolve
+`oc-term.ac2.mist.com`, and went to 0/8 — while THERMOPYLAE and TROY sat at 8/8
+looking perfectly healthy with the same missing config.
+
+So anything of ours that must persist goes in our **own** group, listed after
+Mist's so it is inherited last:
+
+```
+set apply-groups top
+set apply-groups greek-dns
+```
+
+The same rule applies to any future per-switch config on a Mist-managed fabric,
+not just DNS: **never add statements to a group the controller owns.**
+
 ### Verify the group's CONTENT, not just that it is applied
 
-`apply-groups top` being present says nothing about what is *inside* the group.
-A commit that only partly lands leaves the group applied but the static host
-mappings missing — and the switch then works fine until its next session drop,
-at which point it can never come back.
+`apply-groups <name>` being present says nothing about what is *inside* the group.
+The group can be applied and empty, and the switch then works fine until its next
+session drop, at which point it can never come back.
 
-That is exactly how MARATHON came back **0/8 with zero mappings** while
-THERMOPYLAE and TROY held 8/8 with three each, roughly two hours after a rollout
-that had reported `applied=True` for every switch. `push_dns_fix.py --verify-only`
-now checks for the mappings and the name-server line, not just the group
-reference.
+When MARATHON came back **0/8 with zero mappings** while THERMOPYLAE and TROY held
+8/8, the first diagnosis written here was "a commit that only partly landed."
+**That was wrong**, and it is worth recording why: the commits had all landed
+correctly. The mappings were written, lived in `top` for ten days, and were later
+stripped by a Mist re-push (above). A verification that runs immediately after a
+rollout cannot distinguish those two causes — both look like `applied=True` at the
+time and missing config later.
+
+`push_dns_fix.py` now reads the config back and counts the actual
+`static-host-mapping` entries rather than trusting the commit output or the mere
+presence of the group. Re-run `--all --verify-only` periodically, not just after a
+change: it is the only thing that catches a controller quietly removing your
+config.
 
 ### Debugging this
 
