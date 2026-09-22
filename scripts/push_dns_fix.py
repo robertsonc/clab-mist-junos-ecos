@@ -60,30 +60,30 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import junos
 from labnodes import SWITCHES, JUNOS_USER, JUNOS_PASSWORD
 
-# oc-term.ac2.mist.com sits behind an AWS ELB with several addresses. They are
-# pinned here as static host mappings because outbound-ssh's RECONNECT path
-# cannot resolve DNS at all - see the long comment below.
-OC_TERM = "oc-term.ac2.mist.com"
-OC_TERM_IPS = ["3.218.167.152", "98.94.119.178", "44.218.238.151"]
+# The oc-term addresses are shared with mist_site_create.py - one list.
+from mist_site_cli import OC_TERM, OC_TERM_IPS
 
-# Our OWN configuration group. Do NOT move this content into `top`.
-# `top` belongs to Mist - it is the group Mist uses for Dedicated Management
-# VRF, and Mist re-pushes it. When it does, it rewrites the group wholesale and
-# silently DROPS anything it does not manage. The static host mappings lived in
-# `top` for ten days, then vanished from all 24 switches; MARATHON happened to
-# drop a session afterwards and could never reconnect, while THERMOPYLAE and
-# TROY survived only because their sessions stayed up. See README.
+# Bootstrap group. It only has to survive until the switch first reaches Mist.
+#
+# Mist's config push REPLACES the whole config with what Mist intends: it
+# deletes this group, its apply-groups line, and the mgmt_junos bindings in
+# `top` - anything Mist does not itself manage, whatever group it sits in. On
+# 2026-09-19 MARATHON reconnected, received a template change it had missed
+# while down, and lost all of this within two minutes; THERMOPYLAE and TROY
+# only survived because Mist had no push pending for them.
+#
+# The durable copy therefore lives IN MIST, as additional_config_cmds on each
+# site's settings (see README "Mist must own the config"). Mist then pushes the
+# same lines into `system` on every push. This script is only for switches Mist
+# cannot reach yet: first adoption, or a node that dropped before Mist had them.
 OUR_GROUP = "greek-dns"
 
-# These four are safe in `top`: Mist sets equivalent values itself for
-# Dedicated Management VRF, so they survive its re-pushes.
 CONFIG_LINES = [
     "set groups top system commit no-delta-synchronize",
     "set groups top system services outbound-ssh routing-instance mgmt_junos",
     "set groups top system management-instance",
     "set groups top system name-server 8.8.8.8 routing-instance mgmt_junos",
 ] + [
-    # The mappings go in OUR group so a Mist re-push cannot strip them.
     "set groups %s system static-host-mapping %s inet %s" % (OUR_GROUP, OC_TERM, ip)
     for ip in OC_TERM_IPS
 ] + [
@@ -110,7 +110,7 @@ def apply_fix(ip):
 
 
 def verify(ip):
-    """Report whether the group is applied and the Mist session is actually up.
+    """Report whether the DNS/VRF config is in effect and the Mist session is up.
 
     Checks the outbound-ssh SESSION, not DNS. Two earlier attempts at a DNS
     check were both worthless:
@@ -126,20 +126,22 @@ def verify(ip):
     An ESTABLISHED connection to port 2200 is the only signal that means the
     thing we actually care about is working.
     """
+    # Read the EFFECTIVE config (groups expanded), not a particular group.
+    # Where the lines live changes over a switch's life - our bootstrap group
+    # before adoption, `system` once Mist pushes them from site settings - and
+    # an earlier version that checked for `apply-groups greek-dns` reported
+    # every correctly Mist-managed switch as broken.
     out = junos.cli(ip, [
-        "show configuration apply-groups | display set | no-more",
-        "show configuration groups %s | display set | no-more" % OUR_GROUP,
+        "show configuration system | display inheritance no-comments"
+        " | display set | match \"static-host-mapping|mgmt_junos\" | no-more",
         "show system connections inet | match 2200 | no-more",
     ], JUNOS_USER, JUNOS_PASSWORD)
-    # Check the CONTENT, not just that the group is referenced. `apply-groups
-    # top` being present says nothing about what is inside the group: a commit
-    # that only partly landed leaves the group applied but the static host
-    # mappings missing, and the switch then works until its next session drop.
-    # That is exactly how MARATHON came back 0/8 with 0 mappings while
-    # THERMOPYLAE and TROY held 8/8 with 3 each - and the rollout had reported
-    # applied=True for every one of them.
-    applied = ("apply-groups %s" % OUR_GROUP in out
-               and out.count("static-host-mapping %s" % OC_TERM) >= len(OC_TERM_IPS))
+    # Count the content, not the presence of a group. Match on the IPs so the
+    # echoed command line can never satisfy the check.
+    applied = (all("static-host-mapping %s inet %s" % (OC_TERM, a) in out
+                   for a in OC_TERM_IPS)
+               and "outbound-ssh routing-instance mgmt_junos" in out
+               and "name-server 8.8.8.8 routing-instance mgmt_junos" in out)
     session = "ESTABLISHED" in out
     return applied, session, out
 
@@ -169,7 +171,7 @@ def main():
         if args.verify_only:
             try:
                 applied, resolved, _ = verify(ip)
-                print("  %-17s %-14s apply-groups=%-5s mist-session=%s"
+                print("  %-17s %-14s dns-config=%-5s mist-session=%s"
                       % (name, ip, applied, "UP" if resolved else "DOWN"))
             except Exception as exc:
                 print("  %-17s %-14s UNREACHABLE (%s)" % (name, ip, type(exc).__name__))
