@@ -99,7 +99,7 @@ python3 -m venv .venv && .venv/bin/pip install paramiko
 cp .env.example .env                       # fill in MIST_ORG_ID / MIST_API_KEY
 # export the claim snippet from the portal as mist_claim_set.cfg
 
-.venv/bin/python scripts/mist_site_create.py --yes      # create the three sites
+.venv/bin/python scripts/mist_site_create.py --yes      # create sites + DNS/VRF CLI (BEFORE claiming)
 .venv/bin/python scripts/push_mist.py --all             # claim all 24 switches
 .venv/bin/python scripts/push_dns_fix.py --all          # REQUIRED - see below
 .venv/bin/python scripts/push_dns_fix.py --all --verify-only   # confirm it landed
@@ -183,60 +183,80 @@ set groups greek-dns system static-host-mapping oc-term.ac2.mist.com inet 44.218
 set apply-groups greek-dns
 ```
 
-The group name is **load-bearing** — these must not go in `top`. See below.
+These are bootstrap only: the durable copy lives in Mist. See "Mist must own the config" below.
 
 If Mist ever moves that endpoint, refresh these from `getent hosts oc-term.ac2.mist.com`.
 
 All of it is applied by `scripts/push_dns_fix.py`.
 
-### `top` is Mist's group — our statements need our own
+### Mist must own the config — nothing on the switch survives a push
 
-This is the one that cost the most time, because the failure arrives **days** after
-the change looks successful.
+This is the one that cost the most time: every earlier fix held for days and
+then quietly vanished.
 
-`top` is not a neutral name. It is the group Mist itself pushes for Dedicated
-Management VRF, and Mist re-pushes it on its own schedule. When it does, it
-rewrites the group **wholesale** and silently drops every statement it does not
-manage. No commit error, no log line, no Mist alarm — the statements are simply
-gone the next time you read the config back.
+**Mist's config push replaces the whole config with what Mist intends.** Anything
+Mist does not itself manage is deleted, whichever group it lives in. It first
+went unnoticed as "Mist rewrites `top`", so the mappings were moved into our own
+group `greek-dns`. That did not help, because Mist deleted `greek-dns` and its
+`apply-groups` line as well, together with the `mgmt_junos` bindings in `top`.
 
-The static host mappings lived in `top` for about ten days and then vanished from
-all 24 switches at once. Nothing appeared to happen, because removing the mappings
-breaks only the *reconnect* path: every switch with a live session stayed up.
-MARATHON happened to drop a session afterwards, could not re-resolve
-`oc-term.ac2.mist.com`, and went to 0/8 — while THERMOPYLAE and TROY sat at 8/8
-looking perfectly healthy with the same missing config.
+Timeline of the 2026-09-19 MARATHON outage, from `show system commit` and
+`show system rollback compare` on the switches:
 
-So anything of ours that must persist goes in our **own** group, listed after
-Mist's so it is inherited last:
+1. 09-17 01:15 — `main-template` edited. TROY and THERMOPYLAE, connected, get the push.
+2. MARATHON is down at the time (the previous outage), so its push stays pending.
+3. 09-19 ~01:37 — `push_dns_fix.py` restores MARATHON and it reconnects.
+4. Two minutes later Mist delivers the pending push, wiping everything
+   `push_dns_fix.py` had just added. 7/8 go dark; MA-bd-01 survived only because
+   its fix was re-run *after* its Mist push.
+5. TROY and THERMOPYLAE look fine purely because Mist had nothing pending for
+   them. Their next push, from any template, site or device edit, would have
+   killed them the same way.
+
+Because the outage only shows up on the switch's *next* session drop, it looks
+unrelated to whatever caused it.
+
+**The fix is to put the lines in Mist.** Since 2026-09-22 the three sites
+carry them as site-setting `additional_config_cmds`. Mist then pushes them into
+`system` on every push, so a push restores them instead of deleting them:
 
 ```
-set apply-groups top
-set apply-groups greek-dns
+set system login idle-timeout 60                          # copied from main-template:
+delete system login idle-timeout                          #   site-level additional_config_cmds
+set groups top system login class <*> idle-timeout 60     #   REPLACES the template's list
+set system management-instance
+set system services outbound-ssh routing-instance mgmt_junos
+set system name-server 8.8.8.8 routing-instance mgmt_junos
+set system name-server 8.8.4.4 routing-instance mgmt_junos
+set system static-host-mapping oc-term.ac2.mist.com inet 3.218.167.152
+set system static-host-mapping oc-term.ac2.mist.com inet 98.94.119.178
+set system static-host-mapping oc-term.ac2.mist.com inet 44.218.238.151
 ```
 
-The same rule applies to any future per-switch config on a Mist-managed fabric,
-not just DNS: **never add statements to a group the controller owns.**
+Consequences:
 
-### Verify the group's CONTENT, not just that it is applied
+* **Rebuilding a site in Mist:** `mist_site_create.py` writes the lines when it
+  creates a site, so run it *before* claiming. On existing sites it checks them,
+  exits 1 on drift, and repairs with `--fix-cli --yes`. The lines themselves
+  live in `scripts/mist_site_cli.py`, shared with `push_dns_fix.py`.
+* **Editing `main-template`'s Additional CLI:** the three sites do not inherit it,
+  because the site-level list overrides it. Copy the change into each site too.
+* **`push_dns_fix.py` is bootstrap only**, for switches Mist cannot reach yet
+  (first adoption, or a node that dropped before Mist had the lines). Mist
+  deletes its `greek-dns` group on the first push, which is expected.
+* To see what Mist will push, read
+  `GET /sites/{site}/devices/{device}/config_cmd`. If the static host mappings
+  are not in it, the next push removes them.
 
-`apply-groups <name>` being present says nothing about what is *inside* the group.
-The group can be applied and empty, and the switch then works fine until its next
-session drop, at which point it can never come back.
+### Verify the effective config, not a group
 
-When MARATHON came back **0/8 with zero mappings** while THERMOPYLAE and TROY held
-8/8, the first diagnosis written here was "a commit that only partly landed."
-**That was wrong**, and it is worth recording why: the commits had all landed
-correctly. The mappings were written, lived in `top` for ten days, and were later
-stripped by a Mist re-push (above). A verification that runs immediately after a
-rollout cannot distinguish those two causes — both look like `applied=True` at the
-time and missing config later.
-
-`push_dns_fix.py` now reads the config back and counts the actual
-`static-host-mapping` entries rather than trusting the commit output or the mere
-presence of the group. Re-run `--all --verify-only` periodically, not just after a
-change: it is the only thing that catches a controller quietly removing your
-config.
+`push_dns_fix.py --verify-only` reads `show configuration system | display
+inheritance`, i.e. what is actually in effect, and requires all three mappings plus
+the `mgmt_junos` bindings, along with an ESTABLISHED session to port 2200. An
+earlier version checked for `apply-groups greek-dns`. That check was wrong both
+before (the group could be present and empty) and after the move into Mist (the
+group is absent on every healthy switch). Run it periodically, not only after a change, alongside a `mist_site_create.py` dry run
+for the Mist side.
 
 ### Debugging this
 
