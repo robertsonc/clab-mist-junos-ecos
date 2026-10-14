@@ -77,4 +77,8 @@ def call(env, method, path, body=None, timeout=30):
         return {"_http_error": exc.code, "_body": exc.read().decode()[:400], "_path": path}
     except Exception as exc:
         return {"_error": "%s: %s" % (type(exc).__name__, exc), "_path": path}
-    return json.loads(raw) if raw else {}
+    try:
+        return json.loads(raw) if raw else {}
+    except ValueError:
+        # ECOS passthrough writes answer 200 with a plain-text body.
+        return {"_raw": raw[:400]}

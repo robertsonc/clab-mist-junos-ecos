@@ -1,0 +1,112 @@
+{
+ "0": {
+  "self": 0,
+  "asn": 64532,
+  "enable": true,
+  "enable_gms_marked": false,
+  "graceful_restart_en": false,
+  "log_nbr_msgs": true,
+  "max_restart_time": 120,
+  "neighbor": {
+   "10.254.100.1": {
+    "self": "10.254.100.1",
+    "as_override": false,
+    "bfd_desired": false,
+    "directly_connected": false,
+    "enable": true,
+    "evpn": true,
+    "gms_marked": false,
+    "hold": 6,
+    "ka": 3,
+    "lcl_interface": "lo0",
+    "next_hop_self": true,
+    "password": "",
+    "remote_as": 65100,
+    "rtmap_inbound": "default_rtmap_bgp_inbound_br",
+    "rtmap_outbound": "default_rtmap_bgp_outbound_br",
+    "store_received_routes": true,
+    "type": "Branch"
+   },
+   "10.254.100.2": {
+    "self": "10.254.100.2",
+    "as_override": false,
+    "bfd_desired": false,
+    "directly_connected": false,
+    "enable": true,
+    "evpn": true,
+    "gms_marked": false,
+    "hold": 6,
+    "ka": 3,
+    "lcl_interface": "lo0",
+    "next_hop_self": true,
+    "password": "",
+    "remote_as": 65101,
+    "rtmap_inbound": "default_rtmap_bgp_inbound_br",
+    "rtmap_outbound": "default_rtmap_bgp_outbound_br",
+    "store_received_routes": true,
+    "type": "Branch"
+   }
+  },
+  "remote_as_path_advertise": false,
+  "route_target": {
+   "0": {
+    "self": 0,
+    "export": "0:0",
+    "import": "0:0"
+   },
+   "3": {
+    "self": 3,
+    "export": "65000:1001",
+    "import": "65000:1001"
+   },
+   "6": {
+    "self": 6,
+    "export": "65000:1003",
+    "import": "65000:1003"
+   },
+   "7": {
+    "self": 7,
+    "export": "65000:1002",
+    "import": "65000:1002"
+   }
+  },
+  "rtr_id": "198.19.5.2",
+  "stale_path_time": 150
+ },
+ "3": {
+  "self": 3,
+  "asn": 64532,
+  "enable": true,
+  "enable_gms_marked": false,
+  "graceful_restart_en": false,
+  "log_nbr_msgs": true,
+  "max_restart_time": 120,
+  "remote_as_path_advertise": false,
+  "rtr_id": "198.19.5.2",
+  "stale_path_time": 150
+ },
+ "6": {
+  "self": 6,
+  "asn": 64532,
+  "enable": true,
+  "enable_gms_marked": false,
+  "graceful_restart_en": false,
+  "log_nbr_msgs": true,
+  "max_restart_time": 120,
+  "remote_as_path_advertise": false,
+  "rtr_id": "198.19.5.2",
+  "stale_path_time": 150
+ },
+ "7": {
+  "self": 7,
+  "asn": 64532,
+  "enable": true,
+  "enable_gms_marked": false,
+  "graceful_restart_en": false,
+  "log_nbr_msgs": true,
+  "max_restart_time": 120,
+  "remote_as_path_advertise": false,
+  "rtr_id": "198.19.5.2",
+  "stale_path_time": 150
+ }
+}
