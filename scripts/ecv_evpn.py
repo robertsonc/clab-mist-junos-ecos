@@ -29,6 +29,15 @@ What changes on each EC:
        the segment      route_target {"0":     {self: 0,     import, export}}
      The segment's own map is keyed "0"; keyed by its own id it is a 400.
      Without it the segment shows no RT.
+     remote_as_path_advertise is on for all three, so routes shared over the
+     SD-WAN keep their AS path (IoT was arriving at the borders with only the
+     EC's ASN).
+  4. Both EVPN neighbors export through ec0<N>_to_campus (ecv-01 -> ec01,
+     ecv-02 -> ec02). The maps live in Orchestrator's Default Template Group:
+     they permit SD-WAN-learned and local routes, MED 100 / 200 so the campus
+     prefers ecv-01 like the SD-WAN side does (metric 91 / 92), and deny routes
+     learned from the borders so one border's routes are not reflected to the
+     other.
 
 The segment -> VNI map (/vxlan/segVniMap) already matches the borders' type-5
 VNIs on all six, so it is checked, not written.
@@ -81,7 +90,8 @@ def ec_plan(hostname):
         peers.append({"ip": lo, "asn": basn, "lan": "lan%d" % i,
                       "nhop": "10.%d.%d.1" % (idx, base + i),
                       "border": "%s-vjunos-bd-%02d" % (prefix, i + 1)})
-    return {"asn": asn, "rtr_id": loopback, "peers": peers}
+    return {"asn": asn, "rtr_id": loopback, "peers": peers,
+            "rtmap_out": "ec%02d_to_campus" % num}
 
 
 def rest(env, ne, method, url, body=None):
@@ -91,14 +101,14 @@ def rest(env, ne, method, url, body=None):
     return r
 
 
-def neighbor(p):
+def neighbor(p, rtmap_out):
     return {"self": p["ip"], "remote_as": p["asn"], "enable": True,
             "evpn": True, "directly_connected": False, "lcl_interface": "lo0",
             "type": "Branch", "next_hop_self": False, "as_override": False,
             "bfd_desired": False, "store_received_routes": True,
             "password": "", "ka": 30, "hold": 90,
             "rtmap_inbound": "default_rtmap_bgp_inbound_br",
-            "rtmap_outbound": "default_rtmap_bgp_outbound_br"}
+            "rtmap_outbound": rtmap_out}
 
 
 def check(env, ne, plan):
@@ -118,20 +128,23 @@ def check(env, ne, plan):
         n = nbrs.get(ip)
         if not n:
             diffs.append("seg 0: missing EVPN neighbor %s (%s)" % (ip, p["border"]))
-        elif (n.get("remote_as"), n.get("evpn"), n.get("lcl_interface")) != (p["asn"], True, "lo0"):
-            diffs.append("seg 0: neighbor %s as=%s evpn=%s lcl=%s"
-                         % (ip, n.get("remote_as"), n.get("evpn"), n.get("lcl_interface")))
+        elif (n.get("remote_as"), n.get("evpn"), n.get("lcl_interface"), n.get("rtmap_outbound")) \
+                != (p["asn"], True, "lo0", plan["rtmap_out"]):
+            diffs.append("seg 0: neighbor %s as=%s evpn=%s lcl=%s out=%s"
+                         % (ip, n.get("remote_as"), n.get("evpn"), n.get("lcl_interface"),
+                            n.get("rtmap_outbound")))
     for sid, (name, rt, _vni) in SEGMENTS.items():
         s = bgp.get(str(sid), {})
         got = seg0.get("route_target", {}).get(str(sid), {})
         own = s.get("route_target", {}).get("0", {})
         if (s.get("asn"), s.get("enable"), got.get("import"), got.get("export"),
-                own.get("import"), own.get("export")) \
-                != (plan["asn"], True, rt, rt, rt, rt):
-            diffs.append("seg %d %s: asn=%s enable=%s rt seg0=%s/%s own=%s/%s"
+                own.get("import"), own.get("export"), s.get("remote_as_path_advertise")) \
+                != (plan["asn"], True, rt, rt, rt, rt, True):
+            diffs.append("seg %d %s: asn=%s enable=%s rt seg0=%s/%s own=%s/%s as_path_adv=%s"
                          % (sid, name, s.get("asn"), s.get("enable"),
                             got.get("import"), got.get("export"),
-                            own.get("import"), own.get("export")))
+                            own.get("import"), own.get("export"),
+                            s.get("remote_as_path_advertise")))
     vni = rest(env, ne, "GET", "/vxlan/segVniMap")
     for sid, (name, _rt, want_vni) in SEGMENTS.items():
         if vni.get(str(sid), {}).get("vni") != want_vni:
@@ -172,7 +185,7 @@ def apply(env, ne, hostname, plan, outdir):
             str(sid): {"self": sid, "import": rt, "export": rt}
             for sid, (_n, rt, _v) in SEGMENTS.items()})})
     rest(env, ne, "POST", "/bgp/config/vrfs/0/neighbor",
-         {p["ip"]: neighbor(p) for p in plan["peers"]})
+         {p["ip"]: neighbor(p, plan["rtmap_out"]) for p in plan["peers"]})
     # The passthrough refuses DELETE (403), so stale neighbors go via the
     # POST-shaped deleteMultiple, which acts on the Default segment.
     stale = sorted(set(rest(env, ne, "GET", "/bgp/config/vrfs/0/neighbor"))
@@ -189,7 +202,7 @@ def apply(env, ne, hostname, plan, outdir):
             "log_nbr_msgs": cur.get("log_nbr_msgs", True),
             "max_restart_time": cur.get("max_restart_time", 120),
             "stale_path_time": cur.get("stale_path_time", 150),
-            "remote_as_path_advertise": cur.get("remote_as_path_advertise", False),
+            "remote_as_path_advertise": True,
             "route_target": {"0": {"self": 0, "import": rt, "export": rt}}})
 
 

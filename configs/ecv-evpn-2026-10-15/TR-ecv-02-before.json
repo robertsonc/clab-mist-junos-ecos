@@ -1,0 +1,2770 @@
+{
+ "/bgp/config/vrfs/all/system": {
+  "0": {
+   "self": 0,
+   "asn": 64533,
+   "enable": true,
+   "enable_gms_marked": false,
+   "graceful_restart_en": false,
+   "log_nbr_msgs": true,
+   "max_restart_time": 120,
+   "neighbor": {
+    "10.254.101.1": {
+     "self": "10.254.101.1",
+     "as_override": false,
+     "bfd_desired": false,
+     "directly_connected": false,
+     "enable": true,
+     "evpn": true,
+     "gms_marked": false,
+     "hold": 6,
+     "ka": 3,
+     "lcl_interface": "lo0",
+     "next_hop_self": true,
+     "password": "",
+     "remote_as": 65200,
+     "rtmap_inbound": "default_rtmap_bgp_inbound_br",
+     "rtmap_outbound": "default_rtmap_bgp_outbound_br",
+     "store_received_routes": true,
+     "type": "Branch"
+    },
+    "10.254.101.2": {
+     "self": "10.254.101.2",
+     "as_override": false,
+     "bfd_desired": false,
+     "directly_connected": false,
+     "enable": true,
+     "evpn": true,
+     "gms_marked": false,
+     "hold": 6,
+     "ka": 3,
+     "lcl_interface": "lo0",
+     "next_hop_self": true,
+     "password": "",
+     "remote_as": 65201,
+     "rtmap_inbound": "default_rtmap_bgp_inbound_br",
+     "rtmap_outbound": "default_rtmap_bgp_outbound_br",
+     "store_received_routes": true,
+     "type": "Branch"
+    }
+   },
+   "remote_as_path_advertise": false,
+   "route_target": {
+    "0": {
+     "self": 0,
+     "export": "0:0",
+     "import": "0:0"
+    },
+    "3": {
+     "self": 3,
+     "export": "65000:1001",
+     "import": "65000:1001"
+    },
+    "6": {
+     "self": 6,
+     "export": "65000:1003",
+     "import": "65000:1003"
+    },
+    "7": {
+     "self": 7,
+     "export": "65000:1002",
+     "import": "65000:1002"
+    }
+   },
+   "rtr_id": "198.19.6.2",
+   "stale_path_time": 150
+  },
+  "3": {
+   "self": 3,
+   "asn": 64533,
+   "enable": true,
+   "enable_gms_marked": false,
+   "graceful_restart_en": false,
+   "log_nbr_msgs": true,
+   "max_restart_time": 120,
+   "remote_as_path_advertise": false,
+   "route_target": {
+    "0": {
+     "self": 0,
+     "export": "65000:1001",
+     "import": "65000:1001"
+    }
+   },
+   "rtr_id": "198.19.6.2",
+   "stale_path_time": 150
+  },
+  "6": {
+   "self": 6,
+   "asn": 64533,
+   "enable": true,
+   "enable_gms_marked": false,
+   "graceful_restart_en": false,
+   "log_nbr_msgs": true,
+   "max_restart_time": 120,
+   "remote_as_path_advertise": false,
+   "route_target": {
+    "0": {
+     "self": 0,
+     "export": "65000:1003",
+     "import": "65000:1003"
+    }
+   },
+   "rtr_id": "198.19.6.2",
+   "stale_path_time": 150
+  },
+  "7": {
+   "self": 7,
+   "asn": 64533,
+   "enable": true,
+   "enable_gms_marked": false,
+   "graceful_restart_en": false,
+   "log_nbr_msgs": true,
+   "max_restart_time": 120,
+   "remote_as_path_advertise": false,
+   "route_target": {
+    "0": {
+     "self": 0,
+     "export": "65000:1002",
+     "import": "65000:1002"
+    }
+   },
+   "rtr_id": "198.19.6.2",
+   "stale_path_time": 150
+  }
+ },
+ "/vxlan/segVniMap": {
+  "3": {
+   "vni": 11384125,
+   "zoneId": 47,
+   "role": 8
+  },
+  "6": {
+   "vni": 11581948,
+   "zoneId": 54,
+   "role": 8
+  },
+  "7": {
+   "vni": 16751755,
+   "zoneId": 58,
+   "role": 8
+  }
+ },
+ "/subnets3/all/vrfs/0": {
+  "subnets": {
+   "count": 117,
+   "max": 95536,
+   "entries": [
+    {
+     "state": {
+      "version": 4,
+      "prefix": "198.19.7.2/32",
+      "nextHop": "",
+      "metric": 92,
+      "ifName": "",
+      "peerid": 4598126,
+      "saas": 0,
+      "community": "",
+      "aspath": "64534",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "10.100.14.50",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "10",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "MA-ecv-02",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "198.19.7.1/32",
+      "nextHop": "",
+      "metric": 91,
+      "ifName": "",
+      "peerid": 4598127,
+      "saas": 0,
+      "community": "",
+      "aspath": "64534",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "192.168.113.39",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "9",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "MA-ecv-01",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "198.19.6.2/32",
+      "nextHop": "",
+      "metric": 0,
+      "ifName": "lo0",
+      "peerid": 4598091,
+      "saas": 0,
+      "community": "",
+      "aspath": "",
+      "learned": false,
+      "configured": false,
+      "advert": true,
+      "automatic": true,
+      "local": true,
+      "learnedFromIp": "",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "0",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "14",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "adminDistance": 1,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "198.19.5.2/32",
+      "nextHop": "",
+      "metric": 92,
+      "ifName": "",
+      "peerid": 4598089,
+      "saas": 0,
+      "community": "",
+      "aspath": "64532",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "10.100.10.37",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "12",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "TH-ecv-02",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "198.19.5.1/32",
+      "nextHop": "",
+      "metric": 91,
+      "ifName": "",
+      "peerid": 4598088,
+      "saas": 0,
+      "community": "",
+      "aspath": "64532",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "192.168.109.19",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "11",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "TH-ecv-01",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.254.102.2/32",
+      "nextHop": "",
+      "metric": 92,
+      "ifName": "",
+      "peerid": 4598126,
+      "saas": 0,
+      "community": "",
+      "aspath": "64534",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "10.100.14.50",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "10",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "MA-ecv-02",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.254.102.2/32",
+      "nextHop": "",
+      "metric": 91,
+      "ifName": "",
+      "peerid": 4598127,
+      "saas": 0,
+      "community": "",
+      "aspath": "64534",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "192.168.113.39",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "9",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "MA-ecv-01",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.254.102.1/32",
+      "nextHop": "",
+      "metric": 92,
+      "ifName": "",
+      "peerid": 4598126,
+      "saas": 0,
+      "community": "",
+      "aspath": "64534",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "10.100.14.50",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "10",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "MA-ecv-02",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.254.102.1/32",
+      "nextHop": "",
+      "metric": 91,
+      "ifName": "",
+      "peerid": 4598127,
+      "saas": 0,
+      "community": "",
+      "aspath": "64534",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "192.168.113.39",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "9",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "MA-ecv-01",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.254.101.2/32",
+      "nextHop": "10.6.2.1",
+      "metric": 50,
+      "ifName": "lan0",
+      "peerid": 4598091,
+      "saas": 0,
+      "community": "",
+      "aspath": "",
+      "learned": false,
+      "configured": true,
+      "advert": true,
+      "automatic": false,
+      "local": true,
+      "learnedFromIp": "",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "0",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "14",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "adminDistance": 1,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     },
+     "config": {
+      "prefix": "10.254.101.2/32",
+      "local": true,
+      "ifName": "lan0",
+      "metric": 50,
+      "comment": "TR-vjunos-bd-01 lo0 - EVPN peer",
+      "tag": "ANY",
+      "nextHop": "10.6.2.1",
+      "gms_marked": false,
+      "zone_id": 65534,
+      "vxlan": false,
+      "vni": 16777216,
+      "dest_mac": "00:00:00:00:00:00",
+      "label": 0
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.254.101.1/32",
+      "nextHop": "10.6.3.1",
+      "metric": 50,
+      "ifName": "lan1",
+      "peerid": 4598091,
+      "saas": 0,
+      "community": "",
+      "aspath": "",
+      "learned": false,
+      "configured": true,
+      "advert": true,
+      "automatic": false,
+      "local": true,
+      "learnedFromIp": "",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "0",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "14",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "adminDistance": 1,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     },
+     "config": {
+      "prefix": "10.254.101.1/32",
+      "local": true,
+      "ifName": "lan1",
+      "metric": 50,
+      "comment": "TR-vjunos-bd-02 lo0 - EVPN peer",
+      "tag": "ANY",
+      "nextHop": "10.6.3.1",
+      "gms_marked": false,
+      "zone_id": 65534,
+      "vxlan": false,
+      "vni": 16777216,
+      "dest_mac": "00:00:00:00:00:00",
+      "label": 0
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.254.100.2/32",
+      "nextHop": "",
+      "metric": 91,
+      "ifName": "",
+      "peerid": 4598088,
+      "saas": 0,
+      "community": "",
+      "aspath": "64532",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "192.168.109.19",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "11",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "TH-ecv-01",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.254.100.2/32",
+      "nextHop": "",
+      "metric": 92,
+      "ifName": "",
+      "peerid": 4598089,
+      "saas": 0,
+      "community": "",
+      "aspath": "64532",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "10.100.10.37",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "12",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "TH-ecv-02",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.254.100.1/32",
+      "nextHop": "",
+      "metric": 91,
+      "ifName": "",
+      "peerid": 4598088,
+      "saas": 0,
+      "community": "",
+      "aspath": "64532",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "192.168.109.19",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "11",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "TH-ecv-01",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.254.100.1/32",
+      "nextHop": "",
+      "metric": 92,
+      "ifName": "",
+      "peerid": 4598089,
+      "saas": 0,
+      "community": "",
+      "aspath": "64532",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "10.100.10.37",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "12",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "TH-ecv-02",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.44.44.13/32",
+      "nextHop": "",
+      "metric": 92,
+      "ifName": "",
+      "peerid": 4598126,
+      "saas": 0,
+      "community": "",
+      "aspath": "64534",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "10.100.14.50",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "10",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "MA-ecv-02",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.44.44.12/32",
+      "nextHop": "",
+      "metric": 92,
+      "ifName": "",
+      "peerid": 4598089,
+      "saas": 0,
+      "community": "",
+      "aspath": "64532",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "10.100.10.37",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "12",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "TH-ecv-02",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.44.44.10/32",
+      "nextHop": "",
+      "metric": 91,
+      "ifName": "",
+      "peerid": 4598127,
+      "saas": 0,
+      "community": "",
+      "aspath": "64534",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "192.168.113.39",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "9",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "MA-ecv-01",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.44.44.9/32",
+      "nextHop": "",
+      "metric": 0,
+      "ifName": "lo20000",
+      "peerid": 4598091,
+      "saas": 0,
+      "community": "",
+      "aspath": "",
+      "learned": false,
+      "configured": false,
+      "advert": true,
+      "automatic": true,
+      "local": true,
+      "learnedFromIp": "",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "0",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "14",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "adminDistance": 1,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.44.44.8/32",
+      "nextHop": "",
+      "metric": 91,
+      "ifName": "",
+      "peerid": 4598088,
+      "saas": 0,
+      "community": "",
+      "aspath": "64532",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "192.168.109.19",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "11",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "TH-ecv-01",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.7.3.0/31",
+      "nextHop": "",
+      "metric": 92,
+      "ifName": "",
+      "peerid": 4598126,
+      "saas": 0,
+      "community": "",
+      "aspath": "64534",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "10.100.14.50",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "10",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "MA-ecv-02",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.7.2.0/31",
+      "nextHop": "",
+      "metric": 92,
+      "ifName": "",
+      "peerid": 4598126,
+      "saas": 0,
+      "community": "",
+      "aspath": "64534",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "10.100.14.50",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "10",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "MA-ecv-02",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.7.1.0/31",
+      "nextHop": "",
+      "metric": 91,
+      "ifName": "",
+      "peerid": 4598127,
+      "saas": 0,
+      "community": "",
+      "aspath": "64534",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "192.168.113.39",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "9",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "MA-ecv-01",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.7.0.0/31",
+      "nextHop": "",
+      "metric": 91,
+      "ifName": "",
+      "peerid": 4598127,
+      "saas": 0,
+      "community": "",
+      "aspath": "64534",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "192.168.113.39",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "9",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "MA-ecv-01",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.6.3.0/31",
+      "nextHop": "",
+      "metric": 0,
+      "ifName": "lan1",
+      "peerid": 4598091,
+      "saas": 0,
+      "community": "",
+      "aspath": "",
+      "learned": false,
+      "configured": false,
+      "advert": true,
+      "automatic": true,
+      "local": true,
+      "learnedFromIp": "",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "0",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "14",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "adminDistance": 1,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.6.2.0/31",
+      "nextHop": "",
+      "metric": 0,
+      "ifName": "lan0",
+      "peerid": 4598091,
+      "saas": 0,
+      "community": "",
+      "aspath": "",
+      "learned": false,
+      "configured": false,
+      "advert": true,
+      "automatic": true,
+      "local": true,
+      "learnedFromIp": "",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "0",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "14",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "adminDistance": 1,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.5.3.0/31",
+      "nextHop": "",
+      "metric": 92,
+      "ifName": "",
+      "peerid": 4598089,
+      "saas": 0,
+      "community": "",
+      "aspath": "64532",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "10.100.10.37",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "12",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "TH-ecv-02",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.5.2.0/31",
+      "nextHop": "",
+      "metric": 92,
+      "ifName": "",
+      "peerid": 4598089,
+      "saas": 0,
+      "community": "",
+      "aspath": "64532",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "10.100.10.37",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "12",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "TH-ecv-02",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.5.1.0/31",
+      "nextHop": "",
+      "metric": 91,
+      "ifName": "",
+      "peerid": 4598088,
+      "saas": 0,
+      "community": "",
+      "aspath": "64532",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "192.168.109.19",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "11",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "TH-ecv-01",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.5.0.0/31",
+      "nextHop": "",
+      "metric": 91,
+      "ifName": "",
+      "peerid": 4598088,
+      "saas": 0,
+      "community": "",
+      "aspath": "64532",
+      "learned": true,
+      "configured": false,
+      "advert": false,
+      "automatic": false,
+      "local": false,
+      "learnedFromIp": "192.168.109.19",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "8",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "11",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "peername": "TH-ecv-01",
+      "adminDistance": 10,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "192.168.112.0/24",
+      "nextHop": "",
+      "metric": 0,
+      "ifName": "wan0",
+      "peerid": 4598091,
+      "saas": 0,
+      "community": "",
+      "aspath": "",
+      "learned": false,
+      "configured": false,
+      "advert": false,
+      "automatic": true,
+      "local": true,
+      "learnedFromIp": "",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "0",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "14",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "adminDistance": 1,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "10.100.12.0/24",
+      "nextHop": "",
+      "metric": 0,
+      "ifName": "wan1",
+      "peerid": 4598091,
+      "saas": 0,
+      "community": "",
+      "aspath": "",
+      "learned": false,
+      "configured": false,
+      "advert": false,
+      "automatic": true,
+      "local": true,
+      "learnedFromIp": "",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "0",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "14",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "adminDistance": 1,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "0.0.0.0/0",
+      "nextHop": "",
+      "metric": 50,
+      "ifName": "",
+      "peerid": 4598091,
+      "saas": 0,
+      "community": "",
+      "aspath": "",
+      "learned": false,
+      "configured": true,
+      "advert": false,
+      "automatic": false,
+      "local": true,
+      "learnedFromIp": "",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "0",
+      "zone_id": "65534",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "14",
+      "generationId": "0",
+      "label": "1",
+      "peerStatus": "S",
+      "saasAppName": "",
+      "adminDistance": 1,
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     },
+     "config": {
+      "prefix": "0.0.0.0/0",
+      "local": true,
+      "ifName": "default",
+      "metric": 50,
+      "comment": "Default route",
+      "tag": "ANY",
+      "nextHop": "0.0.0.0",
+      "gms_marked": false,
+      "zone_id": 65534,
+      "vxlan": false,
+      "vni": 16777216,
+      "dest_mac": "00:00:00:00:00:00",
+      "label": 1
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "0.0.0.0/0",
+      "nextHop": "192.168.112.1",
+      "metric": 56,
+      "ifName": "wan0",
+      "peerid": 4598091,
+      "saas": 0,
+      "community": "",
+      "aspath": "",
+      "learned": false,
+      "configured": false,
+      "advert": false,
+      "automatic": true,
+      "local": false,
+      "learnedFromIp": "",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "0",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "14",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "tag": "FROM_LAN",
+      "adminDistance": 251,
+      "saasAppName": "",
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    },
+    {
+     "state": {
+      "version": 4,
+      "prefix": "0.0.0.0/0",
+      "nextHop": "10.100.12.1",
+      "metric": 1253,
+      "ifName": "wan1",
+      "peerid": 4598091,
+      "saas": 0,
+      "community": "",
+      "aspath": "",
+      "learned": false,
+      "configured": false,
+      "advert": false,
+      "automatic": true,
+      "local": false,
+      "learnedFromIp": "",
+      "cloudApp": false,
+      "advert_bgp": false,
+      "advert_ospf": false,
+      "learned_bgp": false,
+      "learned_ospf": false,
+      "evpnEnabled": false,
+      "learned_oap": false,
+      "state": "UP",
+      "routeTag": "0",
+      "learnFrom": "",
+      "resolvedNexthop": "",
+      "resolvedInterface": "",
+      "peerType": "",
+      "nexthopTunnel": "",
+      "networkRegionId": "0",
+      "subnetMessage": "0",
+      "zone_id": "0",
+      "advOSPFTag": "0",
+      "vni": "0",
+      "dest_mac": "",
+      "oapDeviceId": "",
+      "siteId": "14",
+      "generationId": "0",
+      "label": "0",
+      "peerStatus": "S",
+      "tag": "FROM_LAN",
+      "adminDistance": 251,
+      "saasAppName": "",
+      "route_target": {
+       "0": {
+        "self": 0,
+        "export": "0:0",
+        "import": "0:0"
+       },
+       "3": {
+        "self": 3,
+        "export": "65000:1001",
+        "import": "65000:1001"
+       },
+       "6": {
+        "self": 6,
+        "export": "65000:1003",
+        "import": "65000:1003"
+       },
+       "7": {
+        "self": 7,
+        "export": "65000:1002",
+        "import": "65000:1002"
+       }
+      }
+     }
+    }
+   ],
+   "disabledByIPSLA": false,
+   "metricAddedByIPSLA": 0
+  },
+  "peers": [
+   {
+    "index": "0",
+    "peerid": 4598088,
+    "peerName": "TH-ecv-01",
+    "role": "0",
+    "roleName": "Spoke",
+    "metric": 0,
+    "peerPriority": 1024,
+    "txtrans": 1044,
+    "txsecs": 4,
+    "rxtrans": 1034,
+    "rxsecs": 65,
+    "rxrecs": 0,
+    "rxtabs": 0,
+    "outOfOrderCount": 0,
+    "majorVersion": "9",
+    "minorVersion": "7",
+    "pointVersion": "1",
+    "subVersion": "0",
+    "region": "0",
+    "regionName": "Default",
+    "messageVersion": "8",
+    "message": "Submsg Ver8 (VRF Pruning, >= Rel 9.7)",
+    "priorTxSec": "802",
+    "mainVerAndRegion": "9.7.1.0 (0)"
+   },
+   {
+    "index": "1",
+    "peerid": 4598127,
+    "peerName": "MA-ecv-01",
+    "role": "0",
+    "roleName": "Spoke",
+    "metric": 0,
+    "peerPriority": 1024,
+    "txtrans": 1044,
+    "txsecs": 4,
+    "rxtrans": 1092,
+    "rxsecs": 765,
+    "rxrecs": 0,
+    "rxtabs": 0,
+    "outOfOrderCount": 0,
+    "majorVersion": "9",
+    "minorVersion": "7",
+    "pointVersion": "1",
+    "subVersion": "0",
+    "region": "0",
+    "regionName": "Default",
+    "messageVersion": "8",
+    "message": "Submsg Ver8 (VRF Pruning, >= Rel 9.7)",
+    "priorTxSec": "802",
+    "mainVerAndRegion": "9.7.1.0 (0)"
+   },
+   {
+    "index": "2",
+    "peerid": 4598089,
+    "peerName": "TH-ecv-02",
+    "role": "0",
+    "roleName": "Spoke",
+    "metric": 0,
+    "peerPriority": 1024,
+    "txtrans": 1044,
+    "txsecs": 4,
+    "rxtrans": 1038,
+    "rxsecs": 65,
+    "rxrecs": 0,
+    "rxtabs": 0,
+    "outOfOrderCount": 0,
+    "majorVersion": "9",
+    "minorVersion": "7",
+    "pointVersion": "1",
+    "subVersion": "0",
+    "region": "0",
+    "regionName": "Default",
+    "messageVersion": "8",
+    "message": "Submsg Ver8 (VRF Pruning, >= Rel 9.7)",
+    "priorTxSec": "802",
+    "mainVerAndRegion": "9.7.1.0 (0)"
+   },
+   {
+    "index": "3",
+    "peerid": 4598090,
+    "peerName": "TR-ecv-01",
+    "role": "0",
+    "roleName": "Spoke",
+    "metric": 0,
+    "peerPriority": 1024,
+    "txtrans": 1044,
+    "txsecs": 4,
+    "rxtrans": 1031,
+    "rxsecs": 4,
+    "rxrecs": 0,
+    "rxtabs": 0,
+    "outOfOrderCount": 0,
+    "majorVersion": "9",
+    "minorVersion": "7",
+    "pointVersion": "1",
+    "subVersion": "0",
+    "region": "0",
+    "regionName": "Default",
+    "messageVersion": "8",
+    "message": "Submsg Ver8 (VRF Pruning, >= Rel 9.7)",
+    "priorTxSec": "802",
+    "mainVerAndRegion": "9.7.1.0 (0)"
+   },
+   {
+    "index": "4",
+    "peerid": 4598126,
+    "peerName": "MA-ecv-02",
+    "role": "0",
+    "roleName": "Spoke",
+    "metric": 0,
+    "peerPriority": 1024,
+    "txtrans": 1044,
+    "txsecs": 4,
+    "rxtrans": 1087,
+    "rxsecs": 763,
+    "rxrecs": 0,
+    "rxtabs": 0,
+    "outOfOrderCount": 0,
+    "majorVersion": "9",
+    "minorVersion": "7",
+    "pointVersion": "1",
+    "subVersion": "0",
+    "region": "0",
+    "regionName": "Default",
+    "messageVersion": "8",
+    "message": "Submsg Ver8 (VRF Pruning, >= Rel 9.7)",
+    "priorTxSec": "802",
+    "mainVerAndRegion": "9.7.1.0 (0)"
+   }
+  ],
+  "moduleInfo": {
+   "my system id": "4598091",
+   "my site id": "14",
+   "my system mac": "00:1b:bc:46:29:4b",
+   "network region": "Default (0)",
+   "network role": "Spoke",
+   "allow management to leak": "true",
+   "site id": "14",
+   "active peer": "0x00000046296f (4598127)",
+   "debug peer id": "2048",
+   "OAP enabled": "false",
+   "last peer index": "1",
+   "local change": "0x0000",
+   "last time": "874515579 ms after boot",
+   "last change": "874513216 ms after boot",
+   "time since change": "2 seconds",
+   "last tx trans": "1045",
+   "last tx rec count": "0",
+   "last tx msg count": "0",
+   "rx invalid msg": "0",
+   "rx unknown msg": "0",
+   "IP tracking": "ENABLED",
+   "IP track delta": "0",
+   "Active READER index": "0"
+  }
+ }
+}
