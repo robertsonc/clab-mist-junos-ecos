@@ -1,0 +1,77 @@
+# GBP hardware test: far end for the EX4400 (CRX-EDGE-SW-01), FRR version.
+#
+#   test host --- enp12s0f1 ~~ (2 dumb switches) ~~ EX4400 ge-0/0/6   access, VLAN 777 / VNI 77001
+#   EX4400 ge-0/0/7 ~~ (2 dumb switches) ~~ enp12s0f0 --- gbpt-frr eth1   underlay 192.168.77.0/30
+#   gbpt-frr eth2 --- gbpt-far                                            far-end host, routed: 192.168.178.0/24
+#
+# Two tests, both live in this file:
+#   bridged - L2 VNI 77001 (br777 + vxlan77001), test host 192.168.177.1
+#   routed  - L3 VNI 77999 (VRF gbptv) carries EVPN type-5; host -> EX irb.777 (.254) -> type-5 -> far
+# Both VXLAN devices use `gbp` so Linux accepts G=1 frames instead of dropping them.
+# If FRR still shows auto RD/RT on VNI 77999 after deploy (show bgp l2vpn evpn vni), rebind it:
+#   vtysh -c 'conf t' -c 'vrf gbptv' -c 'no vni 77999' ; then the same with 'vni 77999'
+#
+# gbpt-frr is the remote VTEP: FRR bgpd (EVPN) + a Linux bridge and VXLAN device.
+# It replaced a vJunos far end, which could not finish booting on the loaded server.
+name: gbpt
+
+mgmt:
+  network: clab-gbpt
+  ipv4-subnet: 172.30.49.0/24
+
+topology:
+  nodes:
+    gbpt-frr:
+      kind: linux
+      image: quay.io/frrouting/frr:10.2.1
+      mgmt-ipv4: 172.30.49.12
+      binds:
+        - frr/daemons:/etc/frr/daemons
+        - frr/frr.conf:/etc/frr/frr.conf
+      exec:
+        - ip link set eth1 mtu 9000
+        - ip addr add 192.168.77.2/30 dev eth1
+        - ip addr add 10.77.77.2/32 dev lo
+        - ip link add br777 type bridge
+        - ip link add vxlan77001 type vxlan id 77001 local 10.77.77.2 dstport 4789 nolearning gbp
+        - ip link set vxlan77001 master br777
+        - ip link set vxlan77001 up
+        - ip link set br777 up
+        - ip link add gbptv type vrf table 100
+        - ip link set gbptv up
+        - ip link add br77999 type bridge
+        - ip link set br77999 master gbptv addr 02:77:77:00:00:02 up
+        - ip link add vxlan77999 type vxlan id 77999 local 10.77.77.2 dstport 4789 nolearning gbp
+        - ip link set vxlan77999 master br77999
+        - ip link set vxlan77999 up
+        - ip link set eth2 master gbptv
+        - ip addr add 192.168.178.1/24 dev eth2
+        - ip link set eth2 up
+    gbpt-host:
+      kind: linux
+      image: ghcr.io/hellt/network-multitool:latest
+      mgmt-ipv4: 172.30.49.21
+      exec:
+        - ip link set eth1 down
+        - ip link set eth1 address aa:c1:ab:77:00:01
+        - ip link set eth1 mtu 1400
+        - ip link set eth1 up
+        - ip addr add 192.168.177.1/24 dev eth1
+        - ip route add 192.168.178.0/24 via 192.168.177.254
+    gbpt-far:
+      kind: linux
+      image: ghcr.io/hellt/network-multitool:latest
+      mgmt-ipv4: 172.30.49.22
+      exec:
+        - ip link set eth1 mtu 1400
+        - ip addr add 192.168.178.2/24 dev eth1
+        - ip route add 192.168.177.0/24 via 192.168.178.1
+    br-gbpt-up:
+      kind: bridge
+    br-gbpt-host:
+      kind: bridge
+
+  links:
+    - endpoints: ["gbpt-frr:eth1", "br-gbpt-up:gbpt-fr1"]
+    - endpoints: ["gbpt-frr:eth2", "gbpt-far:eth1"]
+    - endpoints: ["gbpt-host:eth1", "br-gbpt-host:gbpt-h1"]

@@ -1,0 +1,34 @@
+set system host-name gbpt-vjunos
+set interfaces ge-0/0/0 description "GBPT underlay to EX4400 ge-0/0/7"
+set interfaces ge-0/0/0 mtu 9216
+set interfaces ge-0/0/0 unit 0 family inet address 192.168.77.2/30
+set interfaces ge-0/0/1 description "gbpt-far"
+set interfaces ge-0/0/1 unit 0 family ethernet-switching interface-mode access
+set interfaces ge-0/0/1 unit 0 family ethernet-switching vlan members GBPT
+set interfaces lo0 unit 0 family inet address 10.77.77.2/32
+set routing-options router-id 10.77.77.2
+set routing-options autonomous-system 65478
+set policy-options policy-statement GBPT_UNDERLAY_OUT term lo from interface lo0.0
+set policy-options policy-statement GBPT_UNDERLAY_OUT term lo then accept
+set policy-options policy-statement GBPT_UNDERLAY_OUT term rest then reject
+set policy-options policy-statement GBPT_UNDERLAY_IN term far from route-filter 10.77.77.1/32 exact
+set policy-options policy-statement GBPT_UNDERLAY_IN term far then accept
+set policy-options policy-statement GBPT_UNDERLAY_IN term rest then reject
+set protocols bgp group GBPT_UNDERLAY type external
+set protocols bgp group GBPT_UNDERLAY family inet unicast
+set protocols bgp group GBPT_UNDERLAY import GBPT_UNDERLAY_IN
+set protocols bgp group GBPT_UNDERLAY export GBPT_UNDERLAY_OUT
+set protocols bgp group GBPT_UNDERLAY neighbor 192.168.77.1 peer-as 65477
+set protocols bgp group GBPT_OVERLAY type external
+set protocols bgp group GBPT_OVERLAY multihop ttl 2
+set protocols bgp group GBPT_OVERLAY multihop no-nexthop-change
+set protocols bgp group GBPT_OVERLAY local-address 10.77.77.2
+set protocols bgp group GBPT_OVERLAY family evpn signaling
+set protocols bgp group GBPT_OVERLAY neighbor 10.77.77.1 peer-as 65477
+set switch-options vtep-source-interface lo0.0
+set switch-options route-distinguisher 10.77.77.2:1
+set switch-options vrf-target target:65477:1
+set protocols evpn encapsulation vxlan
+set protocols evpn extended-vni-list 77001
+set vlans GBPT vlan-id 777
+set vlans GBPT vxlan vni 77001

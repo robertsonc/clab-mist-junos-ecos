@@ -1,0 +1,110 @@
+{
+ "adopted": true,
+ "managed": true,
+ "role": "th-access-switches",
+ "notes": "",
+ "networks": {},
+ "port_usages": {},
+ "additional_config_cmds": [
+  "delete routing-instances mgmt_junos"
+ ],
+ "oob_ip_config": {
+  "type": "dhcp",
+  "use_mgmt_vrf": true
+ },
+ "bgp_config": null,
+ "routing_policies": {},
+ "optic_port_config": {},
+ "vars": {},
+ "vars_annotations": {},
+ "evpn_config": {
+  "role": "access",
+  "evpn_id": 8,
+  "downlink2ip": {},
+  "downlink_ips": [],
+  "uplinks": [
+   "0200043b26cc",
+   "020004ace869"
+  ],
+  "suggested_uplinks": [
+   "0200043b26cc",
+   "020004ace869"
+  ],
+  "downlinks": [],
+  "suggested_downlinks": []
+ },
+ "port_config": {
+  "ge-0/0/0,ge-0/0/1": {
+   "usage": "evpn_uplink"
+  },
+  "ge-0/0/2": {
+   "usage": "corp_lan_access",
+   "description": "TH-vm host"
+  }
+ },
+ "router_id": "10.254.100.8",
+ "other_ip_configs": {
+  "corp_lan": {
+   "type": "static",
+   "ip": "10.5.10.1",
+   "netmask": "255.255.255.0",
+   "evpn_anycast": true
+  },
+  "guest_lan": {
+   "type": "static",
+   "ip": "10.5.12.1",
+   "netmask": "255.255.255.0",
+   "evpn_anycast": true
+  },
+  "corp_vlan98": {
+   "type": "static",
+   "ip": "172.15.98.1",
+   "netmask": "255.255.255.0",
+   "evpn_anycast": true
+  },
+  "guest_vlan100": {
+   "type": "static",
+   "ip": "172.15.100.1",
+   "netmask": "255.255.255.0",
+   "evpn_anycast": true
+  },
+  "iot_vlan99": {
+   "type": "static",
+   "ip": "172.15.99.1",
+   "netmask": "255.255.255.0",
+   "evpn_anycast": true
+  },
+  "iot_lan": {
+   "type": "static",
+   "ip": "10.5.11.1",
+   "netmask": "255.255.255.0",
+   "evpn_anycast": true
+  }
+ },
+ "dhcpd_config": {
+  "enabled": false
+ },
+ "vrf_config": {
+  "enabled": true
+ },
+ "id": "00000000-0000-0000-1000-020004af32be",
+ "name": "TH-vjunos-ac-02",
+ "site_id": "8427344c-e538-45a6-91da-d49cfeb29c33",
+ "org_id": "829007ab-2ac1-4d6c-aadd-b2fff00bda4d",
+ "created_time": 1788882399,
+ "modified_time": 1791990452,
+ "map_id": null,
+ "mac": "<redacted>",
+ "serial": "<redacted>",
+ "model": "VJUNOS",
+ "hw_rev": "",
+ "type": "switch",
+ "tag_uuid": "829007ab-2ac1-4d6c-aadd-b2fff00bda4d",
+ "tag_id": 1433975,
+ "evpn_scope": "site",
+ "evpntopo_id": "c98d7366-3aaf-40c3-84bc-6b816ff1e70b",
+ "st_ip_base": "",
+ "deviceprofile_id": null,
+ "bundled_mac": null,
+ "mist_configured": true
+}

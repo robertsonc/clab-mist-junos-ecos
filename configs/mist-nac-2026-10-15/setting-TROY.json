@@ -1,0 +1,455 @@
+{
+ "auto_upgrade": {
+  "enabled": true,
+  "time_of_day": "02:00",
+  "day_of_week": "sun"
+ },
+ "vrf_instances": {
+  "corp_vrf": {
+   "networks": [
+    "corp_lan",
+    "corp_vlan98"
+   ],
+   "extra_routes": {},
+   "extra_routes6": {},
+   "aggregate_routes": {
+    "172.17.3.0/24": {
+     "discard": true
+    }
+   },
+   "aggregate_routes6": {},
+   "evpn_auto_loopback_subnet": "172.17.3.0/24"
+  },
+  "guest_vrf": {
+   "networks": [
+    "guest_lan",
+    "guest_vlan100"
+   ],
+   "extra_routes": {},
+   "extra_routes6": {},
+   "aggregate_routes": {
+    "172.17.4.0/24": {
+     "discard": true
+    }
+   },
+   "aggregate_routes6": {},
+   "evpn_auto_loopback_subnet": "172.17.4.0/24"
+  },
+  "iot_vrf": {
+   "networks": [
+    "iot_lan",
+    "iot_vlan99"
+   ],
+   "extra_routes": {},
+   "extra_routes6": {},
+   "aggregate_routes": {
+    "172.17.5.0/24": {
+     "discard": true
+    }
+   },
+   "aggregate_routes6": {},
+   "evpn_auto_loopback_subnet": "172.17.5.0/24"
+  }
+ },
+ "networks": {
+  "corp_lan": {
+   "vlan_id": 610,
+   "subnet": "10.6.10.0/24",
+   "subnet6": "",
+   "gateway": "10.6.10.1"
+  },
+  "iot_lan": {
+   "vlan_id": 611,
+   "subnet": "10.6.11.0/24",
+   "subnet6": "",
+   "gateway": "10.6.11.1"
+  },
+  "guest_lan": {
+   "vlan_id": 612,
+   "subnet": "10.6.12.0/24",
+   "subnet6": "",
+   "gateway": "10.6.12.1"
+  },
+  "corp_vlan98": {
+   "vlan_id": "98",
+   "subnet": "172.16.98.0/24",
+   "subnet6": ""
+  },
+  "iot_vlan99": {
+   "vlan_id": "99",
+   "subnet": "172.16.99.0/24",
+   "subnet6": ""
+  },
+  "guest_vlan100": {
+   "vlan_id": "100",
+   "subnet": "172.16.100.0/24",
+   "subnet6": ""
+  }
+ },
+ "port_usages": {
+  "corp_lan_access": {
+   "mode": "access",
+   "disabled": false,
+   "port_network": "corp_lan",
+   "voip_network": null,
+   "stp_edge": true,
+   "family": "junos",
+   "stp_disable": false,
+   "stp_required": false,
+   "stp_p2p": false,
+   "stp_no_root_port": false,
+   "use_vstp": false,
+   "port_auth": null,
+   "allow_multiple_supplicants": null,
+   "enable_mac_auth": null,
+   "mac_auth_only": null,
+   "mac_auth_preferred": null,
+   "guest_network": null,
+   "bypass_auth_when_server_down": null,
+   "bypass_auth_when_server_down_for_unknown_client": null,
+   "dynamic_vlan_networks": null,
+   "server_reject_network": null,
+   "server_fail_network": null,
+   "mac_auth_protocol": null,
+   "reauth_interval": null,
+   "all_networks": false,
+   "networks": null,
+   "speed": "auto",
+   "duplex": "auto",
+   "mac_limit": 0,
+   "persist_mac": false,
+   "poe_disabled": false,
+   "poe_legacy_pd": false,
+   "poe_priority": null,
+   "poe_keep_state_when_reboot": false,
+   "enable_qos": false,
+   "storm_control": {},
+   "mtu": null,
+   "description": "",
+   "disable_autoneg": false
+  },
+  "guest_lan_access": {
+   "family": "junos",
+   "disabled": false,
+   "mode": "access",
+   "port_network": "guest_lan",
+   "voip_network": null,
+   "stp_disable": false,
+   "stp_edge": true,
+   "stp_required": false,
+   "stp_p2p": false,
+   "stp_no_root_port": false,
+   "use_vstp": false,
+   "port_auth": null,
+   "allow_multiple_supplicants": null,
+   "enable_mac_auth": null,
+   "mac_auth_only": null,
+   "mac_auth_preferred": null,
+   "guest_network": null,
+   "bypass_auth_when_server_down": null,
+   "bypass_auth_when_server_down_for_unknown_client": null,
+   "dynamic_vlan_networks": null,
+   "server_reject_network": null,
+   "server_fail_network": null,
+   "mac_auth_protocol": null,
+   "reauth_interval": null,
+   "all_networks": false,
+   "networks": null,
+   "speed": "auto",
+   "duplex": "auto",
+   "mac_limit": 0,
+   "persist_mac": false,
+   "poe_disabled": false,
+   "poe_legacy_pd": false,
+   "poe_priority": null,
+   "poe_keep_state_when_reboot": false,
+   "enable_qos": false,
+   "storm_control": {},
+   "mtu": null,
+   "description": "",
+   "disable_autoneg": false
+  },
+  "iot_lan_access": {
+   "family": "junos",
+   "disabled": false,
+   "mode": "access",
+   "port_network": "iot_lan",
+   "voip_network": null,
+   "stp_disable": false,
+   "stp_edge": true,
+   "stp_required": false,
+   "stp_p2p": false,
+   "stp_no_root_port": false,
+   "use_vstp": false,
+   "port_auth": null,
+   "allow_multiple_supplicants": null,
+   "enable_mac_auth": null,
+   "mac_auth_only": null,
+   "mac_auth_preferred": null,
+   "guest_network": null,
+   "bypass_auth_when_server_down": null,
+   "bypass_auth_when_server_down_for_unknown_client": null,
+   "dynamic_vlan_networks": null,
+   "server_reject_network": null,
+   "server_fail_network": null,
+   "mac_auth_protocol": null,
+   "reauth_interval": null,
+   "all_networks": false,
+   "networks": null,
+   "speed": "auto",
+   "duplex": "auto",
+   "mac_limit": 0,
+   "persist_mac": false,
+   "poe_disabled": false,
+   "poe_legacy_pd": false,
+   "poe_priority": null,
+   "poe_keep_state_when_reboot": false,
+   "enable_qos": false,
+   "storm_control": {},
+   "mtu": null,
+   "description": "",
+   "disable_autoneg": false
+  },
+  "corp_vlan98_access": {
+   "family": "junos",
+   "disabled": false,
+   "mode": "access",
+   "port_network": "corp_vlan98",
+   "voip_network": null,
+   "stp_disable": false,
+   "stp_edge": true,
+   "stp_required": false,
+   "stp_p2p": false,
+   "stp_no_root_port": false,
+   "use_vstp": false,
+   "port_auth": null,
+   "allow_multiple_supplicants": null,
+   "enable_mac_auth": null,
+   "mac_auth_only": null,
+   "mac_auth_preferred": null,
+   "guest_network": null,
+   "bypass_auth_when_server_down": null,
+   "bypass_auth_when_server_down_for_unknown_client": null,
+   "dynamic_vlan_networks": null,
+   "server_reject_network": null,
+   "server_fail_network": null,
+   "mac_auth_protocol": null,
+   "reauth_interval": null,
+   "all_networks": false,
+   "networks": null,
+   "speed": "auto",
+   "duplex": "auto",
+   "mac_limit": 0,
+   "persist_mac": false,
+   "poe_disabled": false,
+   "poe_legacy_pd": false,
+   "poe_priority": null,
+   "poe_keep_state_when_reboot": false,
+   "enable_qos": false,
+   "storm_control": {},
+   "mtu": null,
+   "description": "",
+   "disable_autoneg": false,
+   "server_fail_retry_interval": null,
+   "inter_switch_link": false,
+   "inter_isolation_network_link": false
+  },
+  "iot_vlan99_access": {
+   "family": "junos",
+   "disabled": false,
+   "mode": "access",
+   "port_network": "iot_vlan99",
+   "voip_network": null,
+   "stp_disable": false,
+   "stp_edge": true,
+   "stp_required": false,
+   "stp_p2p": false,
+   "stp_no_root_port": false,
+   "use_vstp": false,
+   "port_auth": null,
+   "allow_multiple_supplicants": null,
+   "enable_mac_auth": null,
+   "mac_auth_only": null,
+   "mac_auth_preferred": null,
+   "guest_network": null,
+   "bypass_auth_when_server_down": null,
+   "bypass_auth_when_server_down_for_unknown_client": null,
+   "dynamic_vlan_networks": null,
+   "server_reject_network": null,
+   "server_fail_network": null,
+   "mac_auth_protocol": null,
+   "reauth_interval": null,
+   "all_networks": false,
+   "networks": null,
+   "speed": "auto",
+   "duplex": "auto",
+   "mac_limit": 0,
+   "persist_mac": false,
+   "poe_disabled": false,
+   "poe_legacy_pd": false,
+   "poe_priority": null,
+   "poe_keep_state_when_reboot": false,
+   "enable_qos": false,
+   "storm_control": {},
+   "mtu": null,
+   "description": "",
+   "disable_autoneg": false,
+   "server_fail_retry_interval": null,
+   "inter_switch_link": false,
+   "inter_isolation_network_link": false
+  },
+  "guest_vlan100_access": {
+   "family": "junos",
+   "disabled": false,
+   "mode": "access",
+   "port_network": "guest_vlan100",
+   "voip_network": null,
+   "stp_disable": false,
+   "stp_edge": true,
+   "stp_required": false,
+   "stp_p2p": false,
+   "stp_no_root_port": false,
+   "use_vstp": false,
+   "port_auth": null,
+   "allow_multiple_supplicants": null,
+   "enable_mac_auth": null,
+   "mac_auth_only": null,
+   "mac_auth_preferred": null,
+   "guest_network": null,
+   "bypass_auth_when_server_down": null,
+   "bypass_auth_when_server_down_for_unknown_client": null,
+   "dynamic_vlan_networks": null,
+   "server_reject_network": null,
+   "server_fail_network": null,
+   "mac_auth_protocol": null,
+   "reauth_interval": null,
+   "all_networks": false,
+   "networks": null,
+   "speed": "auto",
+   "duplex": "auto",
+   "mac_limit": 0,
+   "persist_mac": false,
+   "poe_disabled": false,
+   "poe_legacy_pd": false,
+   "poe_priority": null,
+   "poe_keep_state_when_reboot": false,
+   "enable_qos": false,
+   "storm_control": {},
+   "mtu": null,
+   "description": "",
+   "disable_autoneg": false,
+   "server_fail_retry_interval": null,
+   "inter_switch_link": false,
+   "inter_isolation_network_link": false
+  }
+ },
+ "switch": {},
+ "bgp_config": null,
+ "routing_policies": {},
+ "switch_matching": {
+  "enable": true,
+  "rules": [
+   {
+    "name": "th-access-switches",
+    "family": "junos",
+    "match_role": "th-access-switches",
+    "port_config": {
+     "ge-0/0/60": {
+      "usage": "corp_lan_access",
+      "dynamic_usage": null,
+      "critical": false,
+      "description": "",
+      "no_local_overwrite": true
+     },
+     "ge-0/0/61": {
+      "usage": "iot_lan_access",
+      "dynamic_usage": null,
+      "critical": false,
+      "description": "",
+      "no_local_overwrite": true
+     },
+     "ge-0/0/62": {
+      "usage": "guest_lan_access",
+      "dynamic_usage": null,
+      "critical": false,
+      "description": "",
+      "no_local_overwrite": true
+     }
+    },
+    "additional_config_cmds": [
+     ""
+    ],
+    "ip_config": {
+     "type": "dhcp",
+     "network": "default"
+    },
+    "oob_ip_config": {
+     "type": "dhcp",
+     "use_mgmt_vrf": false
+    },
+    "port_mirroring": {},
+    "stp_config": {}
+   },
+   {
+    "name": "tr-border-switches",
+    "family": "junos",
+    "match_role": "tr-border-switches",
+    "port_config": {
+     "ge-0/0/60": {
+      "usage": "corp_vlan98_access",
+      "dynamic_usage": null,
+      "critical": false,
+      "description": "",
+      "no_local_overwrite": true
+     },
+     "ge-0/0/61": {
+      "usage": "iot_vlan99_access",
+      "dynamic_usage": null,
+      "critical": false,
+      "description": "",
+      "no_local_overwrite": true
+     },
+     "ge-0/0/62": {
+      "usage": "guest_vlan100_access",
+      "dynamic_usage": null,
+      "critical": false,
+      "description": "",
+      "no_local_overwrite": true
+     }
+    },
+    "additional_config_cmds": [
+     ""
+    ],
+    "ip_config": {
+     "type": "dhcp",
+     "network": "default"
+    },
+    "oob_ip_config": {
+     "type": "dhcp",
+     "use_mgmt_vrf": false
+    },
+    "port_mirroring": {},
+    "stp_config": {}
+   }
+  ]
+ },
+ "additional_config_cmds": [
+  "set system login idle-timeout 60",
+  "delete system login idle-timeout",
+  "set groups top system login class <*> idle-timeout 60",
+  "set system management-instance",
+  "set system services outbound-ssh routing-instance mgmt_junos",
+  "set system name-server 8.8.8.8 routing-instance mgmt_junos",
+  "set system name-server 8.8.4.4 routing-instance mgmt_junos",
+  "set system static-host-mapping oc-term.ac2.mist.com inet 3.218.167.152",
+  "set system static-host-mapping oc-term.ac2.mist.com inet 98.94.119.178",
+  "set system static-host-mapping oc-term.ac2.mist.com inet 44.218.238.151"
+ ],
+ "cx_additional_config_cmds": [],
+ "id": "ed98b8b0-d422-4b56-9e47-034bd431a42e",
+ "for_site": true,
+ "site_id": "f3527afe-da83-4f1d-a3ec-e64cbb049562",
+ "org_id": "829007ab-2ac1-4d6c-aadd-b2fff00bda4d",
+ "created_time": 1788836329,
+ "modified_time": 1791503487
+}

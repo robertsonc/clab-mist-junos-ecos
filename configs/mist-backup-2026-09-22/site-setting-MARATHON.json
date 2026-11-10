@@ -1,0 +1,13 @@
+{
+ "auto_upgrade": {
+  "enabled": true,
+  "time_of_day": "02:00",
+  "day_of_week": "sun"
+ },
+ "id": "745e0dc4-a9c1-4783-ad9f-d5d886683f1a",
+ "for_site": true,
+ "site_id": "f3905a52-5d2f-4ac2-a6ed-7b17b6ce7053",
+ "org_id": "829007ab-2ac1-4d6c-aadd-b2fff00bda4d",
+ "created_time": 1788836329,
+ "modified_time": 1788836329
+}

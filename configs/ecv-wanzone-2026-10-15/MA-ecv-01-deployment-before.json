@@ -1,0 +1,415 @@
+{
+ "scalars": {
+  "maxWanBandwidth": 1000000000,
+  "defaultMaxWanBandwidth": 1000000000,
+  "maxRxTargetBandwidth": 2000000,
+  "maxTunnels": 10000,
+  "maxIKETunnels": 4000,
+  "minMtu": 700,
+  "maxMtu": 9000,
+  "maxRouteMapEntries": 2000,
+  "maxOptMapEntries": 200,
+  "maxQoSMapEntries": 200,
+  "maxNatMapEntries": 300,
+  "isPortalLicensed": true,
+  "portalLicenseType": 2,
+  "supportServerMode": true,
+  "isLicenseRequired": false,
+  "isDynamicLimits": true,
+  "isDynamicInterface": true,
+  "isModel4Port": true,
+  "isModel10G": false,
+  "isModelSingleDisk": true,
+  "isModelPowerCycle": false,
+  "num1GigPorts": 32,
+  "num1GigFiberPorts": 0,
+  "numMgmtPorts": 2,
+  "num10GigPorts": 0,
+  "isGMSCompatible": true,
+  "maxAcls": 100,
+  "maxAclEntries": 100,
+  "maxUDAs": 200,
+  "maxUDAEntries": 400,
+  "maxVLANs": 511,
+  "maxSubInterfaces": 511,
+  "diskLayout": "",
+  "vrrpCompatible": true,
+  "supportsBridgeLoopTest": true,
+  "supportsDiskSelfTest": true,
+  "supportsBypass": false,
+  "isNMInDisklessMode": true,
+  "nmDiskSize": 3,
+  "processorCount": 4,
+  "memorySize": 16,
+  "cacheDiskCount": 0,
+  "spindleDiskCount": 1,
+  "maxFlows": 256000,
+  "maxRedFlows": 2048000,
+  "maxBypassFlows": 2048000,
+  "actualProcessorCount": 4,
+  "actualMemorySize": 16,
+  "actualNMDiskSize": 3,
+  "isModelForReplication": false,
+  "maxIpServiceEntries": 1000000,
+  "maxSaasEntries": 256000,
+  "maxOverlays": 7,
+  "maxSegMapEntries": 4000,
+  "maxDnsProxySegments": 4,
+  "maxRoutemaps": 10,
+  "maxOptmaps": 10,
+  "maxQosmaps": 10,
+  "maxNatmaps": 10,
+  "maxAcmaps": 10,
+  "maxPolicymaps": 70,
+  "maxMapnamelen": 32,
+  "maxRulesperacl": 100,
+  "maxAclrulelen": 1024,
+  "isIdsSupported": true,
+  "maxBrNatRulesAny": 256,
+  "maxExpressApps": 50,
+  "maxLocalBreakoutPrimaryLinks": 32,
+  "maxLocalBreakoutBackupLinks": 16,
+  "maxInternetPolicies": 32,
+  "fileUploadLimit": 1073741824,
+  "UrlDbSize": 4,
+  "maxRouteLabels": 128,
+  "tpmEnabled": false,
+  "maxSessionAffinityFlows": 65536,
+  "maxSites": 1024,
+  "isWebccSupported": true,
+  "isConnectorSupported": true,
+  "hasConnectorPersona": true,
+  "getCurrentPersona": "default",
+  "isSystemLimitsModified": false,
+  "isMultipleSSLPD": false,
+  "poeInterfaces": []
+ },
+ "sysConfig": {
+  "mode": "router",
+  "useMgmt0": false,
+  "tenG": false,
+  "bonding": true,
+  "maxBW": 500000,
+  "propagateLinkDown": false,
+  "singleBridge": false,
+  "inline": true,
+  "vrfEnable": true,
+  "serverPerSegment": true,
+  "ifLabels": {
+   "lan": [
+    {
+     "id": "4",
+     "name": "Voice"
+    },
+    {
+     "id": "5",
+     "name": "Data"
+    },
+    {
+     "id": "8",
+     "name": "LOOPBACK"
+    }
+   ],
+   "wan": [
+    {
+     "id": "2",
+     "name": "INET1"
+    },
+    {
+     "id": "3",
+     "name": "LTE"
+    },
+    {
+     "id": "6",
+     "name": "INET2"
+    }
+   ]
+  },
+  "haIf": "",
+  "zones": [
+   {
+    "id": "20",
+    "name": "Default"
+   },
+   {
+    "id": "27",
+    "name": "Unknown"
+   },
+   {
+    "id": "44",
+    "name": "WAN"
+   },
+   {
+    "id": "45",
+    "name": "LAN"
+   },
+   {
+    "id": "46",
+    "name": "WAN"
+   },
+   {
+    "id": "47",
+    "name": "LAN"
+   },
+   {
+    "id": "52",
+    "name": "Default"
+   },
+   {
+    "id": "53",
+    "name": "WAN"
+   },
+   {
+    "id": "54",
+    "name": "LAN"
+   },
+   {
+    "id": "55",
+    "name": "Unknown"
+   },
+   {
+    "id": "56",
+    "name": "Default"
+   },
+   {
+    "id": "57",
+    "name": "WAN"
+   },
+   {
+    "id": "58",
+    "name": "LAN"
+   },
+   {
+    "id": "59",
+    "name": "Unknown"
+   }
+  ],
+  "vrfs": [
+   {
+    "id": "0",
+    "name": "Default"
+   },
+   {
+    "id": "3",
+    "name": "CORP"
+   },
+   {
+    "id": "6",
+    "name": "GUEST"
+   },
+   {
+    "id": "7",
+    "name": "IOT"
+   }
+  ],
+  "roles": [
+   {
+    "id": "0",
+    "name": "default"
+   },
+   {
+    "id": "1",
+    "name": "unknown"
+   },
+   {
+    "id": "2",
+    "name": "MANAGED"
+   },
+   {
+    "id": "3",
+    "name": "UNMANAGED"
+   },
+   {
+    "id": "8",
+    "name": "NO_GBP"
+   }
+  ],
+  "vrfZonesMap": {
+   "0": {
+    "0": {
+     "id": 0,
+     "name": "Default"
+    },
+    "10": {
+     "id": 44,
+     "name": "WAN"
+    },
+    "11": {
+     "id": 45,
+     "name": "LAN"
+    }
+   },
+   "3": {
+    "0": {
+     "id": 20,
+     "name": "Default"
+    },
+    "10": {
+     "id": 46,
+     "name": "WAN"
+    },
+    "11": {
+     "id": 47,
+     "name": "LAN"
+    }
+   },
+   "6": {
+    "0": {
+     "id": 52,
+     "name": "Default"
+    },
+    "10": {
+     "id": 53,
+     "name": "WAN"
+    },
+    "11": {
+     "id": 54,
+     "name": "LAN"
+    }
+   },
+   "7": {
+    "0": {
+     "id": 56,
+     "name": "Default"
+    },
+    "10": {
+     "id": 57,
+     "name": "WAN"
+    },
+    "11": {
+     "id": 58,
+     "name": "LAN"
+    }
+   }
+  },
+  "maxInBW": 500000,
+  "maxInSysBW": "400000",
+  "maxObSysBW": "400000",
+  "license": {
+   "ecMini": false,
+   "ecPlus": false,
+   "ecTier": "Unlimited",
+   "ecTierBW": 1000000000,
+   "ecBoost": false,
+   "ecBoostBW": 0,
+   "accountType": "fx",
+   "fx": {}
+  }
+ },
+ "mgmtIfData": {
+  "mgmt0": {
+   "dhcp": true,
+   "nexthop": "10.0.0.2",
+   "ip": "10.0.0.15",
+   "mask": 24
+  }
+ },
+ "modeIfs": [
+  {
+   "devNum": "rtr1",
+   "ifName": "lan0",
+   "applianceIPs": [
+    {
+     "ip": "10.7.0.0",
+     "mask": 31,
+     "wanNexthop": "0.0.0.0",
+     "dhcp": false,
+     "lanSide": true,
+     "wanSide": false,
+     "label": "5",
+     "harden": 0,
+     "behindNAT": "none",
+     "maxBW": {},
+     "zone": 0,
+     "comment": "/31 to MA-vjunos-bd-01 ge-0/0/3 (peer 10.7.0.1)",
+     "vrf": 0,
+     "role": 0,
+     "proxy_arp": false
+    }
+   ]
+  },
+  {
+   "devNum": "rtr2",
+   "ifName": "lan1",
+   "applianceIPs": [
+    {
+     "ip": "10.7.1.0",
+     "mask": 31,
+     "wanNexthop": "0.0.0.0",
+     "dhcp": false,
+     "lanSide": true,
+     "wanSide": false,
+     "label": "5",
+     "harden": 0,
+     "behindNAT": "none",
+     "maxBW": {},
+     "zone": 0,
+     "comment": "/31 to MA-vjunos-bd-02 ge-0/0/3 (peer 10.7.1.1)",
+     "vrf": 0,
+     "role": 0,
+     "proxy_arp": false
+    }
+   ]
+  },
+  {
+   "devNum": "rtr3",
+   "ifName": "wan0",
+   "applianceIPs": [
+    {
+     "ip": "192.168.113.39",
+     "mask": 24,
+     "wanNexthop": "192.168.113.1",
+     "dhcp": true,
+     "lanSide": false,
+     "wanSide": true,
+     "label": "2",
+     "harden": 3,
+     "behindNAT": "none",
+     "maxBW": {
+      "inbound": 200000,
+      "outbound": 200000
+     },
+     "zone": 0,
+     "comment": "isp-a Internet transport",
+     "vrf": 0,
+     "role": 0,
+     "version": 4,
+     "intf_mode": "dhcpv4"
+    }
+   ]
+  },
+  {
+   "devNum": "rtr4",
+   "ifName": "wan1",
+   "applianceIPs": [
+    {
+     "ip": "10.100.13.40",
+     "mask": 24,
+     "wanNexthop": "10.100.13.1",
+     "dhcp": true,
+     "lanSide": false,
+     "wanSide": true,
+     "label": "6",
+     "harden": 3,
+     "behindNAT": "none",
+     "maxBW": {
+      "inbound": 200000,
+      "outbound": 200000
+     },
+     "zone": 0,
+     "comment": "isp-b MPLS transport",
+     "vrf": 0,
+     "role": 0,
+     "version": 4,
+     "intf_mode": "dhcpv4"
+    }
+   ]
+  }
+ ],
+ "dpRoutes": [],
+ "vifs": {
+  "pppoe": [],
+  "bondedIfs": []
+ },
+ "dhcpFailover": {}
+}

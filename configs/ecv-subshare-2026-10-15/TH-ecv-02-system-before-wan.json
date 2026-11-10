@@ -1,0 +1,287 @@
+{
+ "auto_ipid": false,
+ "auto_mtu": {
+  "fast_mode": false
+ },
+ "auto_pol_lookup_intvl": 5,
+ "auto_subnet": {
+  "self": true,
+  "vrf": {
+   "0": {
+    "self": 0,
+    "add_local_asn": true,
+    "add_local_communities": false,
+    "add_local_lan": true,
+    "add_local_metric": 0,
+    "add_local_wan": true,
+    "local_asn_filter": true,
+    "local_communities": "",
+    "rtmap_to_subshare": "ec02_to_sdwan"
+   },
+   "3": {
+    "self": 3,
+    "add_local_asn": true,
+    "add_local_communities": false,
+    "add_local_lan": true,
+    "add_local_metric": 50,
+    "add_local_wan": false,
+    "local_asn_filter": true,
+    "local_communities": "",
+    "rtmap_to_subshare": "ec02_to_sdwan"
+   },
+   "6": {
+    "self": 6,
+    "add_local_asn": true,
+    "add_local_communities": false,
+    "add_local_lan": true,
+    "add_local_metric": 50,
+    "add_local_wan": false,
+    "local_asn_filter": true,
+    "local_communities": "",
+    "rtmap_to_subshare": "ec02_to_sdwan"
+   },
+   "7": {
+    "self": 7,
+    "add_local_asn": true,
+    "add_local_communities": false,
+    "add_local_lan": true,
+    "add_local_metric": 50,
+    "add_local_wan": false,
+    "local_asn_filter": true,
+    "local_communities": "",
+    "rtmap_to_subshare": "ec02_to_sdwan"
+   }
+  },
+  "vrf_pruning": {
+   "allowlist": "",
+   "mode": 0
+  }
+ },
+ "auto_syn": false,
+ "auto_tunnel": false,
+ "bridge_loop_test": true,
+ "brnat-outif-number": 24,
+ "brnat-rules-per-oif": 256,
+ "brnat_max_rules": 10000,
+ "brnat_rules_per_vrf": 256,
+ "brnat_vrf_number": 2000,
+ "bw": {
+  "if_rx_target": false
+ },
+ "disk_encrypt_enable": true,
+ "dpc": {
+  "tunfail": "fail-stick"
+ },
+ "e2e_zfw": {
+  "enable": true
+ },
+ "enforce_overlay": true,
+ "excess_flow": {
+  "dscp_marking": true,
+  "policy": "drop"
+ },
+ "flow_delete_wait_time": 1000,
+ "ha_if": "",
+ "ha_supernet": "",
+ "idrc": {
+  "param_delta": 0.029999999329447746,
+  "param_g": 0.30000001192092896,
+  "param_m": 0.5,
+  "param_y": 0.5
+ },
+ "int_hairpin": true,
+ "internal": {
+  "nat_subnet": "129.127.0.1/24"
+ },
+ "ip_broadcast": false,
+ "iph_compression": true,
+ "ipsec_override": false,
+ "ipsec_sa_delay_delete_time": 5000,
+ "ipv6_frag_enable": true,
+ "ipv6_reassmble_enable": true,
+ "max_tcp_mss": 1328,
+ "mgmt_ip": "static",
+ "nat": true,
+ "network_region": 0,
+ "network_role": 0,
+ "nm_fsp_enable": false,
+ "nm_media": 0,
+ "nm_mode": 0,
+ "node_dns": {
+  "enable": true,
+  "ipaddrs": "8.8.8.8,2001:4860:4860::8888"
+ },
+ "ntwrkreg": {
+  "0": {
+   "self": 0,
+   "name": "Default"
+  }
+ },
+ "options": 0,
+ "orch_guid": "7ec887d487154de485006e47690cb47a",
+ "oto": {
+  "fallback_role_id": 0,
+  "segment_id": 0,
+  "zone_id": 0
+ },
+ "passthru_to_sender": false,
+ "pc_aggr_pf": {
+  "enable": false
+ },
+ "persona": "default",
+ "port_fwd_rules": "",
+ "qdrc": {
+  "adj-slope": 80,
+  "adj-slope-low": 5,
+  "cong-dur": 60000,
+  "enable": false,
+  "mavg-weight": 8,
+  "min-flow-rate": 100,
+  "mode": 1,
+  "msg-intvl": 1000,
+  "q-drop-thres": 5,
+  "q-wait-thres": 50,
+  "r-dur": 10000
+ },
+ "quies_tun_ka_intvl": 60,
+ "serverMode": {
+  "in_max_bw": 0,
+  "out_max_bw": 0,
+  "target_in_thres": 95,
+  "target_out_thres": 95
+ },
+ "sfw_snat_exceptions": "",
+ "shaperinbound": {
+  "wan": {
+   "self": "wan",
+   "accuracy": 5000,
+   "dyn_bw_enable": false,
+   "enable": true,
+   "if_shaping_enable": false,
+   "max_bw": 500000,
+   "traffic-class": {
+    "1": {
+     "self": 1,
+     "excess": 40,
+     "flow_limit": 0,
+     "max_bw": 100,
+     "max_bw_abs": 25000000,
+     "max_wait": 250,
+     "min_bw": 25,
+     "min_bw_abs": 0,
+     "priority": 1
+    },
+    "2": {
+     "self": 2,
+     "excess": 50,
+     "flow_limit": 0,
+     "max_bw": 100,
+     "max_bw_abs": 25000000,
+     "max_wait": 500,
+     "min_bw": 20,
+     "min_bw_abs": 0,
+     "priority": 2
+    },
+    "3": {
+     "self": 3,
+     "excess": 60,
+     "flow_limit": 0,
+     "max_bw": 100,
+     "max_bw_abs": 25000000,
+     "max_wait": 500,
+     "min_bw": 20,
+     "min_bw_abs": 0,
+     "priority": 3
+    },
+    "4": {
+     "self": 4,
+     "excess": 40,
+     "flow_limit": 0,
+     "max_bw": 100,
+     "max_bw_abs": 25000000,
+     "max_wait": 500,
+     "min_bw": 10,
+     "min_bw_abs": 0,
+     "priority": 4
+    },
+    "5": {
+     "self": 5,
+     "excess": 40,
+     "flow_limit": 0,
+     "max_bw": 100,
+     "max_bw_abs": 25000000,
+     "max_wait": 500,
+     "min_bw": 0,
+     "min_bw_abs": 0,
+     "priority": 5
+    },
+    "6": {
+     "self": 6,
+     "excess": 1,
+     "flow_limit": 0,
+     "max_bw": 100,
+     "max_bw_abs": 25000000,
+     "max_wait": 500,
+     "min_bw": 0,
+     "min_bw_abs": 0,
+     "priority": 6
+    },
+    "7": {
+     "self": 7,
+     "excess": 1,
+     "flow_limit": 0,
+     "max_bw": 100,
+     "max_bw_abs": 25000000,
+     "max_wait": 500,
+     "min_bw": 0,
+     "min_bw_abs": 0,
+     "priority": 7
+    },
+    "8": {
+     "self": 8,
+     "excess": 1,
+     "flow_limit": 0,
+     "max_bw": 100,
+     "max_bw_abs": 25000000,
+     "max_wait": 500,
+     "min_bw": 0,
+     "min_bw_abs": 0,
+     "priority": 8
+    },
+    "9": {
+     "self": 9,
+     "excess": 1,
+     "flow_limit": 0,
+     "max_bw": 100,
+     "max_bw_abs": 25000000,
+     "max_wait": 500,
+     "min_bw": 0,
+     "min_bw_abs": 0,
+     "priority": 9
+    },
+    "10": {
+     "self": 10,
+     "excess": 1,
+     "flow_limit": 0,
+     "max_bw": 100,
+     "max_bw_abs": 25000000,
+     "max_wait": 500,
+     "min_bw": 0,
+     "min_bw_abs": 0,
+     "priority": 10
+    }
+   }
+  }
+ },
+ "site_id": 12,
+ "smb_signing": false,
+ "tcp_inact_time": 1800,
+ "tcp_rst_time": 1000,
+ "tun_alarms": {
+  "aggregate": 20
+ },
+ "udp_inact_time": 120,
+ "udp_ipsec_lcl_ports": "12000",
+ "udp_ipsec_peer_ports": "",
+ "restart_on_nh_unreachable": true
+}

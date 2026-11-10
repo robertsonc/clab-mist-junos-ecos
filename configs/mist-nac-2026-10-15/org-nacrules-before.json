@@ -1,0 +1,63 @@
+[
+ {
+  "matching": {
+   "port_types": [
+    "wired"
+   ],
+   "site_ids": [],
+   "auth_type": "mab"
+  },
+  "apply_tags": [
+   "8b914ec8-e62f-41c2-876f-e2ae8b9b7c6a"
+  ],
+  "action": "allow",
+  "enabled": false,
+  "dry_run": false,
+  "id": "d092f52d-ddb9-4cc0-858b-546aeae0c5dd",
+  "name": "",
+  "org_id": "829007ab-2ac1-4d6c-aadd-b2fff00bda4d",
+  "created_time": 1786570881,
+  "modified_time": 1787151370,
+  "order": 1
+ },
+ {
+  "matching": {
+   "port_types": [
+    "wired"
+   ],
+   "site_ids": [],
+   "auth_type": "mab"
+  },
+  "apply_tags": [],
+  "action": "allow",
+  "enabled": false,
+  "dry_run": false,
+  "id": "43292d7d-5158-4358-a0d6-9f3ef44404f9",
+  "name": "",
+  "org_id": "829007ab-2ac1-4d6c-aadd-b2fff00bda4d",
+  "created_time": 1786570881,
+  "modified_time": 1787151370,
+  "order": 2
+ },
+ {
+  "matching": {
+   "site_ids": [],
+   "port_types": [
+    "wired"
+   ],
+   "auth_type": "mab"
+  },
+  "apply_tags": [
+   "8f3d87d0-3f8f-40ba-91cd-daf82b0f2b3e"
+  ],
+  "action": "allow",
+  "enabled": true,
+  "dry_run": false,
+  "id": "c230007a-c6f7-4888-9273-b73ac587cb07",
+  "name": "",
+  "org_id": "829007ab-2ac1-4d6c-aadd-b2fff00bda4d",
+  "created_time": 1786570881,
+  "modified_time": 1787151322,
+  "order": 0
+ }
+]

@@ -1,0 +1,130 @@
+{
+ "adopted": true,
+ "managed": true,
+ "role": "ma-border-switches",
+ "notes": "",
+ "networks": {},
+ "port_usages": {},
+ "additional_config_cmds": [],
+ "oob_ip_config": {
+  "type": "dhcp",
+  "use_mgmt_vrf": true
+ },
+ "bgp_config": null,
+ "routing_policies": {},
+ "optic_port_config": {},
+ "vars": {},
+ "vars_annotations": {},
+ "evpn_config": {
+  "role": "border",
+  "evpn_id": 2,
+  "downlink2ip": {
+   "0200045df43c": "10.254.32.6",
+   "020004fdea1e": "10.254.32.8"
+  },
+  "downlink_ips": [
+   "10.254.32.6",
+   "10.254.32.8"
+  ],
+  "uplinks": [],
+  "suggested_uplinks": [],
+  "downlinks": [
+   "0200045df43c",
+   "020004fdea1e"
+  ],
+  "suggested_downlinks": [
+   "0200045df43c",
+   "020004fdea1e"
+  ]
+ },
+ "port_config": {
+  "ge-0/0/1,ge-0/0/0": {
+   "usage": "evpn_downlink"
+  }
+ },
+ "router_id": "10.254.102.2",
+ "other_ip_configs": {
+  "corp_vlan98": {
+   "type": "static",
+   "ip": "172.17.98.2",
+   "netmask": "/24"
+  },
+  "iot_vlan99": {
+   "type": "static",
+   "ip": "172.17.99.2",
+   "netmask": "/24"
+  },
+  "guest_vlan100": {
+   "type": "static",
+   "ip": "172.17.100.2",
+   "netmask": "/24"
+  }
+ },
+ "vrf_config": {
+  "enabled": true
+ },
+ "vrf_instances": {
+  "corp_vrf": {
+   "networks": [
+    "corp_vlan98"
+   ],
+   "extra_routes": {},
+   "extra_routes6": {},
+   "aggregate_routes": {
+    "172.17.6.0/24": {
+     "discard": true
+    }
+   },
+   "aggregate_routes6": {},
+   "evpn_auto_loopback_subnet": "172.17.6.0/24"
+  },
+  "iot_vrf": {
+   "networks": [
+    "iot_vlan99"
+   ],
+   "extra_routes": {},
+   "extra_routes6": {},
+   "aggregate_routes": {
+    "172.17.7.0/24": {
+     "discard": true
+    }
+   },
+   "aggregate_routes6": {},
+   "evpn_auto_loopback_subnet": "172.17.7.0/24"
+  },
+  "guest_vrf": {
+   "networks": [
+    "guest_vlan100"
+   ],
+   "extra_routes": {},
+   "extra_routes6": {},
+   "aggregate_routes": {
+    "172.17.8.0/24": {
+     "discard": true
+    }
+   },
+   "aggregate_routes6": {},
+   "evpn_auto_loopback_subnet": "172.17.8.0/24"
+  }
+ },
+ "id": "00000000-0000-0000-1000-020004ef35d4",
+ "name": "MA-vjunos-bd-01",
+ "site_id": "f3905a52-5d2f-4ac2-a6ed-7b17b6ce7053",
+ "org_id": "829007ab-2ac1-4d6c-aadd-b2fff00bda4d",
+ "created_time": 1788920156,
+ "modified_time": 1791834234,
+ "map_id": null,
+ "mac": "<redacted>",
+ "serial": "<redacted>",
+ "model": "VJUNOS",
+ "hw_rev": "",
+ "type": "switch",
+ "tag_uuid": "829007ab-2ac1-4d6c-aadd-b2fff00bda4d",
+ "tag_id": 1434493,
+ "evpn_scope": "site",
+ "evpntopo_id": "5813c39e-9354-4d0e-a264-a168e60ef852",
+ "st_ip_base": "",
+ "deviceprofile_id": null,
+ "bundled_mac": null,
+ "mist_configured": true
+}

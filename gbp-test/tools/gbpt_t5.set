@@ -1,0 +1,18 @@
+set interfaces irb unit 777 description "GBPT type-5 test gateway"
+set interfaces irb unit 777 family inet address 192.168.177.254/24
+set routing-instances GBPT vlans GBPT l3-interface irb.777
+set routing-instances GBPT protocols evpn default-gateway do-not-advertise
+set policy-options policy-statement GBPT_T5_EXPORT term 01_ipv4 from protocol evpn
+set policy-options policy-statement GBPT_T5_EXPORT term 01_ipv4 from route-filter 0.0.0.0/0 prefix-length-range /32-/32
+set policy-options policy-statement GBPT_T5_EXPORT term 01_ipv4 then accept
+set policy-options policy-statement GBPT_T5_EXPORT term 03_direct from protocol direct
+set policy-options policy-statement GBPT_T5_EXPORT term 03_direct then accept
+set routing-instances GBPT_VRF instance-type vrf
+set routing-instances GBPT_VRF interface irb.777
+set routing-instances GBPT_VRF route-distinguisher 10.77.77.1:2
+set routing-instances GBPT_VRF vrf-target target:65477:2
+set routing-instances GBPT_VRF routing-options multipath
+set routing-instances GBPT_VRF protocols evpn ip-prefix-routes advertise direct-nexthop
+set routing-instances GBPT_VRF protocols evpn ip-prefix-routes encapsulation vxlan
+set routing-instances GBPT_VRF protocols evpn ip-prefix-routes vni 77999
+set routing-instances GBPT_VRF protocols evpn ip-prefix-routes export GBPT_T5_EXPORT

@@ -1,0 +1,62 @@
+delete interfaces interface-range HQ_AP member "ge-0/0/[0-12]"
+set interfaces interface-range HQ_AP member "ge-0/0/[0-5]"
+set interfaces interface-range HQ_AP member "ge-0/0/[8-12]"
+set interfaces ge-0/0/7 description "GBPT underlay to t430-srv-03 enp12s0f0"
+set interfaces ge-0/0/7 mtu 9216
+set interfaces ge-0/0/7 unit 0 family inet address 192.168.77.1/30
+set interfaces ge-0/0/6 description "GBPT test host via t430-srv-03 enp12s0f1"
+set interfaces ge-0/0/6 unit 0 family ethernet-switching interface-mode access
+set interfaces ge-0/0/6 unit 0 family ethernet-switching vlan members GBPT
+set interfaces lo0 unit 0 family inet address 10.77.77.1/32
+set routing-options router-id 10.77.77.1
+set routing-options autonomous-system 65477
+set policy-options policy-statement GBPT_UNDERLAY_OUT term lo from interface lo0.0
+set policy-options policy-statement GBPT_UNDERLAY_OUT term lo then accept
+set policy-options policy-statement GBPT_UNDERLAY_OUT term rest then reject
+set policy-options policy-statement GBPT_UNDERLAY_IN term far from route-filter 10.77.77.2/32 exact
+set policy-options policy-statement GBPT_UNDERLAY_IN term far then accept
+set policy-options policy-statement GBPT_UNDERLAY_IN term rest then reject
+set protocols bgp group GBPT_UNDERLAY type external
+set protocols bgp group GBPT_UNDERLAY family inet unicast
+set protocols bgp group GBPT_UNDERLAY import GBPT_UNDERLAY_IN
+set protocols bgp group GBPT_UNDERLAY export GBPT_UNDERLAY_OUT
+set protocols bgp group GBPT_UNDERLAY neighbor 192.168.77.2 peer-as 65478
+set protocols bgp group GBPT_OVERLAY type external
+set protocols bgp group GBPT_OVERLAY multihop ttl 2
+set protocols bgp group GBPT_OVERLAY multihop no-nexthop-change
+set protocols bgp group GBPT_OVERLAY local-address 10.77.77.1
+set protocols bgp group GBPT_OVERLAY family evpn signaling
+set protocols bgp group GBPT_OVERLAY neighbor 10.77.77.2 peer-as 65478
+set routing-instances GBPT instance-type mac-vrf
+set routing-instances GBPT service-type vlan-based
+set routing-instances GBPT vtep-source-interface lo0.0
+set routing-instances GBPT route-distinguisher 10.77.77.1:1
+set routing-instances GBPT vrf-target target:65477:1
+set routing-instances GBPT protocols evpn encapsulation vxlan
+set routing-instances GBPT protocols evpn extended-vni-list 77001
+set routing-instances GBPT vlans GBPT vlan-id 777
+set routing-instances GBPT vlans GBPT vxlan vni 77001
+set routing-instances GBPT interface ge-0/0/6.0
+set firewall family any filter GBPT_TAGS micro-segmentation
+set firewall family any filter GBPT_TAGS term host from mac-address aa:c1:ab:77:00:01/48
+set firewall family any filter GBPT_TAGS term host then gbp-tag 10001
+set chassis forwarding-options vxlan-gbp-profile
+set forwarding-options evpn-vxlan shared-tunnels
+set interfaces irb unit 777 description "GBPT type-5 test gateway"
+set interfaces irb unit 777 family inet address 192.168.177.254/24
+set routing-instances GBPT vlans GBPT l3-interface irb.777
+set routing-instances GBPT protocols evpn default-gateway do-not-advertise
+set policy-options policy-statement GBPT_T5_EXPORT term 01_ipv4 from protocol evpn
+set policy-options policy-statement GBPT_T5_EXPORT term 01_ipv4 from route-filter 0.0.0.0/0 prefix-length-range /32-/32
+set policy-options policy-statement GBPT_T5_EXPORT term 01_ipv4 then accept
+set policy-options policy-statement GBPT_T5_EXPORT term 03_direct from protocol direct
+set policy-options policy-statement GBPT_T5_EXPORT term 03_direct then accept
+set routing-instances GBPT_VRF instance-type vrf
+set routing-instances GBPT_VRF interface irb.777
+set routing-instances GBPT_VRF route-distinguisher 10.77.77.1:2
+set routing-instances GBPT_VRF vrf-target target:65477:2
+set routing-instances GBPT_VRF routing-options multipath
+set routing-instances GBPT_VRF protocols evpn ip-prefix-routes advertise direct-nexthop
+set routing-instances GBPT_VRF protocols evpn ip-prefix-routes encapsulation vxlan
+set routing-instances GBPT_VRF protocols evpn ip-prefix-routes vni 77999
+set routing-instances GBPT_VRF protocols evpn ip-prefix-routes export GBPT_T5_EXPORT

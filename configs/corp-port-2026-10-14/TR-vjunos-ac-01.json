@@ -1,0 +1,106 @@
+{
+ "adopted": true,
+ "managed": true,
+ "role": "th-access-switches",
+ "notes": "",
+ "networks": {},
+ "port_usages": {},
+ "additional_config_cmds": [
+  "delete routing-instances mgmt_junos"
+ ],
+ "oob_ip_config": {
+  "type": "dhcp",
+  "use_mgmt_vrf": true
+ },
+ "bgp_config": null,
+ "routing_policies": {},
+ "optic_port_config": {},
+ "vars": {},
+ "vars_annotations": {},
+ "evpn_config": {
+  "role": "access",
+  "evpn_id": 8,
+  "downlink2ip": {},
+  "downlink_ips": [],
+  "uplinks": [
+   "02000433425b",
+   "020004d73d15"
+  ],
+  "suggested_uplinks": [
+   "02000433425b",
+   "020004d73d15"
+  ],
+  "downlinks": [],
+  "suggested_downlinks": []
+ },
+ "port_config": {
+  "ge-0/0/0,ge-0/0/1": {
+   "usage": "evpn_uplink"
+  }
+ },
+ "router_id": "10.254.101.8",
+ "other_ip_configs": {
+  "corp_lan": {
+   "type": "static",
+   "ip": "10.6.10.1",
+   "netmask": "255.255.255.0",
+   "evpn_anycast": true
+  },
+  "guest_lan": {
+   "type": "static",
+   "ip": "10.6.12.1",
+   "netmask": "255.255.255.0",
+   "evpn_anycast": true
+  },
+  "iot_lan": {
+   "type": "static",
+   "ip": "10.6.11.1",
+   "netmask": "255.255.255.0",
+   "evpn_anycast": true
+  },
+  "corp_vlan98": {
+   "type": "static",
+   "ip": "172.16.98.1",
+   "netmask": "255.255.255.0",
+   "evpn_anycast": true
+  },
+  "guest_vlan100": {
+   "type": "static",
+   "ip": "172.16.100.1",
+   "netmask": "255.255.255.0",
+   "evpn_anycast": true
+  },
+  "iot_vlan99": {
+   "type": "static",
+   "ip": "172.16.99.1",
+   "netmask": "255.255.255.0",
+   "evpn_anycast": true
+  }
+ },
+ "dhcpd_config": {
+  "enabled": false
+ },
+ "vrf_config": {
+  "enabled": true
+ },
+ "id": "00000000-0000-0000-1000-020004f00241",
+ "name": "TR-vjunos-ac-01",
+ "site_id": "f3527afe-da83-4f1d-a3ec-e64cbb049562",
+ "org_id": "829007ab-2ac1-4d6c-aadd-b2fff00bda4d",
+ "created_time": 1788882482,
+ "modified_time": 1791503487,
+ "map_id": null,
+ "mac": "<redacted>",
+ "serial": "<redacted>",
+ "model": "VJUNOS",
+ "hw_rev": "",
+ "type": "switch",
+ "tag_uuid": "829007ab-2ac1-4d6c-aadd-b2fff00bda4d",
+ "tag_id": 1434016,
+ "evpn_scope": "site",
+ "evpntopo_id": "d29fdfd5-f07a-42b1-863a-1fe946023238",
+ "st_ip_base": "",
+ "deviceprofile_id": null,
+ "bundled_mac": null,
+ "mist_configured": true
+}

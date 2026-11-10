@@ -1,0 +1,46 @@
+# GBP hardware test: far end for the EX4400 (CRX-EDGE-SW-01).
+#
+#   test host --- enp12s0f1 ~~ (2 dumb switches) ~~ EX4400 ge-0/0/6   access, VLAN 777 / VNI 77001
+#   EX4400 ge-0/0/7 ~~ (2 dumb switches) ~~ enp12s0f0 --- gbpt-vjunos ge-0/0/0   underlay 192.168.77.0/30
+#   gbpt-vjunos ge-0/0/1 --- gbpt-far                                         far-end host
+#
+# The physical NICs join host bridges (br-gbpt-up, br-gbpt-host) created by
+# gbpt_up.sh before deploy. Separate from the greek fabric: own mgmt net, no links to it.
+name: gbpt
+
+mgmt:
+  network: clab-gbpt
+  ipv4-subnet: 172.30.49.0/24
+
+topology:
+  nodes:
+    gbpt-vjunos:
+      kind: juniper_vjunosswitch
+      image: vrnetlab/juniper_vjunos-switch:26.2R1.7
+      mgmt-ipv4: 172.30.49.11
+    gbpt-host:
+      kind: linux
+      image: ghcr.io/hellt/network-multitool:latest
+      mgmt-ipv4: 172.30.49.21
+      exec:
+        - ip link set eth1 down
+        - ip link set eth1 address aa:c1:ab:77:00:01
+        - ip link set eth1 mtu 1400
+        - ip link set eth1 up
+        - ip addr add 192.168.177.1/24 dev eth1
+    gbpt-far:
+      kind: linux
+      image: ghcr.io/hellt/network-multitool:latest
+      mgmt-ipv4: 172.30.49.22
+      exec:
+        - ip link set eth1 mtu 1400
+        - ip addr add 192.168.177.2/24 dev eth1
+    br-gbpt-up:
+      kind: bridge
+    br-gbpt-host:
+      kind: bridge
+
+  links:
+    - endpoints: ["gbpt-vjunos:ge-0/0/0", "br-gbpt-up:gbpt-vj0"]
+    - endpoints: ["gbpt-vjunos:ge-0/0/1", "gbpt-far:eth1"]
+    - endpoints: ["gbpt-host:eth1", "br-gbpt-host:gbpt-h1"]

@@ -1,0 +1,120 @@
+{
+ "adopted": true,
+ "managed": true,
+ "role": "ma-access-switches",
+ "notes": "",
+ "networks": {},
+ "port_usages": {},
+ "additional_config_cmds": [
+  "set access radsec destination 895 source-address 172.17.6.2",
+  "set access radsec destination 896 source-address 172.17.6.2",
+  "set access radius-server 3.33.153.159 source-address 172.17.6.2",
+  "set access radius-server 15.197.139.214 source-address 172.17.6.2",
+  "set chassis forwarding-options vxlan-gbp-profile",
+  "set forwarding-options evpn-vxlan gbp ingress-enforcement",
+  "set forwarding-options evpn-vxlan gbp mac-ip-inter-tagging"
+ ],
+ "oob_ip_config": {
+  "type": "dhcp",
+  "use_mgmt_vrf": true
+ },
+ "bgp_config": null,
+ "routing_policies": {},
+ "optic_port_config": {},
+ "vars": {},
+ "vars_annotations": {},
+ "evpn_config": {
+  "role": "access",
+  "evpn_id": 8,
+  "downlink2ip": {},
+  "downlink_ips": [],
+  "uplinks": [
+   "020004426e33",
+   "020004c6d021"
+  ],
+  "suggested_uplinks": [
+   "020004426e33",
+   "020004c6d021"
+  ],
+  "downlinks": [],
+  "suggested_downlinks": []
+ },
+ "port_config": {
+  "ge-0/0/1,ge-0/0/0": {
+   "usage": "evpn_uplink"
+  },
+  "ge-0/0/3": {
+   "usage": "guest_lan_access",
+   "description": "MA-vm-03 guest host"
+  },
+  "ge-0/0/2": {
+   "usage": "corp_lan_mab",
+   "description": "MA-vm host"
+  }
+ },
+ "router_id": "10.254.102.8",
+ "other_ip_configs": {
+  "corp_lan": {
+   "type": "static",
+   "ip": "10.7.10.1",
+   "netmask": "255.255.255.0",
+   "evpn_anycast": true
+  },
+  "iot_lan": {
+   "type": "static",
+   "ip": "10.7.11.1",
+   "netmask": "255.255.255.0",
+   "evpn_anycast": true
+  },
+  "guest_lan": {
+   "type": "static",
+   "ip": "10.7.12.1",
+   "netmask": "255.255.255.0",
+   "evpn_anycast": true
+  },
+  "corp_vlan98": {
+   "type": "static",
+   "ip": "172.17.98.1",
+   "netmask": "255.255.255.0",
+   "evpn_anycast": true
+  },
+  "iot_vlan99": {
+   "type": "static",
+   "ip": "172.17.99.1",
+   "netmask": "255.255.255.0",
+   "evpn_anycast": true
+  },
+  "guest_vlan100": {
+   "type": "static",
+   "ip": "172.17.100.1",
+   "netmask": "255.255.255.0",
+   "evpn_anycast": true
+  }
+ },
+ "dhcpd_config": {
+  "enabled": false
+ },
+ "vrf_config": {
+  "enabled": true
+ },
+ "id": "00000000-0000-0000-1000-020004e46aa4",
+ "name": "MA-vjunos-ac-01",
+ "site_id": "f3905a52-5d2f-4ac2-a6ed-7b17b6ce7053",
+ "org_id": "829007ab-2ac1-4d6c-aadd-b2fff00bda4d",
+ "created_time": 1788920158,
+ "modified_time": 1792099468,
+ "map_id": null,
+ "mac": "<redacted>",
+ "serial": "<redacted>",
+ "model": "VJUNOS",
+ "hw_rev": "",
+ "type": "switch",
+ "tag_uuid": "829007ab-2ac1-4d6c-aadd-b2fff00bda4d",
+ "tag_id": 1434503,
+ "evpn_scope": "site",
+ "evpntopo_id": "5813c39e-9354-4d0e-a264-a168e60ef852",
+ "st_ip_base": "",
+ "deviceprofile_id": null,
+ "bundled_mac": null,
+ "mist_configured": true
+}

@@ -1,0 +1,2671 @@
+[
+ {
+  "name": "EVPN-VXLAN",
+  "comment": null,
+  "templates": [
+   {
+    "name": "acls",
+    "value": {
+     "data": {
+      "NewACL": {
+       "entry": {},
+       "self": "NewACL"
+      }
+     },
+     "options": {
+      "merge": true,
+      "delDependent": true
+     }
+    },
+    "valObject": null,
+    "buildVersion": "8.1.0.0_0000",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Access Lists",
+    "isSelected": false
+   },
+   {
+    "name": "adminDistance",
+    "value": {
+     "local": 1,
+     "sub_shared": 10,
+     "sub_shared_bgp": 15,
+     "sub_shared_ospf": 15,
+     "bgp_br": 20,
+     "bgp_tr": 20,
+     "ebgp": 15,
+     "sub_shared_cfgset": 20,
+     "sub_shared_iapvpn": 20,
+     "sub_shared_overlay": 20,
+     "sub_shared_rip": 20,
+     "oap_bgp": 20,
+     "oap_cfgset": 20,
+     "oap_iapvpn": 20,
+     "oap_ospf": 20,
+     "oap_overlay": 20,
+     "oap_rip": 20,
+     "oap_static": 20,
+     "oap_direct": 20,
+     "bgp_pe": 25,
+     "ospf": 110,
+     "ibgp": 200
+    },
+    "valObject": null,
+    "buildVersion": "8.1.7.0_0000",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Admin Distance",
+    "isSelected": false
+   },
+   {
+    "name": "authentication",
+    "value": {
+     "aaa": {
+      "author": {
+       "default-user": "admin",
+       "map-order": "local-only"
+      },
+      "auth_method": {
+       "1": {
+        "name": "local",
+        "self": 1
+       }
+      }
+     },
+     "radius": {},
+     "tacacs": {}
+    },
+    "valObject": null,
+    "buildVersion": "6.2.3.1_0000",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Auth/Radius/TACACS+",
+    "isSelected": false
+   },
+   {
+    "name": "banners",
+    "value": {
+     "motd": "MOTD via Template....",
+     "issue": "Banner via Template...."
+    },
+    "valObject": null,
+    "buildVersion": "6.2.3.0_0000",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Banner Messages",
+    "isSelected": false
+   },
+   {
+    "name": "bfd",
+    "value": {
+     "0": {
+      "minTxInterval": 300,
+      "minRxInterval": 300,
+      "detectMultiplier": 3,
+      "self": 0
+     }
+    },
+    "valObject": null,
+    "buildVersion": "9.2.0.0_0000",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "BFD",
+    "isSelected": false
+   },
+   {
+    "name": "bgp",
+    "value": {
+     "adv_loop_interval": "",
+     "vrf": {
+      "0": {
+       "graceful_restart_en": "false",
+       "max_restart_time": 120,
+       "stale_path_time": 150,
+       "remote_as_path_advertise": "false",
+       "next_hop_self": "true",
+       "as_override": "false",
+       "store_received_routes": "true",
+       "ka": 3,
+       "hold": 6,
+       "password": "",
+       "applyPassword": "none",
+       "log_nbr_msgs": "true",
+       "evpn": "none",
+       "route_target_template": {
+        "applyStatus": "none",
+        "import": "0:0",
+        "export": "0:0"
+       }
+      }
+     },
+     "adv_loop_max_updates": ""
+    },
+    "valObject": null,
+    "buildVersion": "6.2.0.0_0001",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "BGP",
+    "isSelected": false
+   },
+   {
+    "name": "cli",
+    "value": {
+     "cliCommands": [
+      "discoveryd enable",
+      "interface wan0 lldp enable",
+      "interface wan1 lldp enable",
+      "interface lan0 lldp enable",
+      "interface lan1 lldp enable",
+      "interface wan2 lldp enable",
+      "interface lan2 lldp enable"
+     ]
+    },
+    "valObject": null,
+    "buildVersion": "6.2.10.0_0000",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "CLI",
+    "isSelected": false
+   },
+   {
+    "name": "datetime",
+    "value": {
+     "timeTmp": {
+      "now": {
+       "datetime": "",
+       "date": "",
+       "time": ""
+      },
+      "zone": "UTC"
+     },
+     "ntp": {
+      "enable": true,
+      "server": {
+       "address": {
+        "time.nist.gov": {
+         "prefer": false,
+         "self": "time.nist.gov",
+         "enable": true,
+         "version": "4"
+        }
+       }
+      }
+     }
+    },
+    "valObject": null,
+    "buildVersion": "6.2.3.0_0000",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Date/Time",
+    "isSelected": false
+   },
+   {
+    "name": "dns",
+    "value": {
+     "nameserver": {
+      "1": {
+       "self": 1,
+       "address": "8.8.8.8"
+      },
+      "2": {
+       "self": 2,
+       "address": "8.8.4.4"
+      }
+     },
+     "domain_search": {}
+    },
+    "valObject": null,
+    "buildVersion": "6.2.3.0_0000",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "DNS",
+    "isSelected": false
+   },
+   {
+    "name": "dnsProxy",
+    "value": {
+     "config": {
+      "enable": false,
+      "interface": "",
+      "active": "",
+      "profile": {
+       "profile_A": {},
+       "profile_B": {}
+      },
+      "domaingroup": {
+       "group_A": {}
+      },
+      "map": {
+       "map1": {
+        "prio": {}
+       }
+      }
+     }
+    },
+    "valObject": null,
+    "buildVersion": "8.1.9.5_0000",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "DNS Proxy",
+    "isSelected": false
+   },
+   {
+    "name": "firewallProtectionProfile",
+    "value": {
+     "profiles": [],
+     "profileMaps": [],
+     "addos_settings": {
+      "baseline": {
+       "enable": 0,
+       "method_value": 95,
+       "method_type": "percentile",
+       "baseline_cycle_interval": 8,
+       "baseline_min_max_delta": 90,
+       "training_period": 14
+      },
+      "smart_burst": {
+       "enable": false,
+       "baseline_percent_headroom": 20,
+       "reserve_capacity_distribution": "proportional",
+       "tcp_inactive_timeout": 300,
+       "per_source_bc_limit_percent": 50,
+       "excess_burst_credit_period": 30,
+       "min_reserve_capacity_limit_percent": 20
+      }
+     },
+     "internal_ip_reputation": {
+      "enable": false,
+      "good_session_count": 20,
+      "bad_session_count": 20
+     },
+     "addoSSettings": {
+      "baseline": {
+       "enable": 0,
+       "method_value": 95,
+       "method_type": "percentile",
+       "baseline_cycle_interval": 8,
+       "baseline_min_max_delta": 90,
+       "training_period": 14
+      },
+      "smart_burst": {
+       "enable": false,
+       "baseline_percent_headroom": 20,
+       "reserve_capacity_distribution": "proportional",
+       "tcp_inactive_timeout": 300,
+       "per_source_bc_limit_percent": 50,
+       "excess_burst_credit_period": 30,
+       "min_reserve_capacity_limit_percent": 20
+      }
+     }
+    },
+    "valObject": null,
+    "buildVersion": "9.2.0.0_0002",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Firewall Protection Profiles",
+    "isSelected": false
+   },
+   {
+    "name": "httpsCertsUpload",
+    "value": {
+     "chain": "",
+     "selectionType": "S",
+     "keyPassPhrase": "",
+     "customCert": {},
+     "keyData": "",
+     "use_custom_cert": false,
+     "certificateData": ""
+    },
+    "valObject": null,
+    "buildVersion": "8.1.0.0_0001",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "HTTPS Certificate",
+    "isSelected": false
+   },
+   {
+    "name": "ipAllowList",
+    "value": {
+     "enable": false,
+     "ip": {}
+    },
+    "valObject": null,
+    "buildVersion": "9.6.0.0_0000",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Appliance IP Allow List",
+    "isSelected": false
+   },
+   {
+    "name": "logging",
+    "value": {
+     "logsettings": {
+      "min_priority": "Notice",
+      "threshold_size": 52428800,
+      "keep_number": 30,
+      "auditlog": "local0",
+      "flow": "local2",
+      "ids": "local3",
+      "system": "local1"
+     },
+     "remotereceivers": {}
+    },
+    "valObject": null,
+    "buildVersion": "6.2.3.0_0001",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Logging",
+    "isSelected": false
+   },
+   {
+    "name": "logsettings",
+    "value": {},
+    "valObject": null,
+    "buildVersion": "6.2.3.0_0000",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "logsettings",
+    "isSelected": false
+   },
+   {
+    "name": "mgmtServices",
+    "value": {
+     "aaa": {
+      "self": "aaa",
+      "displayname": "RADIUS/TACACS+",
+      "srcinf": "any"
+     },
+     "netflowd": {
+      "self": "netflowd",
+      "displayname": "Netflow",
+      "srcinf": "any"
+     },
+     "node": {
+      "self": "node",
+      "displayname": "HTTP(S), Cloud Portal, Orchestrator, Secure Web Services",
+      "srcinf": "any"
+     },
+     "dhcrelay": {
+      "self": "dhcrelay",
+      "displayname": "DHCP Relay",
+      "srcinf": "any"
+     },
+     "other": {
+      "self": "other",
+      "displayname": "Other VRF mgmt Apps",
+      "srcinf": "any"
+     },
+     "syslogd": {
+      "self": "syslogd",
+      "displayname": "Syslog",
+      "srcinf": "any"
+     },
+     "ntpd": {
+      "self": "ntpd",
+      "displayname": "NTP",
+      "srcinf": "any"
+     },
+     "sshd": {
+      "self": "sshd",
+      "displayname": "SSH",
+      "srcinf": "any"
+     },
+     "snmpd": {
+      "self": "snmpd",
+      "displayname": "SNMP",
+      "srcinf": "any"
+     }
+    },
+    "valObject": null,
+    "buildVersion": "9.0.0.0_0004",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Management Services",
+    "isSelected": false
+   },
+   {
+    "name": "multicast",
+    "value": {
+     "vrf": {
+      "0": {
+       "enable": -1,
+       "rp": "",
+       "filter_name": ""
+      }
+     }
+    },
+    "valObject": null,
+    "buildVersion": "9.7.0.0_0000",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Multicast",
+    "isSelected": false
+   },
+   {
+    "name": "nac",
+    "value": {
+     "server": {
+      "1": {
+       "address": "0.0.0.1",
+       "authport": 1812,
+       "key": "",
+       "name": "default",
+       "source_ip_interface": "any"
+      }
+     },
+     "aaaProfile": {
+      "1": {
+       "da_enable": false,
+       "da_server": "",
+       "dot1x_acct_server_group": "default",
+       "dot1x_default_role": "default",
+       "dot1x_profile": "default",
+       "dot1x_server_group": "default",
+       "mac_acct_server_group": "default",
+       "mac_default_role": "default",
+       "mac_profile": "default",
+       "mac_server_group": "default",
+       "name": "default",
+       "srvl": false,
+       "srvl_period": 86400,
+       "deny_enable": false,
+       "deny_period": 900,
+       "deny_threshold": 3
+      }
+     },
+     "dot1x": {
+      "1": {
+       "eapol_logoff": false,
+       "idrequest_period": 5,
+       "ignore_eapolstart_after_auth": false,
+       "max_auth_fails": 1,
+       "max_req": 0,
+       "name": "default",
+       "quiet_period": 30,
+       "reauth": false,
+       "reauth_max": 3,
+       "reauth_period": 86400,
+       "server_retry_period": 60,
+       "server_retry": 3
+      }
+     },
+     "serverGroup": {
+      "1": {
+       "name": "default",
+       "server": {
+        "1": {
+         "self": 1,
+         "name": "default"
+        }
+       }
+      }
+     },
+     "applyPolicies": {},
+     "macAuthProfile": {
+      "1": {
+       "max_auth_fails": 1,
+       "name": "default",
+       "quiet_period": 30,
+       "reauth": false,
+       "reauth_period": 86400,
+       "reauth_max": 3,
+       "server_retry_period": 60,
+       "server_retry": 3,
+       "message_auth_attribute": false
+      }
+     },
+     "nacEnable": false
+    },
+    "valObject": null,
+    "buildVersion": "9.5.0.0_0003",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Network Access Control (NAC)",
+    "isSelected": false
+   },
+   {
+    "name": "natMaps",
+    "value": {
+     "advanced": {
+      "options": {
+       "activeMap": "map1",
+       "selectedMap": "map1"
+      },
+      "data": {
+       "map1": {
+        "self": "map1",
+        "prio": {
+         "1000": {
+          "set": {
+           "0": {
+            "nat_ip_fallback": false,
+            "self": 0,
+            "nat_dir": "none",
+            "nat_type": "no-nat",
+            "nat_ip": "auto"
+           }
+          },
+          "match": {
+           "0": {
+            "dst_ip": "0.0.0.0/0",
+            "dst_port": 0,
+            "self": 0,
+            "dscp": "any",
+            "protocol": "ip",
+            "acl": "",
+            "application": "any",
+            "src_ip": "0.0.0.0/0",
+            "src_port": 0,
+            "vlan": "any"
+           }
+          },
+          "self": 1000,
+          "comment": "",
+          "gms_marked": false
+         }
+        }
+       }
+      }
+     },
+     "basic": {
+      "inbound": {
+       "fallback": false,
+       "enable": false,
+       "ipaddr": "auto"
+      },
+      "outbound": {
+       "fallback": false,
+       "enable": false,
+       "ipaddr": "auto"
+      }
+     }
+    },
+    "valObject": null,
+    "buildVersion": "8.1.0.0_0000",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "SaaS NAT Policies",
+    "isSelected": false
+   },
+   {
+    "name": "netflow",
+    "value": {
+     "active_timeout": 1,
+     "ipfix_tmplt_rfrsh_t": 10,
+     "if_wan_tx": true,
+     "enable": false,
+     "ipaddr1": "0.0.0.0",
+     "if_lan_rx": false,
+     "if_lan_tx": false,
+     "ipaddr2": "0.0.0.0",
+     "if_wan_rx": false,
+     "port1": 2055,
+     "port2": 2055,
+     "optional_ies": {
+      "app_perf_ies": true,
+      "zbf_ies": true
+     }
+    },
+    "valObject": null,
+    "buildVersion": "6.2.3.0_0000",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Flow Export",
+    "isSelected": false
+   },
+   {
+    "name": "optmap",
+    "value": {
+     "data": {
+      "map1": {
+       "prio": {
+        "1000": {
+         "comment": "Disable All Else",
+         "set": {
+          "0": {
+           "adv_options": {
+            "wan_congestion_control": 2,
+            "wan_window_scale_factor": 8,
+            "slow_lan_threshold": 9,
+            "w2l_buf_max": 4000000,
+            "l2w_buf_max": 4000000,
+            "tcp_slowlan_winpenalty": 0,
+            "tcp_lanside_wsfclamp": 0,
+            "tcp_persistdrop": 0,
+            "tcp_keepintvl": 30,
+            "tcp_keepcnt": 8,
+            "tcp_keepidle": 600,
+            "tcp_coalesce": 1,
+            "tcp_mss_cap": 1,
+            "tcp_lan_opt": 1,
+            "tcp_rpol_override": 1,
+            "tcp_auto_reset": 0,
+            "tcp_ibl": 0,
+            "tcp_e2efin": 1
+           },
+           "payload_ena": false,
+           "proxy_type": "none",
+           "netmem_mode": 0,
+           "header_ena": false
+          }
+         },
+         "match": {
+          "0": {}
+         },
+         "gms_marked": false
+        },
+        "1490": {
+         "comment": "WANOp Exclusion",
+         "set": {
+          "0": {
+           "adv_options": {
+            "wan_congestion_control": 2,
+            "wan_window_scale_factor": 8,
+            "slow_lan_threshold": 9,
+            "w2l_buf_max": 4000000,
+            "l2w_buf_max": 4000000,
+            "tcp_slowlan_winpenalty": 0,
+            "tcp_lanside_wsfclamp": 0,
+            "tcp_persistdrop": 0,
+            "tcp_keepintvl": 30,
+            "tcp_keepcnt": 8,
+            "tcp_keepidle": 600,
+            "tcp_coalesce": 1,
+            "tcp_mss_cap": 1,
+            "tcp_lan_opt": 1,
+            "tcp_rpol_override": 1,
+            "tcp_auto_reset": 0,
+            "tcp_ibl": 0,
+            "tcp_e2efin": 1
+           },
+           "payload_ena": false,
+           "proxy_type": "none",
+           "netmem_mode": 0,
+           "header_ena": false
+          }
+         },
+         "match": {
+          "0": {
+           "src_ip": "10.184.135.123/32",
+           "dst_ip": "10.176.199.53/32",
+           "application": "Http"
+          }
+         },
+         "gms_marked": false
+        },
+        "1500": {
+         "comment": "Max Dedupe Apps for DC to DC Traffic",
+         "set": {
+          "0": {
+           "adv_options": {
+            "wan_congestion_control": 2,
+            "wan_window_scale_factor": 8,
+            "slow_lan_threshold": 9,
+            "w2l_buf_max": 4000000,
+            "l2w_buf_max": 4000000,
+            "tcp_slowlan_winpenalty": 0,
+            "tcp_lanside_wsfclamp": 0,
+            "tcp_persistdrop": 0,
+            "tcp_keepintvl": 30,
+            "tcp_keepcnt": 8,
+            "tcp_keepidle": 600,
+            "tcp_coalesce": 1,
+            "tcp_mss_cap": 1,
+            "tcp_lan_opt": 1,
+            "tcp_rpol_override": 1,
+            "tcp_auto_reset": 0,
+            "tcp_ibl": 0,
+            "tcp_e2efin": 1
+           },
+           "payload_ena": true,
+           "proxy_type": "none",
+           "netmem_mode": 3,
+           "header_ena": true
+          }
+         },
+         "match": {
+          "0": {
+           "src_addrgrp_groups": "DC_SUPERNETS",
+           "dst_addrgrp_groups": "DC_SUPERNETS",
+           "app_group": "OPTIMIZED_APPS"
+          }
+         },
+         "gms_marked": false
+        },
+        "1510": {
+         "comment": "Balanced Dedupe Apps for DC to DC Traffic",
+         "set": {
+          "0": {
+           "adv_options": {
+            "wan_congestion_control": 2,
+            "wan_window_scale_factor": 8,
+            "slow_lan_threshold": 9,
+            "w2l_buf_max": 4000000,
+            "l2w_buf_max": 4000000,
+            "tcp_slowlan_winpenalty": 0,
+            "tcp_lanside_wsfclamp": 0,
+            "tcp_persistdrop": 0,
+            "tcp_keepintvl": 30,
+            "tcp_keepcnt": 8,
+            "tcp_keepidle": 600,
+            "tcp_coalesce": 1,
+            "tcp_mss_cap": 1,
+            "tcp_lan_opt": 1,
+            "tcp_rpol_override": 1,
+            "tcp_auto_reset": 0,
+            "tcp_ibl": 0,
+            "tcp_e2efin": 1
+           },
+           "payload_ena": true,
+           "proxy_type": "none",
+           "netmem_mode": 1,
+           "header_ena": true
+          }
+         },
+         "match": {
+          "0": {
+           "src_addrgrp_groups": "DC_SUPERNETS",
+           "dst_addrgrp_groups": "DC_SUPERNETS",
+           "app_group": "Transactional"
+          }
+         },
+         "gms_marked": false
+        }
+       }
+      }
+     },
+     "options": {
+      "merge": false,
+      "templateApply": true,
+      "activeMap": "map1",
+      "selectedMap": "map1"
+     }
+    },
+    "valObject": null,
+    "buildVersion": "8.1.0.0_0000",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Optimization Policies",
+    "isSelected": false
+   },
+   {
+    "name": "ospf",
+    "value": {
+     "vrf": {
+      "0": {
+       "enable": "true",
+       "adminStatus": "none",
+       "helloInterval": 10,
+       "deadInterval": 40,
+       "transmitDelay": 1,
+       "retransmitInterval": 4,
+       "redistMapToOSPF": "",
+       "authKey": "",
+       "authType": "Don't apply",
+       "md5Key": "",
+       "md5Password": "",
+       "opaque_enable": "none"
+      }
+     }
+    },
+    "valObject": null,
+    "buildVersion": "8.2.1.0_0000",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "OSPF",
+    "isSelected": false
+   },
+   {
+    "name": "passwordSettings",
+    "value": {
+     "passwordMinLen": 8,
+     "useLowercaseLetterInPassword": true,
+     "useUppercaseLetterInPassword": true,
+     "enforcePasswordCriteria": true,
+     "useSpecialSymbolInPassword": true,
+     "notifyPasswordExpiryDays": 7,
+     "passwordHistoryCount": 8,
+     "passwordExpireDays": 90,
+     "useDigitInPassword": true,
+     "userInactiveDays": 0,
+     "gmsMarked": true
+    },
+    "valObject": null,
+    "buildVersion": "9.6.0.0_0001",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Password Settings",
+    "isSelected": false
+   },
+   {
+    "name": "peerPriorityList",
+    "value": {},
+    "valObject": null,
+    "buildVersion": "7.3.0.0_0001",
+    "lastSaved": 1789769579000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Peer Priority",
+    "isSelected": false
+   },
+   {
+    "name": "qosMaps",
+    "value": {
+     "data": {
+      "map1": {
+       "prio": {
+        "1000": {
+         "comment": "",
+         "set": {
+          "0": {
+           "traffic_class": 1,
+           "lan_qos": "trust-lan",
+           "wan_qos": "trust-lan"
+          }
+         },
+         "match": {
+          "0": {
+           "either_port": "6010"
+          }
+         }
+        },
+        "1010": {
+         "comment": "",
+         "set": {
+          "0": {
+           "traffic_class": 2,
+           "lan_qos": "trust-lan",
+           "wan_qos": "trust-lan"
+          }
+         },
+         "match": {
+          "0": {
+           "either_port": "6011"
+          }
+         }
+        },
+        "1020": {
+         "comment": "",
+         "set": {
+          "0": {
+           "traffic_class": 3,
+           "lan_qos": "trust-lan",
+           "wan_qos": "trust-lan"
+          }
+         },
+         "match": {
+          "0": {
+           "either_port": "6012"
+          }
+         }
+        },
+        "1030": {
+         "comment": "",
+         "set": {
+          "0": {
+           "traffic_class": 4,
+           "lan_qos": "trust-lan",
+           "wan_qos": "trust-lan"
+          }
+         },
+         "match": {
+          "0": {
+           "either_port": "6013"
+          }
+         }
+        },
+        "1040": {
+         "comment": "",
+         "set": {
+          "0": {
+           "traffic_class": 5,
+           "lan_qos": "trust-lan",
+           "wan_qos": "trust-lan"
+          }
+         },
+         "match": {
+          "0": {
+           "either_port": "6014-6016"
+          }
+         }
+        }
+       }
+      }
+     },
+     "options": {
+      "merge": false,
+      "templateApply": true,
+      "activeMap": "map1",
+      "selectedMap": "map1"
+     }
+    },
+    "valObject": null,
+    "buildVersion": "8.1.0.0_0000",
+    "lastSaved": 1789769580000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "QoS Policies",
+    "isSelected": false
+   },
+   {
+    "name": "radius",
+    "value": {},
+    "valObject": null,
+    "buildVersion": "6.2.2.0_0000",
+    "lastSaved": 1789769580000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "radius",
+    "isSelected": false
+   },
+   {
+    "name": "remotereceivers",
+    "value": {},
+    "valObject": null,
+    "buildVersion": "6.2.3.0_0000",
+    "lastSaved": 1789769580000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "remotereceivers",
+    "isSelected": false
+   },
+   {
+    "name": "routeMaps",
+    "value": {
+     "data": {
+      "map1": {
+       "prio": {}
+      }
+     },
+     "options": {
+      "activeMap": "map1",
+      "selectedMap": "map1"
+     }
+    },
+    "valObject": null,
+    "buildVersion": "8.1.0.0_0000",
+    "lastSaved": 1789769580000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Route Policies",
+    "isSelected": false
+   },
+   {
+    "name": "routes",
+    "value": {
+     "auto_subnet": {
+      "self": true,
+      "vrf": {
+       "0": {
+        "add_local_lan": true,
+        "add_local_wan": false,
+        "add_local_metric": 50,
+        "add_local_communities": "none",
+        "local_communities": "",
+        "add_local_asn": "true",
+        "local_asn_filter": "false",
+        "rtmap_to_subshare": "default_rtmap_to_subsh"
+       }
+      },
+      "vrf_pruning": {
+       "mode": -1,
+       "allowlist": ""
+      }
+     },
+     "ecmp_en": true
+    },
+    "valObject": null,
+    "buildVersion": "6.2.0.0_0001",
+    "lastSaved": 1789769580000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Routes",
+    "isSelected": false
+   },
+   {
+    "name": "routesRedistributeMaps",
+    "value": {
+     "data": {
+      "maps": {
+       "OSPF_PRIMARY": {
+        "map_type": "ospf-out",
+        "prio": {
+         "1000": {
+          "set": {
+           "ospf_rtype": 1,
+           "action": "permit"
+          },
+          "match": {
+           "src_proto": "subshare"
+          },
+          "gms_marked": false,
+          "enabled": true
+         },
+         "1010": {
+          "set": {
+           "ospf_rtype": 1,
+           "action": "permit"
+          },
+          "match": {
+           "prefix": "10.0.0.0/8 GE 32 LE 32",
+           "src_proto": "local"
+          },
+          "gms_marked": false,
+          "enabled": true
+         }
+        }
+       },
+       "OSPF_SECONDARY": {
+        "map_type": "ospf-out",
+        "prio": {
+         "1000": {
+          "set": {
+           "ospf_rtype": 2,
+           "action": "permit"
+          },
+          "match": {
+           "src_proto": "subshare"
+          },
+          "gms_marked": false,
+          "enabled": true
+         },
+         "1010": {
+          "set": {
+           "ospf_rtype": 2,
+           "action": "permit"
+          },
+          "match": {
+           "prefix": "10.0.0.0/8 GE 32 LE 32",
+           "src_proto": "local"
+          },
+          "gms_marked": false,
+          "enabled": true
+         }
+        }
+       },
+       "S1-ecv-01_to_bd-01": {
+        "map_type": "bgp-outbound",
+        "prio": {
+         "1000": {
+          "match": {
+           "src_proto": "local"
+          },
+          "set": {
+           "permit": true,
+           "action": "permit"
+          },
+          "enabled": true,
+          "gms_marked": false
+         }
+        }
+       },
+       "S1-ecv-01_to_bd-02": {
+        "map_type": "bgp-outbound",
+        "prio": {
+         "1000": {
+          "match": {
+           "src_proto": "local"
+          },
+          "set": {
+           "permit": true,
+           "action": "permit"
+          },
+          "enabled": true,
+          "gms_marked": false
+         }
+        }
+       },
+       "S1-ecv-02_to_bd-01": {
+        "map_type": "bgp-outbound",
+        "prio": {
+         "1000": {
+          "match": {
+           "src_proto": "local"
+          },
+          "set": {
+           "permit": true,
+           "action": "permit"
+          },
+          "enabled": true,
+          "gms_marked": false
+         }
+        }
+       },
+       "S1-ecv-02_to_bd-02": {
+        "map_type": "bgp-outbound",
+        "prio": {
+         "1000": {
+          "match": {
+           "src_proto": "local"
+          },
+          "set": {
+           "permit": true,
+           "action": "permit"
+          },
+          "enabled": true,
+          "gms_marked": false
+         }
+        }
+       },
+       "ec02_to_sdwan": {
+        "map_type": "subshare-out",
+        "prio": {
+         "1000": {
+          "match": {
+           "src_proto": "local",
+           "prefix": "0.0.0.0/0|172.16.0.0/16"
+          },
+          "set": {
+           "permit": false,
+           "action": "deny"
+          },
+          "enabled": true,
+          "comment": "DENY STATICS to FABRIC",
+          "gms_marked": false
+         },
+         "1010": {
+          "set": {
+           "metric": "92",
+           "action": "permit"
+          },
+          "match": {
+           "src_proto": "local"
+          },
+          "gms_marked": false,
+          "enabled": true
+         },
+         "1020": {
+          "set": {
+           "metric": "92",
+           "action": "permit"
+          },
+          "match": {
+           "src_proto": "bgp"
+          },
+          "gms_marked": false,
+          "enabled": true
+         },
+         "1030": {
+          "set": {
+           "metric": "92",
+           "action": "permit"
+          },
+          "match": {
+           "src_proto": "ospf"
+          },
+          "gms_marked": false,
+          "enabled": true
+         }
+        }
+       },
+       "ec01_to_sdwan": {
+        "map_type": "subshare-out",
+        "prio": {
+         "1000": {
+          "match": {
+           "src_proto": "local",
+           "prefix": "0.0.0.0/0|172.16.0.0/16"
+          },
+          "set": {
+           "permit": false,
+           "action": "deny"
+          },
+          "enabled": true,
+          "comment": "DENY 0/0 to FABRIC",
+          "gms_marked": false
+         },
+         "1010": {
+          "set": {
+           "metric": "91",
+           "action": "permit"
+          },
+          "match": {
+           "src_proto": "local"
+          },
+          "gms_marked": false,
+          "enabled": true
+         },
+         "1020": {
+          "set": {
+           "metric": "91",
+           "action": "permit"
+          },
+          "match": {
+           "src_proto": "bgp"
+          },
+          "gms_marked": false,
+          "enabled": true
+         },
+         "1030": {
+          "set": {
+           "metric": "91",
+           "action": "permit"
+          },
+          "match": {
+           "src_proto": "ospf"
+          },
+          "gms_marked": false,
+          "enabled": true
+         }
+        }
+       },
+       "bd-01_to_S1-ecv-01": {
+        "map_type": "bgp-inbound",
+        "prio": {
+         "1100": {
+          "match": {
+           "src_proto": "bgp"
+          },
+          "set": {
+           "permit": true,
+           "action": "permit"
+          },
+          "enabled": true,
+          "gms_marked": false
+         }
+        }
+       },
+       "bd-02_to_S1-ecv-01": {
+        "map_type": "bgp-inbound",
+        "prio": {
+         "1099": {
+          "match": {
+           "src_proto": "bgp"
+          },
+          "set": {
+           "permit": true,
+           "action": "permit"
+          },
+          "enabled": true,
+          "gms_marked": false
+         }
+        }
+       },
+       "bd-01_to_S1-ecv-02": {
+        "map_type": "bgp-inbound",
+        "prio": {
+         "1100": {
+          "match": {
+           "src_proto": "bgp"
+          },
+          "set": {
+           "permit": true,
+           "action": "permit"
+          },
+          "enabled": true,
+          "gms_marked": false
+         }
+        }
+       },
+       "bd-02_to_S1-ecv-02": {
+        "map_type": "bgp-inbound",
+        "prio": {
+         "1099": {
+          "match": {
+           "src_proto": "bgp"
+          },
+          "set": {
+           "permit": true,
+           "action": "permit"
+          },
+          "enabled": true,
+          "gms_marked": false
+         }
+        }
+       },
+       "bd-01_to_S2-ecv-01": {
+        "map_type": "bgp-inbound",
+        "prio": {
+         "1100": {
+          "match": {
+           "src_proto": "bgp"
+          },
+          "set": {
+           "permit": true,
+           "action": "permit"
+          },
+          "enabled": true,
+          "gms_marked": false
+         }
+        }
+       },
+       "bd-02_to_S2-ecv-01": {
+        "map_type": "bgp-inbound",
+        "prio": {
+         "1099": {
+          "match": {
+           "src_proto": "bgp"
+          },
+          "set": {
+           "permit": true,
+           "action": "permit"
+          },
+          "enabled": true,
+          "gms_marked": false
+         }
+        }
+       },
+       "bd-01_to_S2-ecv-02": {
+        "map_type": "bgp-inbound",
+        "prio": {
+         "1100": {
+          "match": {
+           "src_proto": "bgp"
+          },
+          "set": {
+           "permit": true,
+           "action": "permit"
+          },
+          "enabled": true,
+          "gms_marked": false
+         }
+        }
+       },
+       "bd-02_to_S2-ecv-02": {
+        "map_type": "bgp-inbound",
+        "prio": {
+         "1099": {
+          "match": {
+           "src_proto": "bgp"
+          },
+          "set": {
+           "permit": true,
+           "action": "permit"
+          },
+          "enabled": true,
+          "gms_marked": false
+         }
+        }
+       },
+       "S2-ecv-01_to_bd-01": {
+        "map_type": "bgp-outbound",
+        "prio": {
+         "1000": {
+          "match": {
+           "src_proto": "local"
+          },
+          "set": {
+           "permit": true,
+           "action": "permit"
+          },
+          "enabled": true,
+          "gms_marked": false
+         }
+        }
+       },
+       "S2-ecv-01_to_bd-02": {
+        "map_type": "bgp-outbound",
+        "prio": {
+         "1000": {
+          "match": {
+           "src_proto": "local"
+          },
+          "set": {
+           "permit": true,
+           "action": "permit"
+          },
+          "enabled": true,
+          "gms_marked": false
+         }
+        }
+       },
+       "S2-ecv-02_to_bd-01": {
+        "map_type": "bgp-outbound",
+        "prio": {
+         "1000": {
+          "match": {
+           "src_proto": "local"
+          },
+          "set": {
+           "permit": true,
+           "action": "permit"
+          },
+          "enabled": true,
+          "gms_marked": false
+         }
+        }
+       },
+       "S2-ecv-02_to_bd-02": {
+        "map_type": "bgp-outbound",
+        "prio": {
+         "1000": {
+          "match": {
+           "src_proto": "local"
+          },
+          "set": {
+           "permit": true,
+           "action": "permit"
+          },
+          "enabled": true,
+          "gms_marked": false
+         }
+        }
+       }
+      }
+     },
+     "options": {
+      "merge": false,
+      "currentMapName": "bd-01_to_S1-ecv-01",
+      "currentMapType": "bgp-inbound"
+     }
+    },
+    "valObject": null,
+    "buildVersion": "8.2.1.0_0000",
+    "lastSaved": 1789769580000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Route Redistribution Maps",
+    "isSelected": false
+   },
+   {
+    "name": "secureWebServicesConfig",
+    "value": {
+     "hasSecureWebServicesConfig": true,
+     "urlClassificationConfig": {
+      "hasURLClassification": true,
+      "queryOnMiss": true,
+      "incrementalUpdate": true,
+      "urlReputation": 3
+     },
+     "ipReputationConfig": {
+      "hasIPReputation": true,
+      "incrementalUpdate": true
+     }
+    },
+    "valObject": null,
+    "buildVersion": "9.6.0.0_0000",
+    "lastSaved": 1791913511000,
+    "path": "dummy path",
+    "isselected": true,
+    "userId": "<redacted-email>",
+    "auditLogComment": "",
+    "displayName": "Secure Web Services",
+    "isSelected": true
+   },
+   {
+    "name": "securityMaps",
+    "value": {
+     "settings": {
+      "map1": {
+       "imp_fw_drop": 2
+      }
+     },
+     "data": {
+      "map1": {}
+     },
+     "options": {
+      "merge": false
+     }
+    },
+    "valObject": null,
+    "buildVersion": "8.1.8.0_0000",
+    "lastSaved": 1789769580000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Security Policies",
+    "isSelected": false
+   },
+   {
+    "name": "shaper",
+    "value": {
+     "inbound": {
+      "isDRCEnabled": false,
+      "wan": {
+       "traffic-class": {
+        "1": {
+         "priority": 1,
+         "min_bw": 25,
+         "max_wait": 250,
+         "excess": 40,
+         "max_bw": 100,
+         "flow_limit": 0,
+         "name": "Platinum",
+         "min_bw_abs": 0,
+         "max_bw_abs": 25000000
+        },
+        "2": {
+         "priority": 2,
+         "min_bw": 20,
+         "max_wait": 500,
+         "excess": 50,
+         "max_bw": 100,
+         "flow_limit": 0,
+         "name": "Gold",
+         "min_bw_abs": 0,
+         "max_bw_abs": 25000000
+        },
+        "3": {
+         "priority": 3,
+         "min_bw": 20,
+         "max_wait": 500,
+         "excess": 60,
+         "max_bw": 100,
+         "flow_limit": 0,
+         "name": "Silver",
+         "min_bw_abs": 0,
+         "max_bw_abs": 25000000
+        },
+        "4": {
+         "priority": 4,
+         "min_bw": 10,
+         "max_wait": 500,
+         "excess": 40,
+         "max_bw": 100,
+         "flow_limit": 0,
+         "name": "Bronze",
+         "min_bw_abs": 0,
+         "max_bw_abs": 25000000
+        },
+        "5": {
+         "priority": 5,
+         "min_bw": 0,
+         "max_wait": 500,
+         "excess": 40,
+         "max_bw": 100,
+         "flow_limit": 0,
+         "name": "BestEffort",
+         "min_bw_abs": 0,
+         "max_bw_abs": 25000000
+        },
+        "6": {
+         "priority": 6,
+         "min_bw": 0,
+         "max_wait": 500,
+         "excess": 1,
+         "max_bw": 100,
+         "flow_limit": 0,
+         "name": "UNUSED6",
+         "min_bw_abs": 0,
+         "max_bw_abs": 25000000
+        },
+        "7": {
+         "priority": 7,
+         "min_bw": 0,
+         "max_wait": 500,
+         "excess": 1,
+         "max_bw": 100,
+         "flow_limit": 0,
+         "name": "UNUSED7",
+         "min_bw_abs": 0,
+         "max_bw_abs": 25000000
+        },
+        "8": {
+         "priority": 8,
+         "min_bw": 0,
+         "max_wait": 500,
+         "excess": 1,
+         "max_bw": 100,
+         "flow_limit": 0,
+         "name": "UNUSED8",
+         "min_bw_abs": 0,
+         "max_bw_abs": 25000000
+        },
+        "9": {
+         "priority": 9,
+         "min_bw": 0,
+         "max_wait": 500,
+         "excess": 1,
+         "max_bw": 100,
+         "flow_limit": 0,
+         "name": "UNUSED9",
+         "min_bw_abs": 0,
+         "max_bw_abs": 25000000
+        },
+        "10": {
+         "priority": 10,
+         "min_bw": 0,
+         "max_wait": 500,
+         "excess": 1,
+         "max_bw": 100,
+         "flow_limit": 0,
+         "name": "UNUSED10",
+         "min_bw_abs": 0,
+         "max_bw_abs": 25000000
+        }
+       },
+       "accuracy": 5000,
+       "enable": true,
+       "dyn_bw_enable": false,
+       "if_shaping_enable": false
+      }
+     },
+     "outbound": {
+      "wan": {
+       "traffic-class": {
+        "1": {
+         "priority": 1,
+         "min_bw": 25,
+         "max_wait": 250,
+         "excess": 40,
+         "max_bw": 100,
+         "flow_limit": 0,
+         "name": "Platinum",
+         "min_bw_abs": 0,
+         "max_bw_abs": 25000000
+        },
+        "2": {
+         "priority": 2,
+         "min_bw": 20,
+         "max_wait": 500,
+         "excess": 50,
+         "max_bw": 100,
+         "flow_limit": 0,
+         "name": "Gold",
+         "min_bw_abs": 0,
+         "max_bw_abs": 25000000
+        },
+        "3": {
+         "priority": 3,
+         "min_bw": 20,
+         "max_wait": 500,
+         "excess": 60,
+         "max_bw": 100,
+         "flow_limit": 0,
+         "name": "Silver",
+         "min_bw_abs": 0,
+         "max_bw_abs": 25000000
+        },
+        "4": {
+         "priority": 4,
+         "min_bw": 10,
+         "max_wait": 500,
+         "excess": 40,
+         "max_bw": 100,
+         "flow_limit": 0,
+         "name": "Bronze",
+         "min_bw_abs": 0,
+         "max_bw_abs": 25000000
+        },
+        "5": {
+         "priority": 5,
+         "min_bw": 0,
+         "max_wait": 500,
+         "excess": 40,
+         "max_bw": 100,
+         "flow_limit": 0,
+         "name": "BestEffort",
+         "min_bw_abs": 0,
+         "max_bw_abs": 25000000
+        },
+        "6": {
+         "priority": 6,
+         "min_bw": 0,
+         "max_wait": 500,
+         "excess": 1,
+         "max_bw": 100,
+         "flow_limit": 0,
+         "name": "UNUSED6",
+         "min_bw_abs": 0,
+         "max_bw_abs": 25000000
+        },
+        "7": {
+         "priority": 7,
+         "min_bw": 0,
+         "max_wait": 500,
+         "excess": 1,
+         "max_bw": 100,
+         "flow_limit": 0,
+         "name": "UNUSED7",
+         "min_bw_abs": 0,
+         "max_bw_abs": 25000000
+        },
+        "8": {
+         "priority": 8,
+         "min_bw": 0,
+         "max_wait": 500,
+         "excess": 1,
+         "max_bw": 100,
+         "flow_limit": 0,
+         "name": "UNUSED8",
+         "min_bw_abs": 0,
+         "max_bw_abs": 25000000
+        },
+        "9": {
+         "priority": 9,
+         "min_bw": 0,
+         "max_wait": 500,
+         "excess": 1,
+         "max_bw": 100,
+         "flow_limit": 0,
+         "name": "UNUSED9",
+         "min_bw_abs": 0,
+         "max_bw_abs": 25000000
+        },
+        "10": {
+         "priority": 10,
+         "min_bw": 0,
+         "max_wait": 500,
+         "excess": 1,
+         "max_bw": 100,
+         "flow_limit": 0,
+         "name": "UNUSED10",
+         "min_bw_abs": 0,
+         "max_bw_abs": 25000000
+        }
+       },
+       "accuracy": 5000,
+       "enable": true,
+       "dyn_bw_enable": false
+      }
+     }
+    },
+    "valObject": null,
+    "buildVersion": "8.0.20.0_0000",
+    "lastSaved": 1789769580000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Shaper",
+    "isSelected": false
+   },
+   {
+    "name": "snmp",
+    "value": {
+     "access": {
+      "rocommunity": "",
+      "enable": true
+     },
+     "listen": {
+      "enable": true
+     },
+     "traps": {
+      "trap_community": "",
+      "enable": true
+     },
+     "auto_launch": true,
+     "v3": {
+      "users": {
+       "admin": {
+        "hash_type": "sha",
+        "auth_key": "",
+        "self": "admin",
+        "privacy_key": "",
+        "enable": false,
+        "privacy_type": "aes-128"
+       }
+      }
+     },
+     "encAuth": true,
+     "encPri": true,
+     "trapsink": {
+      "sink": {
+       "10.32.99.134": {
+        "self": "10.32.99.134",
+        "enable": true,
+        "community": "",
+        "type": "trap-v2c"
+       }
+      }
+     }
+    },
+    "valObject": null,
+    "buildVersion": "9.2.1.0_0000",
+    "lastSaved": 1789769580000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "SNMP",
+    "isSelected": false
+   },
+   {
+    "name": "sslCACerts",
+    "value": {
+     "options": {
+      "merge": "true"
+     },
+     "config": {
+      "auth": {}
+     }
+    },
+    "valObject": null,
+    "buildVersion": "7.2.0.0_0000",
+    "lastSaved": 1789769580000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "SSL WAN Optimization CA Certificates",
+    "isSelected": false
+   },
+   {
+    "name": "sslCerts",
+    "value": {
+     "options": {
+      "merge": "true"
+     },
+     "config": {
+      "host": {}
+     }
+    },
+    "valObject": null,
+    "buildVersion": "6.2.3.0_0001",
+    "lastSaved": 1789769580000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "SSL WAN Optimization Certificates",
+    "isSelected": false
+   },
+   {
+    "name": "system",
+    "value": {
+     "iph_compression": true,
+     "ip_broadcast": false,
+     "max_tcp_mss": 1328,
+     "enforce_overlay": true,
+     "allowUnknownDestRole": true,
+     "quies_tun_ka_intvl": 60,
+     "excess_flow": {
+      "policy": "drop"
+     },
+     "enableDnsHttpSnooping": true,
+     "tun_alarms": {
+      "aggregate": 20
+     },
+     "auto_ipid": false,
+     "ipsec_override": false,
+     "restart_on_nh_unreachable": true,
+     "dpc": {
+      "tunfail": "fail-stick"
+     },
+     "node_dns": {
+      "enable": true
+     },
+     "int_hairpin": true,
+     "udp_inact_time": 120,
+     "auto_pol_lookup_intvl": 60,
+     "bridge_loop_test": true,
+     "tcp_inact_time": 1800,
+     "disk_encrypt_enable": true,
+     "auto_syn": false,
+     "ipsec_natt_keepalive": 200
+    },
+    "valObject": null,
+    "buildVersion": "9.7.0.0_0000",
+    "lastSaved": 1789769580000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "System",
+    "isSelected": false
+   },
+   {
+    "name": "tacacs",
+    "value": {},
+    "valObject": null,
+    "buildVersion": "6.2.3.0_0000",
+    "lastSaved": 1789769580000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "tacacs",
+    "isSelected": false
+   },
+   {
+    "name": "thresholdCrossingAlert",
+    "value": {
+     "oop-pre-poc": {
+      "allow_falling": false,
+      "allow_disable": true,
+      "UI": {
+       "units": "tenth %",
+       "allow_config": true,
+       "descr": "Tunnel OOP pre-POC",
+       "inst_bname": {
+        "1": {
+         "descr": "tunnel",
+         "self": 1,
+         "name": "/cn/tunneld/net/interface/tunnel/config"
+        }
+       }
+      },
+      "allow_rising": true,
+      "dft": {
+       "falling": {
+        "raiseVal": 0,
+        "clearVal": 0,
+        "sustain": 4,
+        "is_set": false
+       },
+       "enable": true,
+       "rising": {
+        "raiseVal": 1000,
+        "clearVal": 1000,
+        "sustain": 4,
+        "is_set": true
+       }
+      },
+      "threshold_max": 1000,
+      "threshold_min": 0
+     },
+     "file-system-utilization": {
+      "allow_falling": false,
+      "allow_disable": false,
+      "UI": {
+       "units": "%",
+       "allow_config": true,
+       "descr": "File-system utilization"
+      },
+      "allow_rising": true,
+      "dft": {
+       "falling": {
+        "raiseVal": 75,
+        "clearVal": 75,
+        "sustain": 4,
+        "is_set": false
+       },
+       "enable": true,
+       "rising": {
+        "raiseVal": 90,
+        "clearVal": 85,
+        "sustain": 4,
+        "is_set": true
+       }
+      },
+      "threshold_max": 90,
+      "threshold_min": 75
+     },
+     "utilization": {
+      "allow_falling": true,
+      "allow_disable": true,
+      "UI": {
+       "units": "%",
+       "allow_config": true,
+       "descr": "Tunnel utilization",
+       "inst_bname": {
+        "1": {
+         "descr": "tunnel",
+         "self": 1,
+         "name": "/cn/tunneld/net/interface/tunnel/config"
+        }
+       }
+      },
+      "allow_rising": true,
+      "dft": {
+       "falling": {
+        "raiseVal": 0,
+        "clearVal": 0,
+        "sustain": 4,
+        "is_set": false
+       },
+       "enable": false,
+       "rising": {
+        "raiseVal": 100,
+        "clearVal": 100,
+        "sustain": 4,
+        "is_set": false
+       }
+      },
+      "threshold_max": 100,
+      "threshold_min": 0
+     },
+     "lan-side-rx-throughput": {
+      "allow_falling": true,
+      "allow_disable": true,
+      "UI": {
+       "units": "kbps",
+       "allow_config": true,
+       "descr": "LAN-side receive throughput"
+      },
+      "allow_rising": true,
+      "dft": {
+       "falling": {
+        "raiseVal": 0,
+        "clearVal": 0,
+        "sustain": 4,
+        "is_set": false
+       },
+       "enable": false,
+       "rising": {
+        "raiseVal": 1000000,
+        "clearVal": 1000000,
+        "sustain": 4,
+        "is_set": false
+       }
+      },
+      "threshold_min": 0
+     },
+     "optimized-flows": {
+      "allow_falling": true,
+      "allow_disable": true,
+      "UI": {
+       "units": "%",
+       "allow_config": true,
+       "descr": "Total number of optimized flows"
+      },
+      "allow_rising": true,
+      "dft": {
+       "falling": {
+        "raiseVal": 0,
+        "clearVal": 0,
+        "sustain": 4,
+        "is_set": false
+       },
+       "enable": false,
+       "rising": {
+        "raiseVal": 90,
+        "clearVal": 85,
+        "sustain": 4,
+        "is_set": false
+       }
+      },
+      "threshold_max": 100,
+      "threshold_min": 0
+     },
+     "latency": {
+      "allow_falling": false,
+      "allow_disable": true,
+      "UI": {
+       "units": "ms",
+       "allow_config": true,
+       "descr": "Tunnel latency",
+       "inst_bname": {
+        "1": {
+         "descr": "tunnel",
+         "self": 1,
+         "name": "/cn/tunneld/net/interface/tunnel/config"
+        }
+       }
+      },
+      "allow_rising": true,
+      "dft": {
+       "falling": {
+        "raiseVal": 0,
+        "clearVal": 0,
+        "sustain": 4,
+        "is_set": false
+       },
+       "enable": true,
+       "rising": {
+        "raiseVal": 1000,
+        "clearVal": 850,
+        "sustain": 4,
+        "is_set": true
+       }
+      },
+      "threshold_min": 0
+     },
+     "loss-post-fec": {
+      "allow_falling": false,
+      "allow_disable": true,
+      "UI": {
+       "units": "tenth %",
+       "allow_config": true,
+       "descr": "Tunnel loss post-FEC",
+       "inst_bname": {
+        "1": {
+         "descr": "tunnel",
+         "self": 1,
+         "name": "/cn/tunneld/net/interface/tunnel/config"
+        }
+       }
+      },
+      "allow_rising": true,
+      "dft": {
+       "falling": {
+        "raiseVal": 0,
+        "clearVal": 0,
+        "sustain": 4,
+        "is_set": false
+       },
+       "enable": false,
+       "rising": {
+        "raiseVal": 1000,
+        "clearVal": 1000,
+        "sustain": 4,
+        "is_set": false
+       }
+      },
+      "threshold_max": 1000,
+      "threshold_min": 0
+     },
+     "loss-pre-fec": {
+      "allow_falling": false,
+      "allow_disable": true,
+      "UI": {
+       "units": "tenth %",
+       "allow_config": true,
+       "descr": "Tunnel loss pre-FEC",
+       "inst_bname": {
+        "1": {
+         "descr": "tunnel",
+         "self": 1,
+         "name": "/cn/tunneld/net/interface/tunnel/config"
+        }
+       }
+      },
+      "allow_rising": true,
+      "dft": {
+       "falling": {
+        "raiseVal": 0,
+        "clearVal": 0,
+        "sustain": 4,
+        "is_set": false
+       },
+       "enable": false,
+       "rising": {
+        "raiseVal": 1000,
+        "clearVal": 1000,
+        "sustain": 4,
+        "is_set": false
+       }
+      },
+      "threshold_max": 1000,
+      "threshold_min": 0
+     },
+     "oop-post-poc": {
+      "allow_falling": false,
+      "allow_disable": true,
+      "UI": {
+       "units": "tenth %",
+       "allow_config": true,
+       "descr": "Tunnel OOP post-POC",
+       "inst_bname": {
+        "1": {
+         "descr": "tunnel",
+         "self": 1,
+         "name": "/cn/tunneld/net/interface/tunnel/config"
+        }
+       }
+      },
+      "allow_rising": true,
+      "dft": {
+       "falling": {
+        "raiseVal": 0,
+        "clearVal": 0,
+        "sustain": 4,
+        "is_set": false
+       },
+       "enable": false,
+       "rising": {
+        "raiseVal": 1000,
+        "clearVal": 1000,
+        "sustain": 4,
+        "is_set": false
+       }
+      },
+      "threshold_max": 1000,
+      "threshold_min": 0
+     },
+     "wan-side-tx-throughput": {
+      "allow_falling": true,
+      "allow_disable": true,
+      "UI": {
+       "units": "kbps",
+       "allow_config": true,
+       "descr": "WAN-side transmit throughput"
+      },
+      "allow_rising": true,
+      "dft": {
+       "falling": {
+        "raiseVal": 0,
+        "clearVal": 0,
+        "sustain": 4,
+        "is_set": false
+       },
+       "enable": false,
+       "rising": {
+        "raiseVal": 1000000,
+        "clearVal": 1000000,
+        "sustain": 4,
+        "is_set": false
+       }
+      },
+      "threshold_min": 0
+     },
+     "reduction": {
+      "allow_falling": true,
+      "allow_disable": true,
+      "UI": {
+       "units": "%",
+       "allow_config": true,
+       "descr": "Tunnel reduction",
+       "inst_bname": {
+        "1": {
+         "descr": "tunnel",
+         "self": 1,
+         "name": "/cn/tunneld/net/interface/tunnel/config"
+        }
+       }
+      },
+      "allow_rising": false,
+      "dft": {
+       "falling": {
+        "raiseVal": 0,
+        "clearVal": 0,
+        "sustain": 4,
+        "is_set": false
+       },
+       "enable": false,
+       "rising": {
+        "raiseVal": 100,
+        "clearVal": 100,
+        "sustain": 4,
+        "is_set": false
+       }
+      },
+      "threshold_max": 100,
+      "threshold_min": 0
+     },
+     "total-flows": {
+      "allow_falling": true,
+      "allow_disable": true,
+      "UI": {
+       "units": "%",
+       "allow_config": true,
+       "descr": "Total number of flows"
+      },
+      "allow_rising": true,
+      "dft": {
+       "falling": {
+        "raiseVal": 0,
+        "clearVal": 0,
+        "sustain": 4,
+        "is_set": false
+       },
+       "enable": true,
+       "rising": {
+        "raiseVal": 90,
+        "clearVal": 85,
+        "sustain": 4,
+        "is_set": true
+       }
+      },
+      "threshold_max": 100,
+      "threshold_min": 0
+     }
+    },
+    "valObject": null,
+    "buildVersion": "7.2.1.0_0001",
+    "lastSaved": 1789769580000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Threshold Crossing Alerts",
+    "isSelected": false
+   },
+   {
+    "name": "tunnels",
+    "value": {
+     "udp_flows": 256,
+     "ipsec_arc_window": "1024",
+     "admin": "up",
+     "threshold": {
+      "retry_count": 30,
+      "fastfail": 0,
+      "latency": 0,
+      "loss": 0,
+      "jitter": 0,
+      "fastfail-wait-base": 150,
+      "fastfail-wait-rtt": 2
+     },
+     "ctrl_pkt": {
+      "dscp": "be"
+     },
+     "max_bw_auto": true,
+     "mtu": 1500,
+     "mode": "udp",
+     "apply_to_default": true,
+     "presharedkey": "<redacted>",
+     "udp_dest_port": 4163,
+     "ipsec": {
+      "security": {
+       "ah": {
+        "algorithm": "sha1"
+       },
+       "esp": {
+        "algorithm": ""
+       }
+      },
+      "lifetime": 360,
+      "lifebytes": 0,
+      "pfsgroup": "14",
+      "pfs": true,
+      "ike_aalg": "sha1",
+      "ike_ealg": "default",
+      "ike_prf": "null",
+      "ipsec_suite_b": "none",
+      "dhgroup": "14",
+      "ike_lifetime": 360,
+      "dpd_delay": 10,
+      "dpd_retry": 3,
+      "id_type": "address",
+      "id_str": "",
+      "exchange_mode": "aggressive"
+     },
+     "pkt": {
+      "fec_enable_str": "disable",
+      "fec_reset_intvl": 10,
+      "fec_min_ratio": 0,
+      "fec_max_ratio": 10,
+      "reorder_wait": 100
+     },
+     "auto_mtu": true,
+     "min_bw": 32,
+     "ipsec_enable": false,
+     "max_bw": 4000
+    },
+    "valObject": null,
+    "buildVersion": "8.1.0.0_0002",
+    "lastSaved": 1789769580000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Tunnels",
+    "isSelected": false
+   },
+   {
+    "name": "userAppGroups",
+    "value": {
+     "options": {
+      "merge": true,
+      "delDependent": true
+     },
+     "data": {
+      "interactive": {
+       "aol": "aol",
+       "3par": "3par"
+      }
+     }
+    },
+    "valObject": null,
+    "buildVersion": "6.1.1.0_0000",
+    "lastSaved": 1789769580000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Application Groups",
+    "isSelected": false
+   },
+   {
+    "name": "userApps",
+    "value": {
+     "data": {},
+     "options": {
+      "delDependent": true
+     }
+    },
+    "valObject": null,
+    "buildVersion": "7.1.0.0_0000",
+    "lastSaved": 1789769580000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "User Defined Apps",
+    "isSelected": false
+   },
+   {
+    "name": "users",
+    "value": {
+     "users": {
+      "admin": {
+       "enable": true,
+       "gid": 0,
+       "password": "",
+       "self": "admin",
+       "gms_marked": true
+      },
+      "enableuser": {
+       "gid": 0,
+       "self": "enableuser",
+       "gms_marked": true,
+       "password": ""
+      },
+      "monitor": {
+       "enable": false,
+       "gid": 1001,
+       "password": "",
+       "self": "monitor",
+       "gms_marked": true
+      },
+      "agentia": {
+       "enable": true,
+       "gid": 0,
+       "password": "",
+       "self": "agentia",
+       "gms_marked": true
+      }
+     }
+    },
+    "valObject": null,
+    "buildVersion": "6.2.3.0_0001",
+    "lastSaved": 1789769580000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "User Management",
+    "isSelected": false
+   },
+   {
+    "name": "vrrp",
+    "value": {
+     "admin": "",
+     "advTimer": "",
+     "priority": "",
+     "preempt": false,
+     "auth": ""
+    },
+    "valObject": null,
+    "buildVersion": "6.2.10.0_0000",
+    "lastSaved": 1789769580000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "VRRP",
+    "isSelected": false
+   },
+   {
+    "name": "vxlan",
+    "value": {
+     "vrfId": {
+      "3": {
+       "vni": 11384125,
+       "role": "8",
+       "zoneId": 47
+      },
+      "6": {
+       "vni": 11581948,
+       "role": "8",
+       "zoneId": 54
+      }
+     },
+     "port": "4789",
+     "vtepIf": ""
+    },
+    "valObject": null,
+    "buildVersion": "9.4.1.0_0000",
+    "lastSaved": 1791213035000,
+    "path": "dummy path",
+    "isselected": true,
+    "userId": "<redacted-email>",
+    "auditLogComment": "",
+    "displayName": "VXLAN",
+    "isSelected": true
+   },
+   {
+    "name": "webconfig",
+    "value": {
+     "proxy": {
+      "password": "",
+      "port": null,
+      "enable": false,
+      "host": "",
+      "username": ""
+     },
+     "session_max": 10,
+     "http": {
+      "enable": false
+     },
+     "https": {
+      "enable": true
+     },
+     "session_timeout": 900
+    },
+    "valObject": null,
+    "buildVersion": "9.6.0.0_0002",
+    "lastSaved": 1789769580000,
+    "path": "dummy path",
+    "isselected": false,
+    "userId": "<redacted-email>",
+    "auditLogComment": null,
+    "displayName": "Session Management",
+    "isSelected": false
+   }
+  ],
+  "selectedTemplates": [
+   {
+    "name": "secureWebServicesConfig",
+    "value": {
+     "hasSecureWebServicesConfig": true,
+     "urlClassificationConfig": {
+      "hasURLClassification": true,
+      "queryOnMiss": true,
+      "incrementalUpdate": true,
+      "urlReputation": 3
+     },
+     "ipReputationConfig": {
+      "hasIPReputation": true,
+      "incrementalUpdate": true
+     }
+    },
+    "valObject": null,
+    "buildVersion": "9.6.0.0_0000",
+    "lastSaved": 1791913511000,
+    "path": "dummy path",
+    "isselected": true,
+    "userId": "<redacted-email>",
+    "auditLogComment": "",
+    "displayName": "Secure Web Services",
+    "isSelected": true
+   },
+   {
+    "name": "vxlan",
+    "value": {
+     "vrfId": {
+      "3": {
+       "vni": 11384125,
+       "role": "8",
+       "zoneId": 47
+      },
+      "6": {
+       "vni": 11581948,
+       "role": "8",
+       "zoneId": 54
+      }
+     },
+     "port": "4789",
+     "vtepIf": ""
+    },
+    "valObject": null,
+    "buildVersion": "9.4.1.0_0000",
+    "lastSaved": 1791213035000,
+    "path": "dummy path",
+    "isselected": true,
+    "userId": "<redacted-email>",
+    "auditLogComment": "",
+    "displayName": "VXLAN",
+    "isSelected": true
+   }
+  ],
+  "selectedTemplateNames": [
+   "secureWebServicesConfig",
+   "vxlan"
+  ]
+ }
+]

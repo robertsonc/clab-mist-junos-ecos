@@ -1,0 +1,15 @@
+import sys; sys.path.insert(0,"scripts"); import junos
+c=junos.connect("172.30.46.27"); sh=junos.shell(c)
+out=junos.send(sh,"configure private",3)
+for m in ["gbp-tag:0L:10001","gbp-tag:0:10001","0x0308:0:10001","0x0308:10001"]:
+    out+=junos.send(sh,f'set policy-options community T_GBP members {m}',2)
+    out+=junos.send(sh,"show policy-options community T_GBP",2)
+    out+=junos.send(sh,"delete policy-options community T_GBP",2)
+out+=junos.send(sh,"set policy-options policy-statement T_POL term t from nlri-route-type 2",2)
+out+=junos.send(sh,"set policy-options policy-statement T_POL term t from evpn-mac-route mac-ipv4",2)
+out+=junos.send(sh,"set policy-options policy-statement T_POL term t from evpn-esi 0",2)
+out+=junos.send(sh,"set policy-options policy-statement T_POL term t then community add T_GBP",2)
+out+=junos.send(sh,"rollback 0",3)
+out+=junos.send(sh,"show | compare",3)
+out+=junos.send(sh,"exit configuration-mode",3)
+print(out); c.close()
