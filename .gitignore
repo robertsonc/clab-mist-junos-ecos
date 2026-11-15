@@ -25,3 +25,7 @@ clab-*/
 .clab.yml.bak
 ansible-inventory.yml
 topology-data.json
+
+# EC-V image build context
+ecos/docker/*.qcow2
+ecos/*.qcow2
