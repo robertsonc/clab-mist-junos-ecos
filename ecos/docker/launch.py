@@ -20,6 +20,14 @@ Environment (all optional):
     ECOS_READY_STABLE_SECS  seconds HTTPS must stay up before "healthy" (60)
     ECOS_BOOT_TIMEOUT_SECS  seconds before the node is reported stuck (1200)
 
+Disk:
+
+    /disk (bind mount)      if present, the VM overlay disk lives there instead
+                            of in the container's writable layer
+    ECOS_DISK_CACHE         QEMU cache mode, default "unsafe" (no host fsync:
+                            fast, and a lab disk is disposable)
+    ECOS_DISK_IF            "ide" (default, known to boot) or "virtio"
+
 Sizing uses vrnetlab's generic QEMU_SMP / QEMU_MEMORY. ECOS_VCPU / ECOS_RAM
 are still honoured as defaults so existing topologies keep working.
 """
@@ -28,6 +36,7 @@ from __future__ import annotations
 import logging
 import os
 import re
+import secrets
 import signal
 import socket
 import ssl
@@ -47,6 +56,11 @@ CLOUDINIT_ISO = "/spcustom.iso"
 DEFAULT_NIC_MAP = "mgmt0:eth0,wan0:eth1,lan0:eth2,wan1:eth3,lan1:eth4,lan2:eth6"
 DEFAULT_VCPU = 4        # 1 vCPU / 4 GB loses the Orchestrator heartbeat
 DEFAULT_RAM_MB = 16384
+
+DISK_DIR = "/disk"                 # optional bind mount for the overlay
+OWNER_TOKEN = "/.ecos-disk-owner"  # lives in the container layer on purpose
+DISK_CACHE_MODES = ("unsafe", "writeback", "none", "writethrough", "directsync")
+DISK_INTERFACES = ("ide", "virtio")
 
 HTTPS_PROBE_INTERVAL = 5.0
 HTTPS_PROBE_TIMEOUT = 3.0
@@ -96,6 +110,66 @@ def find_disk_image(directory: str = "/") -> str:
     if not candidates:
         raise FileNotFoundError(f"no base .qcow2 image in {directory}")
     return os.path.join(directory, candidates[0])
+
+
+def env_choice(name: str, default: str, allowed: tuple[str, ...]) -> str:
+    value = os.getenv(name, "").strip().lower() or default
+    if value not in allowed:
+        raise ConfigError(f"{name}={value!r} must be one of {', '.join(allowed)}")
+    return value
+
+
+def prepare_disk_dir(base_image: str, disk_dir: str = DISK_DIR,
+                     token_file: str = OWNER_TOKEN) -> str:
+    """Return the path vrnetlab should treat as the base image.
+
+    vrnetlab writes the overlay next to the base image. Presenting the base
+    through a symlink in `disk_dir` therefore lands the overlay on the bind
+    mount, off the container's writable layer.
+
+    A bind mount outlives the container, and ECOS reads spcustom.yml only on
+    the first boot of a clean disk. An overlay left by a previous deploy would
+    boot with the old NIC MAC pinning and ignore the new day-0, so it is
+    discarded unless it belongs to this container. Ownership is a random token
+    kept in the container layer: a restart keeps it, a redeploy does not.
+    """
+    if not os.path.isdir(disk_dir):
+        return base_image
+    marker = os.path.join(disk_dir, ".owner")
+    mine = theirs = None
+    if os.path.exists(token_file):
+        with open(token_file) as fh:
+            mine = fh.read().strip()
+    if os.path.exists(marker):
+        with open(marker) as fh:
+            theirs = fh.read().strip()
+    if mine is None or mine != theirs:
+        for entry in os.listdir(disk_dir):
+            if entry.endswith(".qcow2"):
+                LOG.info("discarding disk from an earlier deploy: %s", entry)
+                os.remove(os.path.join(disk_dir, entry))
+        mine = secrets.token_hex(16)
+        for path in (token_file, marker):
+            with open(path, "w") as fh:
+                fh.write(mine + "\n")
+    link = os.path.join(disk_dir, os.path.basename(base_image))
+    if not os.path.islink(link):
+        os.symlink(base_image, link)
+    return link
+
+
+def tune_drive_args(qemu_args: list[str], cache: str) -> list[str]:
+    """Add cache/discard options to the overlay `-drive` vrnetlab generated.
+
+    detect-zeroes=unmap keeps zero-filled writes from growing the qcow2, which
+    matters for an appliance that formats a 30 GB disk on first boot.
+    """
+    out = list(qemu_args)
+    for i, arg in enumerate(out):
+        if i and out[i - 1] == "-drive" and "-overlay." in arg and "cache=" not in arg:
+            out[i] = f"{arg},cache={cache},discard=unmap,detect-zeroes=unmap"
+            return out
+    raise RuntimeError("overlay -drive argument not found in the qemu command line")
 
 
 def _check(name: str, value: str, pattern: re.Pattern[str]) -> str:
@@ -238,9 +312,13 @@ class ECOS_vm(vrnetlab.VM):
         super().__init__(
             username,
             password,
-            disk_image=find_disk_image(),
+            disk_image=prepare_disk_dir(find_disk_image()),
             ram=env_int("ECOS_RAM", DEFAULT_RAM_MB),
             smp=str(env_int("ECOS_VCPU", DEFAULT_VCPU)),
+            driveif=env_choice("ECOS_DISK_IF", "ide", DISK_INTERFACES),
+        )
+        self.qemu_args = tune_drive_args(
+            self.qemu_args, env_choice("ECOS_DISK_CACHE", "unsafe", DISK_CACHE_MODES)
         )
         self.hostname = hostname
         self.conn_mode = conn_mode
@@ -259,7 +337,7 @@ class ECOS_vm(vrnetlab.VM):
         self._last_stuck_log = 0.0
 
         build_cloudinit_iso(render_spcustom(hostname, dict(os.environ)))
-        # Same wiring as the guide's "IDE cdrom". The disk is IDE index 0.
+        # Same wiring as the guide's "IDE cdrom". An IDE disk is index 0.
         self.qemu_args.extend(
             ["-drive", f"if=ide,index=1,media=cdrom,readonly=on,file={CLOUDINIT_ISO}"]
         )

@@ -1,6 +1,7 @@
 """Tests for the spcustom.yml renderer. No QEMU, no vrnetlab image needed."""
 import os
 import sys
+import tempfile
 import types
 import unittest
 
@@ -73,6 +74,54 @@ class RenderTests(unittest.TestCase):
                          [("mgmt0", "eth0"), ("wan0", "eth1")])
         with self.assertRaises(launch.ConfigError):
             launch.parse_nic_map("wan0=eth1")
+
+
+class DiskTests(unittest.TestCase):
+    def test_drive_args_tuned(self):
+        args = ["qemu", "-drive", "if=ide,file=/disk/ECV-1-overlay.qcow2", "-m", "4096"]
+        out = launch.tune_drive_args(args, "unsafe")
+        self.assertEqual(
+            out[2],
+            "if=ide,file=/disk/ECV-1-overlay.qcow2,cache=unsafe,discard=unmap,detect-zeroes=unmap")
+        self.assertEqual(args[2], "if=ide,file=/disk/ECV-1-overlay.qcow2")  # input untouched
+
+    def test_drive_args_missing_overlay(self):
+        with self.assertRaises(RuntimeError):
+            launch.tune_drive_args(["qemu", "-m", "4096"], "unsafe")
+
+    def test_no_disk_dir_keeps_base(self):
+        self.assertEqual(
+            launch.prepare_disk_dir("/ECV-1.qcow2", "/nonexistent-dir", "/nonexistent-tok"),
+            "/ECV-1.qcow2")
+
+    def test_disk_dir_restart_keeps_overlay_redeploy_discards(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            disk = os.path.join(tmp, "disk")
+            os.mkdir(disk)
+            token = os.path.join(tmp, "token")
+            base = os.path.join(tmp, "ECV-1.qcow2")
+            open(base, "w").close()
+
+            link = launch.prepare_disk_dir(base, disk, token)
+            self.assertEqual(os.path.realpath(link), os.path.realpath(base))
+            overlay = os.path.join(disk, "ECV-1-overlay.qcow2")
+            open(overlay, "w").close()
+
+            launch.prepare_disk_dir(base, disk, token)      # container restart
+            self.assertTrue(os.path.exists(overlay))
+
+            os.remove(token)                                # new container
+            launch.prepare_disk_dir(base, disk, token)
+            self.assertFalse(os.path.exists(overlay))
+            self.assertTrue(os.path.islink(link))
+
+    def test_bad_cache_mode_rejected(self):
+        os.environ["ECOS_DISK_CACHE"] = "bogus"
+        try:
+            with self.assertRaises(launch.ConfigError):
+                launch.env_choice("ECOS_DISK_CACHE", "unsafe", launch.DISK_CACHE_MODES)
+        finally:
+            del os.environ["ECOS_DISK_CACHE"]
 
 
 if __name__ == "__main__":
