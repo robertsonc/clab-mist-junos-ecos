@@ -1,0 +1,216 @@
+[
+ {
+  "op": "add_node",
+  "type": "cloud",
+  "nodeId": "inet",
+  "x": 620,
+  "y": 80,
+  "label": "Internet",
+  "sublabel": "Cloud Portal / Orchestrator",
+  "innerClouds": "none"
+ },
+ {
+  "op": "add_node",
+  "type": "router",
+  "nodeId": "isp-a",
+  "x": 620,
+  "y": 260,
+  "label": "isp-a",
+  "sublabel": "Internet, NAT + DHCP",
+  "labelPlacement": "nw"
+ },
+ {
+  "op": "add_node",
+  "type": "router",
+  "nodeId": "isp-b",
+  "x": 620,
+  "y": 640,
+  "label": "isp-b",
+  "sublabel": "MPLS, DHCP, no NAT",
+  "labelOffset": 40
+ },
+ {
+  "op": "add_node",
+  "type": "ec",
+  "variant": "virtual",
+  "nodeId": "BR-ecv-01",
+  "x": 320,
+  "y": 460,
+  "label": "BR-ecv-01",
+  "sublabel": "EC-V 172.30.50.21",
+  "labelPlacement": "w"
+ },
+ {
+  "op": "add_node",
+  "type": "switch",
+  "nodeId": "BR-sw-01",
+  "x": 320,
+  "y": 640,
+  "label": "BR-sw-01",
+  "sublabel": "vJunos-switch, VLAN 10"
+ },
+ {
+  "op": "add_node",
+  "type": "host",
+  "nodeId": "BR-vm-01",
+  "x": 320,
+  "y": 820,
+  "label": "BR-vm-01",
+  "sublabel": "10.20.10.11/24"
+ },
+ {
+  "op": "add_node",
+  "type": "ec",
+  "variant": "virtual",
+  "nodeId": "DC-ecv-01",
+  "x": 920,
+  "y": 460,
+  "label": "DC-ecv-01",
+  "sublabel": "EC-V AS 65001",
+  "labelPlacement": "w"
+ },
+ {
+  "op": "add_node",
+  "type": "firewall",
+  "nodeId": "DC-srx-01",
+  "x": 1100,
+  "y": 260,
+  "label": "DC-srx-01",
+  "sublabel": "vSRX AS 65021",
+  "labelPlacement": "n"
+ },
+ {
+  "op": "add_node",
+  "type": "switch",
+  "nodeId": "DC-sw-01",
+  "x": 1280,
+  "y": 460,
+  "label": "DC-sw-01",
+  "sublabel": "vJunos-switch, VLAN 10"
+ },
+ {
+  "op": "add_node",
+  "type": "host",
+  "nodeId": "DC-vm-01",
+  "x": 1280,
+  "y": 660,
+  "label": "DC-vm-01",
+  "sublabel": "10.21.10.11/24"
+ },
+ {
+  "op": "add_link",
+  "type": "line",
+  "from": "inet",
+  "to": "isp-a",
+  "label": "NAT out eth0"
+ },
+ {
+  "op": "add_link",
+  "type": "line",
+  "from": "BR-ecv-01",
+  "to": "isp-a",
+  "fromLabel": "wan0",
+  "toLabel": "eth1",
+  "label": "192.168.120.0/24"
+ },
+ {
+  "op": "add_link",
+  "type": "line",
+  "from": "DC-ecv-01",
+  "to": "isp-a",
+  "fromLabel": "wan0",
+  "toLabel": "eth2",
+  "label": "192.168.121.0/24"
+ },
+ {
+  "op": "add_link",
+  "type": "line",
+  "from": "DC-srx-01",
+  "to": "isp-a",
+  "fromLabel": "ge-0/0/0",
+  "toLabel": "eth3",
+  "label": "untrust 192.168.122.0/24"
+ },
+ {
+  "op": "add_link",
+  "type": "line",
+  "from": "BR-ecv-01",
+  "to": "isp-b",
+  "fromLabel": "wan1",
+  "toLabel": "eth1",
+  "label": "10.100.20.0/24"
+ },
+ {
+  "op": "add_link",
+  "type": "line",
+  "from": "DC-ecv-01",
+  "to": "isp-b",
+  "fromLabel": "wan1",
+  "toLabel": "eth2",
+  "label": "10.100.21.0/24"
+ },
+ {
+  "op": "add_link",
+  "type": "line",
+  "from": "BR-ecv-01",
+  "to": "BR-sw-01",
+  "fromLabel": "lan0",
+  "toLabel": "ge-0/0/0",
+  "label": "10.20.10.0/24"
+ },
+ {
+  "op": "add_link",
+  "type": "line",
+  "from": "BR-sw-01",
+  "to": "BR-vm-01",
+  "fromLabel": "ge-0/0/1",
+  "toLabel": "eth1"
+ },
+ {
+  "op": "add_link",
+  "type": "line",
+  "from": "DC-ecv-01",
+  "to": "DC-srx-01",
+  "fromLabel": "lan0",
+  "toLabel": "ge-0/0/2",
+  "label": "sdwan 10.21.0.0/30 eBGP"
+ },
+ {
+  "op": "add_link",
+  "type": "line",
+  "from": "DC-srx-01",
+  "to": "DC-sw-01",
+  "fromLabel": "ge-0/0/1",
+  "toLabel": "ge-0/0/0",
+  "label": "trust 10.21.10.0/24"
+ },
+ {
+  "op": "add_link",
+  "type": "line",
+  "from": "DC-sw-01",
+  "to": "DC-vm-01",
+  "fromLabel": "ge-0/0/1",
+  "toLabel": "eth1"
+ },
+ {
+  "op": "add_zone",
+  "zoneId": "z-br",
+  "label": "BRANCH",
+  "nodes": [
+   "BR-ecv-01",
+   "BR-sw-01",
+   "BR-vm-01"
+  ]
+ },
+ {
+  "op": "add_zone",
+  "zoneId": "z-dc",
+  "label": "DC",
+  "nodes": [
+   "DC-ecv-01",
+   "DC-srx-01",
+   "DC-sw-01",
+   "DC-vm-01"
+  ]
+ }
+]
