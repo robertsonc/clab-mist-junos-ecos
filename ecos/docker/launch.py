@@ -1,0 +1,364 @@
+#!/usr/bin/env python3
+"""EdgeConnect Virtual (EC-V) launcher for vrnetlab / containerlab.
+
+Day-0 is delivered the way HPE documents it for KVM: a CloudInit ISO carrying
+`spcustom.yml`, which ECOS reads on the first boot of a clean disk
+("Deployment Guide: EdgeConnect-Virtual in a KVM Host using CloudInit").
+ECOS applies the file itself and reboots itself, so this launcher never logs
+in to the serial console and never types a credential into it.
+
+Environment (all optional):
+
+    ECOS_REGISTRATION_KEY   account key      } both needed to register with
+    ECOS_ACCOUNT_NAME       account name     } the Cloud Portal
+    ECOS_SITE_TAG           appliance tag Orchestrator shows on discovery
+    ECOS_ADMIN_PASSWORD     replaces the default admin password
+    ECOS_PORTAL_HOSTNAME    non-default Cloud Portal host
+    ECOS_ROUTER_MODE        inline router mode, default "true"
+    ECOS_NIC_MAP            default mgmt0:eth0,wan0:eth1,lan0:eth2,wan1:eth3,
+                            lan1:eth4,lan2:eth6   (eth5 is left as ha)
+    ECOS_READY_STABLE_SECS  seconds HTTPS must stay up before "healthy" (60)
+    ECOS_BOOT_TIMEOUT_SECS  seconds before the node is reported stuck (1200)
+
+Sizing uses vrnetlab's generic QEMU_SMP / QEMU_MEMORY. ECOS_VCPU / ECOS_RAM
+are still honoured as defaults so existing topologies keep working.
+"""
+from __future__ import annotations
+
+import logging
+import os
+import re
+import signal
+import socket
+import ssl
+import subprocess
+import sys
+import time
+from types import FrameType
+
+import vrnetlab
+
+LOG = logging.getLogger("ecos")
+
+CLOUDINIT_DIR = "/cloudinit"
+CLOUDINIT_FILE = os.path.join(CLOUDINIT_DIR, "spcustom.yml")  # name is fixed by ECOS
+CLOUDINIT_ISO = "/spcustom.iso"
+
+DEFAULT_NIC_MAP = "mgmt0:eth0,wan0:eth1,lan0:eth2,wan1:eth3,lan1:eth4,lan2:eth6"
+DEFAULT_VCPU = 4        # 1 vCPU / 4 GB loses the Orchestrator heartbeat
+DEFAULT_RAM_MB = 16384
+
+HTTPS_PROBE_INTERVAL = 5.0
+HTTPS_PROBE_TIMEOUT = 3.0
+
+_NAME_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,62}$")
+_KEY_RE = re.compile(r"^[A-Za-z0-9+/=_-]+$")
+_NIC_RE = re.compile(r"^[a-z]+[0-9]+$")
+
+
+class ConfigError(ValueError):
+    """An environment value cannot be written into spcustom.yml safely."""
+
+
+def handle_sigchld(_sig: int, _frame: FrameType | None) -> None:
+    os.waitpid(-1, os.WNOHANG)
+
+
+def handle_sigterm(_sig: int, _frame: FrameType | None) -> None:
+    sys.exit(0)
+
+
+def env_int(name: str, default: int) -> int:
+    raw = os.getenv(name, "").strip()
+    if not raw:
+        return default
+    try:
+        value = int(raw)
+    except ValueError as exc:
+        raise ConfigError(f"{name}={raw!r} is not an integer") from exc
+    if value <= 0:
+        raise ConfigError(f"{name}={raw!r} must be positive")
+    return value
+
+
+def find_disk_image(directory: str = "/") -> str:
+    """Return the base qcow2, never the overlay vrnetlab creates next to it.
+
+    A plain "first *.qcow2" match can pick `<name>-overlay.qcow2` after a
+    container restart and stack an overlay on an overlay.
+    """
+    candidates = sorted(
+        e for e in os.listdir(directory)
+        if e.endswith(".qcow2")
+        and not e.endswith("-overlay.qcow2")
+        and not e.startswith("clab-")
+    )
+    if not candidates:
+        raise FileNotFoundError(f"no base .qcow2 image in {directory}")
+    return os.path.join(directory, candidates[0])
+
+
+def _check(name: str, value: str, pattern: re.Pattern[str]) -> str:
+    if not pattern.match(value):
+        raise ConfigError(f"{name} has characters that are not allowed: {value!r}")
+    return value
+
+
+def _check_plain_scalar(name: str, value: str) -> str:
+    """Accept only text that survives as an unquoted YAML value.
+
+    The guide writes config_vars unquoted, and what parses the file inside
+    ECOS is undocumented, so do not rely on YAML quoting or escapes.
+    """
+    bad = (
+        value != value.strip()
+        or not value.isprintable()
+        or ": " in value
+        or " #" in value
+        or "_$" in value
+        or value[0] in "!&*-?|>'\"%@`#{}[],:"
+    )
+    if bad:
+        raise ConfigError(f"{name} cannot be written as a plain YAML value: {value!r}")
+    return value
+
+
+def _check_cli_word(name: str, value: str) -> str:
+    """A single CLI argument inside a `cli:a;b;c` task in a quoted YAML string."""
+    if not value.isprintable() or any(c in value for c in " ;\"'\\") or "_$" in value:
+        raise ConfigError(
+            f"{name} must not contain spaces, semicolons, quotes, backslashes or '_$'"
+        )
+    return value
+
+
+def parse_nic_map(raw: str) -> list[tuple[str, str]]:
+    pairs: list[tuple[str, str]] = []
+    for item in raw.split(","):
+        ecos_if, sep, eth = item.strip().partition(":")
+        if not sep or not _NIC_RE.match(ecos_if) or not _NIC_RE.match(eth):
+            raise ConfigError(f"ECOS_NIC_MAP entry {item!r} is not <ecos-if>:<ethN>")
+        pairs.append((ecos_if, eth))
+    return pairs
+
+
+def render_spcustom(hostname: str, env: dict[str, str]) -> str:
+    """Build spcustom.yml. Layout follows Appendix 1/2 of the deployment guide."""
+    _check("hostname", hostname, _NAME_RE)
+    key = env.get("ECOS_REGISTRATION_KEY", "").strip()
+    account = env.get("ECOS_ACCOUNT_NAME", "").strip()
+    site_tag = env.get("ECOS_SITE_TAG", "").strip() or "containerlab"
+    password = env.get("ECOS_ADMIN_PASSWORD", "").strip()
+    portal = env.get("ECOS_PORTAL_HOSTNAME", "").strip()
+    router_mode = env.get("ECOS_ROUTER_MODE", "true").strip().lower() != "false"
+    nic_map = parse_nic_map(env.get("ECOS_NIC_MAP", "").strip() or DEFAULT_NIC_MAP)
+
+    if bool(key) != bool(account):
+        raise ConfigError(
+            "set both ECOS_REGISTRATION_KEY and ECOS_ACCOUNT_NAME, or neither"
+        )
+
+    config_vars = [("HOSTNAME", hostname)]
+    pre = ['"configdb:/system/hostname,hostname,_$HOSTNAME$"']
+    if key:
+        config_vars += [
+            ("ACCNAME", _check_plain_scalar("ECOS_ACCOUNT_NAME", account)),
+            ("ACCKEY", _check("ECOS_REGISTRATION_KEY", key, _KEY_RE)),
+            ("SYS_TAG", _check("ECOS_SITE_TAG", site_tag, _NAME_RE)),
+        ]
+        base = "configdb:/cn/tunneld/portal/config/registration"
+        pre += [
+            f'"{base}/account,string,_$ACCNAME$"',
+            f'"{base}/key,string,_$ACCKEY$"',
+            f'"{base}/site,string,_$SYS_TAG$"',
+        ]
+    if router_mode:
+        config_vars.append(("ILRM", "true"))
+        pre.append('"configdb:/cn/tunneld/system/config/routing_inline,bool,_$ILRM$"')
+
+    # MAC pinning only takes effect after the reboot at the end, which is why
+    # the guide ends every example with one.
+    post = [f'"cli:en;conf t;interface {a} mac address {b}"' for a, b in nic_map]
+    if password:
+        word = _check_cli_word("ECOS_ADMIN_PASSWORD", password)
+        post.append(f'"cli:en;conf t;username admin password {word}"')
+    if portal:
+        word = _check_cli_word("ECOS_PORTAL_HOSTNAME", portal)
+        post.append(f'"cli:en;conf t;portal hostname {word}"')
+    post.append('"cli:en;conf t;write memory;reboot noconfirm"')
+
+    lines = ["silverpeak_vxoa_init:", "  config_vars:"]
+    lines += [f"    {k}: {v}" for k, v in config_vars]
+    lines.append("  pre_mgmtd_tasks:")
+    lines += [f"    - {t}" for t in pre]
+    lines.append("  post_mgmtd_tasks:")
+    lines += [f"    - {t}" for t in post]
+    return "\n".join(lines) + "\n"
+
+
+def build_cloudinit_iso(content: str) -> None:
+    os.makedirs(CLOUDINIT_DIR, mode=0o700, exist_ok=True)
+    # Holds the registration key and admin password: owner-only.
+    fd = os.open(CLOUDINIT_FILE, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "w") as fh:
+        fh.write(content)
+    try:
+        subprocess.run(
+            ["genisoimage", "-quiet", "-R", "-o", CLOUDINIT_ISO, CLOUDINIT_FILE],
+            check=True, capture_output=True, text=True, timeout=60,
+        )
+    except subprocess.CalledProcessError as exc:
+        raise RuntimeError(f"genisoimage failed: {exc.stderr.strip()}") from exc
+    os.chmod(CLOUDINIT_ISO, 0o600)
+
+
+def https_alive(host: str = "127.0.0.1", port: int = 443) -> bool:
+    """True only if the appliance completes a TLS handshake.
+
+    A bare TCP connect proves nothing: QEMU's hostfwd socket accepts while the
+    guest is down or rebooting. The handshake has to come from ECOS itself.
+    """
+    ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    # Liveness probe of the appliance's self-signed cert over the container's
+    # own loopback. Nothing is sent, so there is nothing to protect.
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+    try:
+        with socket.create_connection((host, port), timeout=HTTPS_PROBE_TIMEOUT) as raw:
+            with ctx.wrap_socket(raw):
+                return True
+    except (OSError, ssl.SSLError):
+        return False
+
+
+class ECOS_vm(vrnetlab.VM):
+    """One EC-V. Day-0 comes from the CloudInit ISO, not the console."""
+
+    def __init__(self, hostname: str, username: str, password: str, conn_mode: str):
+        super().__init__(
+            username,
+            password,
+            disk_image=find_disk_image(),
+            ram=env_int("ECOS_RAM", DEFAULT_RAM_MB),
+            smp=str(env_int("ECOS_VCPU", DEFAULT_VCPU)),
+        )
+        self.hostname = hostname
+        self.conn_mode = conn_mode
+        self.num_nics = 7  # eth1..eth7: wan0 lan0 wan1 lan1 ha lan2 + spare
+        self.nic_type = "virtio-net-pci"
+
+        self.ready_stable = env_int("ECOS_READY_STABLE_SECS", 60)
+        self.boot_timeout = env_int("ECOS_BOOT_TIMEOUT_SECS", 1200)
+        self._login_re = re.escape(hostname).encode() + rb"[^\r\n]* login:"
+        self._spin_started: float | None = None
+        self._last_probe = 0.0
+        self._https_since: float | None = None
+        self._last_console = 0.0
+        self._login_seen = False
+        self._hostname_seen = False
+        self._last_stuck_log = 0.0
+
+        build_cloudinit_iso(render_spcustom(hostname, dict(os.environ)))
+        # Same wiring as the guide's "IDE cdrom". The disk is IDE index 0.
+        self.qemu_args.extend(
+            ["-drive", f"if=ide,index=1,media=cdrom,readonly=on,file={CLOUDINIT_ISO}"]
+        )
+
+    def bootstrap_spin(self) -> None:
+        """Watch the boot; mark the node running only once it is stable.
+
+        ECOS reboots at least once on its own while applying spcustom.yml, so
+        the first sign of life is not readiness. Because nothing is typed at
+        the console, declaring "ready" early cannot corrupt day-0 - ECOS
+        finishes regardless - but it is still held back until HTTPS has
+        stayed up for ECOS_READY_STABLE_SECS.
+        """
+        now = time.monotonic()
+        if self._spin_started is None:
+            self._spin_started = self._last_console = now
+
+        ridx, _match, res = self.tn.expect([self._login_re, rb"login:"], 1)
+        if res:
+            self._last_console = now
+        if ridx == 0 and not self._hostname_seen:
+            self._hostname_seen = True
+            self.logger.info("console shows hostname %s: spcustom.yml was read", self.hostname)
+        if ridx >= 0:
+            self._login_seen = True
+
+        if self.mgmt_passthrough:
+            # No hostfwd to probe; fall back to a quiet console at a login prompt.
+            ready = self._login_seen and now - self._last_console >= self.ready_stable
+        else:
+            if now - self._last_probe >= HTTPS_PROBE_INTERVAL:
+                self._last_probe = now
+                if https_alive():
+                    if self._https_since is None:
+                        self.logger.info("HTTPS is up; waiting %ss for it to stay up",
+                                         self.ready_stable)
+                        self._https_since = now
+                elif self._https_since is not None:
+                    self.logger.info("HTTPS went away (reboot); waiting again")
+                    self._https_since = None
+            ready = (self._https_since is not None
+                     and now - self._https_since >= self.ready_stable)
+
+        if ready:
+            if not self._hostname_seen:
+                self.logger.warning(
+                    "ready, but hostname %s never appeared on the serial console - "
+                    "confirm spcustom.yml was applied (show running-config)",
+                    self.hostname,
+                )
+            self.logger.info("EC-V ready after %.0fs", now - self._spin_started)
+            self.tn.close()  # free the serial console for `telnet <node> 5000`
+            self.running = True
+            return
+
+        # Never report healthy on a timeout: a node that is not up should look it.
+        if (now - self._spin_started > self.boot_timeout
+                and now - self._last_stuck_log > 60):
+            self._last_stuck_log = now
+            self.logger.error(
+                "not ready after %.0fs (login prompt seen: %s, https up: %s)",
+                now - self._spin_started, self._login_seen, self._https_since is not None,
+            )
+
+
+class ECOS(vrnetlab.VR):
+    def __init__(self, hostname: str, username: str, password: str, conn_mode: str):
+        super().__init__(username, password)
+        self.vms = [ECOS_vm(hostname, username, password, conn_mode)]
+
+
+def main() -> int:
+    import argparse
+
+    parser = argparse.ArgumentParser(description="EdgeConnect EC-V vrnetlab launcher")
+    parser.add_argument("--hostname", default="ecos")
+    parser.add_argument("--username", default="admin")
+    parser.add_argument("--password", default="admin")
+    parser.add_argument("--connection-mode", default="tc")
+    parser.add_argument("--trace", action="store_true")
+    args = parser.parse_args()
+
+    logging.basicConfig(
+        format="%(asctime)s: %(module)-10s %(levelname)-8s %(message)s",
+        level=logging.DEBUG if args.trace else logging.INFO,
+    )
+    signal.signal(signal.SIGINT, handle_sigterm)
+    signal.signal(signal.SIGTERM, handle_sigterm)
+    signal.signal(signal.SIGCHLD, handle_sigchld)
+
+    vrnetlab.boot_delay()
+    try:
+        vr = ECOS(args.hostname, args.username, args.password, args.connection_mode)
+    except (ConfigError, FileNotFoundError, RuntimeError) as exc:
+        LOG.error("cannot start EC-V: %s", exc)
+        return 1
+    vr.start()
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

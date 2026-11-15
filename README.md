@@ -385,23 +385,64 @@ serials and `discovered` accumulates ghosts. Approving one creates an appliance
 that can never connect. `ecv_onboard.py approve` refuses when it sees duplicate
 hostnames and prints their discovery times so you can tell live from stale.
 
+## EC-V image (`ecos/`)
+
+The image build now lives in this repo. Put `ECV-<version>.qcow2` in `ecos/` and
+run `make -C ecos`; it produces `vrnetlab/aruba_ecos:<version>`.
+
+`ecos/docker/launch.py` delivers day-0 with a CloudInit ISO (`spcustom.yml`), the
+method HPE documents for EC-V on KVM, instead of logging in to the serial console
+and typing commands on timers. ECOS applies the file and reboots on its own.
+What that changes:
+
+* nothing is typed at the console, so a mistimed prompt cannot half-configure a node
+* the registration key and admin password no longer scroll through `docker logs`
+* readiness is a TLS handshake that has stayed up for `ECOS_READY_STABLE_SECS`
+  (default 60). A plain TCP connect to the forwarded port succeeds even while
+  the guest is rebooting, so it cannot be used as a probe
+* a node that never comes up stays `unhealthy` instead of being reported running
+
+**Not yet booted against a real ECOS image.** The renderer is unit-tested
+(`make -C ecos test`); the boot path is not. On the first run, watch
+`docker logs -f <node>` and confirm the console prompt carries the node's
+hostname. Keep the previous image tag until one node has registered cleanly.
+
 ## EC-V sizing
 
-Do not trim it. At the vrnetlab default of 1 vCPU / 4 GB the appliances lose their
-management heartbeat and flap continuously in Orchestrator. 4 vCPU / 16 GB is
-stable:
+Do not trim it. At 1 vCPU / 4 GB the appliances lose their management heartbeat
+and flap continuously in Orchestrator. 4 vCPU / 16 GB is stable and is the
+launcher's default.
+
+Sizing is vrnetlab's generic `QEMU_SMP` / `QEMU_MEMORY`, which works for **every**
+vrnetlab node, vJunos and vSRX included:
 
 ```yaml
 env:
-  ECOS_VCPU: "4"
-  ECOS_RAM:  "16384"
+  QEMU_SMP: "4"
+  QEMU_MEMORY: "16384"
 ```
 
-This needs the patched `launch.py` — stock vrnetlab hardcodes `ram=4096` and never
-passes `smp`, so older images ignore both variables silently.
+`ECOS_VCPU` / `ECOS_RAM` are still read as defaults, so the Greek topologies work
+unchanged.
 
-vJunos sizing is **not** settable this way; it is hardcoded in vrnetlab's
-`launch.py` (`ram=5120`, `smp=4`).
+## EC-V + vJunos-switch + vSRX lab (`interop/`)
+
+A two-site, nine-node lab: a branch (EC-V, vJunos-switch, host) and a DC (EC-V,
+vSRX, vJunos-switch, host). The vSRX is the DC firewall, an eBGP peer of the DC
+EC-V, and has an untrust leg on isp-a so it can also terminate third-party IPsec
+from the branch EC-V. About 46 GB RAM.
+
+```bash
+make -C ecos                                   # EC-V image
+# build vrnetlab's juniper/vsrx, then set its tag in the topology (SET-ME)
+sudo containerlab deploy -t interop/ecos-junos-srx.clab.yml
+```
+
+The switches and the vSRX boot fully configured from `interop/configs/`. The
+EC-Vs boot registered; their interfaces, BGP (AS 65001 toward the vSRX at
+10.21.0.1, AS 65021) and overlays come from Orchestrator preconfigs, which are
+not written for this lab yet. Not deployed yet: the Junos configs are
+unvalidated against a running device.
 
 ## Secrets
 
