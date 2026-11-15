@@ -463,6 +463,13 @@ make -C ecos                                   # EC-V image
 scripts/lab_up.sh interop/ecos-junos-srx.clab.yml   # web GUI + deploy
 ```
 
+![EC-V, vJunos-switch and vSRX interop lab topology](interop/diagram/ecos-junos-srx.png)
+
+The diagram was built with [Topology Dojo](https://github.com/robertsonc/topology-dojo).
+`interop/diagram/ecos-junos-srx.topology.json` is the document: import it in the
+editor (or `import_topology` over MCP) to edit it. `edit-operations.json` is the
+`edit_topology` batch that produced it.
+
 The switches and the vSRX boot fully configured from `interop/configs/`. The
 EC-Vs boot registered; their interfaces, BGP (AS 65001 toward the vSRX at
 10.21.0.1, AS 65021) and overlays come from Orchestrator preconfigs, which are

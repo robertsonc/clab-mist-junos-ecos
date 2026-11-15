@@ -1,0 +1,225 @@
+{
+ "title": "EC-V + vJunos-switch + vSRX interop lab",
+ "pages": [
+  {
+   "id": "pmwi7t0k00",
+   "name": "Physical / L3",
+   "viewBox": "0 0 1500 940",
+   "linkAttach": {
+    "distribute": true
+   },
+   "nodes": [
+    {
+     "id": "inet",
+     "type": "cloud",
+     "x": 620,
+     "y": 80,
+     "label": "Internet",
+     "sublabel": "Cloud Portal / Orchestrator",
+     "innerClouds": "none"
+    },
+    {
+     "id": "isp-a",
+     "type": "router",
+     "x": 620,
+     "y": 260,
+     "label": "isp-a",
+     "sublabel": "Internet, NAT + DHCP",
+     "labelPlacement": "nw"
+    },
+    {
+     "id": "isp-b",
+     "type": "router",
+     "x": 620,
+     "y": 640,
+     "label": "isp-b",
+     "sublabel": "MPLS, DHCP, no NAT",
+     "labelOffset": 40
+    },
+    {
+     "id": "BR-ecv-01",
+     "type": "ec",
+     "x": 320,
+     "y": 460,
+     "label": "BR-ecv-01",
+     "sublabel": "EC-V 172.30.50.21",
+     "variant": "virtual",
+     "labelPlacement": "w"
+    },
+    {
+     "id": "BR-sw-01",
+     "type": "switch",
+     "x": 320,
+     "y": 640,
+     "label": "BR-sw-01",
+     "sublabel": "vJunos-switch, VLAN 10"
+    },
+    {
+     "id": "BR-vm-01",
+     "type": "host",
+     "x": 320,
+     "y": 820,
+     "label": "BR-vm-01",
+     "sublabel": "10.20.10.11/24"
+    },
+    {
+     "id": "DC-ecv-01",
+     "type": "ec",
+     "x": 920,
+     "y": 460,
+     "label": "DC-ecv-01",
+     "sublabel": "EC-V AS 65001",
+     "variant": "virtual",
+     "labelPlacement": "w"
+    },
+    {
+     "id": "DC-srx-01",
+     "type": "firewall",
+     "x": 1100,
+     "y": 260,
+     "label": "DC-srx-01",
+     "sublabel": "vSRX AS 65021",
+     "labelPlacement": "n"
+    },
+    {
+     "id": "DC-sw-01",
+     "type": "switch",
+     "x": 1280,
+     "y": 460,
+     "label": "DC-sw-01",
+     "sublabel": "vJunos-switch, VLAN 10"
+    },
+    {
+     "id": "DC-vm-01",
+     "type": "host",
+     "x": 1280,
+     "y": 660,
+     "label": "DC-vm-01",
+     "sublabel": "10.21.10.11/24"
+    }
+   ],
+   "links": [
+    {
+     "id": "lmwi7t0kd1",
+     "type": "line",
+     "from": "inet",
+     "to": "isp-a",
+     "label": "NAT out eth0"
+    },
+    {
+     "id": "lmwi7t0ke2",
+     "type": "line",
+     "from": "BR-ecv-01",
+     "to": "isp-a",
+     "label": "192.168.120.0/24",
+     "fromLabel": "wan0",
+     "toLabel": "eth1"
+    },
+    {
+     "id": "lmwi7t0ke3",
+     "type": "line",
+     "from": "DC-ecv-01",
+     "to": "isp-a",
+     "label": "192.168.121.0/24",
+     "fromLabel": "wan0",
+     "toLabel": "eth2"
+    },
+    {
+     "id": "lmwi7t0kf4",
+     "type": "line",
+     "from": "DC-srx-01",
+     "to": "isp-a",
+     "label": "untrust 192.168.122.0/24",
+     "fromLabel": "ge-0/0/0",
+     "toLabel": "eth3"
+    },
+    {
+     "id": "lmwi7t0kf5",
+     "type": "line",
+     "from": "BR-ecv-01",
+     "to": "isp-b",
+     "label": "10.100.20.0/24",
+     "fromLabel": "wan1",
+     "toLabel": "eth1"
+    },
+    {
+     "id": "lmwi7t0kg6",
+     "type": "line",
+     "from": "DC-ecv-01",
+     "to": "isp-b",
+     "label": "10.100.21.0/24",
+     "fromLabel": "wan1",
+     "toLabel": "eth2"
+    },
+    {
+     "id": "lmwi7t0kg7",
+     "type": "line",
+     "from": "BR-ecv-01",
+     "to": "BR-sw-01",
+     "label": "10.20.10.0/24",
+     "fromLabel": "lan0",
+     "toLabel": "ge-0/0/0"
+    },
+    {
+     "id": "lmwi7t0kh8",
+     "type": "line",
+     "from": "BR-sw-01",
+     "to": "BR-vm-01",
+     "fromLabel": "ge-0/0/1",
+     "toLabel": "eth1"
+    },
+    {
+     "id": "lmwi7t0kh9",
+     "type": "line",
+     "from": "DC-ecv-01",
+     "to": "DC-srx-01",
+     "label": "sdwan 10.21.0.0/30 eBGP",
+     "fromLabel": "lan0",
+     "toLabel": "ge-0/0/2"
+    },
+    {
+     "id": "lmwi7t0kia",
+     "type": "line",
+     "from": "DC-srx-01",
+     "to": "DC-sw-01",
+     "label": "trust 10.21.10.0/24",
+     "fromLabel": "ge-0/0/1",
+     "toLabel": "ge-0/0/0"
+    },
+    {
+     "id": "lmwi7t0kib",
+     "type": "line",
+     "from": "DC-sw-01",
+     "to": "DC-vm-01",
+     "fromLabel": "ge-0/0/1",
+     "toLabel": "eth1"
+    }
+   ],
+   "anchors": [],
+   "zones": [
+    {
+     "id": "z-br",
+     "nodes": [
+      "BR-ecv-01",
+      "BR-sw-01",
+      "BR-vm-01"
+     ],
+     "label": "BRANCH"
+    },
+    {
+     "id": "z-dc",
+     "nodes": [
+      "DC-ecv-01",
+      "DC-srx-01",
+      "DC-sw-01",
+      "DC-vm-01"
+     ],
+     "label": "DC"
+    }
+   ],
+   "flowPaths": [],
+   "policyMarkers": []
+  }
+ ],
+ "customNodes": []
+}
