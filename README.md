@@ -82,15 +82,40 @@ Topologies are generated — edit the generator, not the YAML:
 python3 gen_greek_topology.py          # writes the three .clab.yml + dnsmasq configs
 ```
 
-Deploy **sequentially**, not in parallel — 30 VMs booting at once will contend:
+Deploy **sequentially**, not in parallel — 30 VMs booting at once will contend.
+`scripts/lab_up.sh` does that, and starts the web GUI first (see "Web GUI"):
 
 ```bash
-sudo containerlab deploy -t greek-fabric-thermopylae.clab.yml
-sudo containerlab deploy -t greek-fabric-troy.clab.yml
-sudo containerlab deploy -t greek-fabric-marathon.clab.yml
+scripts/lab_up.sh greek-fabric-thermopylae.clab.yml \
+                  greek-fabric-troy.clab.yml \
+                  greek-fabric-marathon.clab.yml
 ```
 
 A site reaches all-healthy in roughly four minutes.
+
+## Web GUI
+
+`scripts/lab_up.sh` starts the containerlab web GUI
+(`ghcr.io/srl-labs/containerlab-web`, pinned in `gui/compose.yml`) before every
+deploy, at `https://<lab-host>:3001`. One instance serves every lab on the host.
+`LAB_GUI=0 scripts/lab_up.sh ...` skips it.
+
+The GUI is a front end only: lab operations go through `clab-api-server`, which
+is a one-time install on the lab host and is **not** installed by the script,
+because it adds a root systemd service:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/srl-labs/clab-api-server/main/install.sh | sudo bash -s -- install
+sudo usermod -aG clab_api "$USER"          # log in to the GUI as this Linux user
+sudo systemctl enable --now clab-api-server
+```
+
+Log in with that Linux username and password and the API URL
+`https://localhost:8090`. Both ends use self-signed certificates by default, so
+the browser warns once.
+
+The GUI listens on every host interface and the login is a Linux account on the
+lab host, so keep port 3001 off untrusted networks.
 
 ## Mist adoption
 
@@ -435,7 +460,7 @@ from the branch EC-V. About 46 GB RAM.
 ```bash
 make -C ecos                                   # EC-V image
 # build vrnetlab's juniper/vsrx, then set its tag in the topology (SET-ME)
-sudo containerlab deploy -t interop/ecos-junos-srx.clab.yml
+scripts/lab_up.sh interop/ecos-junos-srx.clab.yml   # web GUI + deploy
 ```
 
 The switches and the vSRX boot fully configured from `interop/configs/`. The
