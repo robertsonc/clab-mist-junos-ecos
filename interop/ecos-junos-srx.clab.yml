@@ -53,9 +53,8 @@ topology:
       # Set this to the tag `make` printed when you built vrnetlab's juniper/vsrx.
       image: vrnetlab/juniper_vsrx:SET-ME
     linux:
-      # Unpinned to match the Greek fabric. Pin it on your host with the digest
-      # from: docker inspect --format '{{index .RepoDigests 0}}' <image>
-      image: ghcr.io/hellt/network-multitool:latest
+      # Built by `make -C images` (scripts/lab_up.sh does it when missing).
+      image: clab-lab-isp:1
 
   nodes:
     # --- transport -----------------------------------------------------------
@@ -70,7 +69,6 @@ topology:
         - ip addr add 192.168.121.1/24 dev eth2
         - ip addr add 192.168.122.1/24 dev eth3
         - iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-        - apk add --no-cache dnsmasq
         - dnsmasq
     isp-b:
       kind: linux
@@ -81,13 +79,14 @@ topology:
         - sysctl -w net.ipv4.ip_forward=1
         - ip addr add 10.100.20.1/24 dev eth1
         - ip addr add 10.100.21.1/24 dev eth2
-        - apk add --no-cache dnsmasq
         - dnsmasq
 
     # --- EdgeConnect ---------------------------------------------------------
     BR-ecv-01:
       kind: generic_vm
       mgmt-ipv4: 172.30.50.21
+      binds:
+        - disks/BR-ecv-01:/disk          # VM overlay disk, outside the container layer
       env-files:
         - ../configs/ecos.env        # gitignored; see .env.example
       env:
@@ -97,6 +96,8 @@ topology:
     DC-ecv-01:
       kind: generic_vm
       mgmt-ipv4: 172.30.50.22
+      binds:
+        - disks/DC-ecv-01:/disk          # VM overlay disk, outside the container layer
       env-files:
         - ../configs/ecos.env
       env:
@@ -121,12 +122,14 @@ topology:
     # --- hosts ---------------------------------------------------------------
     BR-vm-01:
       kind: linux
+      image: clab-lab-host:1
       mgmt-ipv4: 172.30.50.51
       exec:
         - ip addr add 10.20.10.11/24 dev eth1
         - ip route replace 10.0.0.0/8 via 10.20.10.1 dev eth1
     DC-vm-01:
       kind: linux
+      image: clab-lab-host:1
       mgmt-ipv4: 172.30.50.52
       exec:
         - ip addr add 10.21.10.11/24 dev eth1

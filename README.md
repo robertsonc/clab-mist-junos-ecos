@@ -82,8 +82,13 @@ Topologies are generated — edit the generator, not the YAML:
 python3 gen_greek_topology.py          # writes the three .clab.yml + dnsmasq configs
 ```
 
-Deploy **sequentially**, not in parallel — 30 VMs booting at once will contend.
-`scripts/lab_up.sh` does that, and starts the web GUI first (see "Web GUI"):
+Deploy with `scripts/lab_up.sh`, not back-to-back `containerlab deploy` commands.
+`containerlab deploy` returns once the containers exist, not once the VMs have
+booted, so chaining three deploys boots 30 VMs at once and they starve each
+other. The script starts the next topology only when fewer than
+`LAB_BOOT_SLOTS` (default 4) VM nodes on the host are still booting, then waits
+for all of them and prints the total time. It also starts the web GUI (see
+"Web GUI") and builds the two helper images on first use:
 
 ```bash
 scripts/lab_up.sh greek-fabric-thermopylae.clab.yml \
@@ -92,6 +97,11 @@ scripts/lab_up.sh greek-fabric-thermopylae.clab.yml \
 ```
 
 A site reaches all-healthy in roughly four minutes.
+
+Hosts and ISP routers run from `clab-lab-host:1` and `clab-lab-isp:1`
+(`images/`, built by `make -C images` or by `lab_up.sh` when missing). They
+replace the `apt-get` / `apk add` that used to run inside every node on every
+deploy, so transport comes up without waiting on, or needing, the internet.
 
 ## Web GUI
 
@@ -426,6 +436,17 @@ What that changes:
   (default 60). A plain TCP connect to the forwarded port succeeds even while
   the guest is rebooting, so it cannot be used as a probe
 * a node that never comes up stays `unhealthy` instead of being reported running
+
+Disk options, all optional:
+
+| Setting | Default | Effect |
+|---|---|---|
+| bind mount at `/disk` | none | VM overlay disk lives there instead of the container's writable layer (the 37–39 GB per EC-V that fills the containerd snapshotter). A disk left by an earlier deploy is discarded on start, because ECOS only reads `spcustom.yml` on a clean disk |
+| `ECOS_DISK_CACHE` | `unsafe` | QEMU cache mode. `unsafe` skips host fsync: faster, and a host crash can corrupt the lab disk. Set `writeback` to get QEMU's default back |
+| `ECOS_DISK_IF` | `ide` | `virtio` is faster if ECOS boots from it, which is untested |
+
+Zero-filled writes are also unmapped rather than stored, which should slow the
+overlay's growth.
 
 **Not yet booted against a real ECOS image.** The renderer is unit-tested
 (`make -C ecos test`); the boot path is not. On the first run, watch

@@ -234,7 +234,8 @@ topology:
     generic_vm:
       image: vrnetlab/aruba_ecos:9.6.3.0_107217
     linux:
-      image: ghcr.io/hellt/network-multitool:latest
+      # Built by `make -C images` (scripts/lab_up.sh does it when missing).
+      image: clab-lab-isp:1
 
   nodes:
 
@@ -297,7 +298,6 @@ def isp_block(site, which):
         "iptables -A FORWARD -i eth2 -j ACCEPT",
         "iptables -A FORWARD -i eth3 -j ACCEPT",
         "iptables -A FORWARD -i eth0 -m state --state RELATED,ESTABLISHED -j ACCEPT",
-        "apk add --no-cache dnsmasq",
         "dnsmasq",
     ]
     lines = "\n".join("        - %s" % e for e in execs)
@@ -359,21 +359,16 @@ def vm_block(site, num):
     return '''
     {name}:
       kind: linux
-      image: ubuntu:24.04
+      image: clab-lab-host:1
       mgmt-ipv4: {ip}
-      cmd: sleep infinity
       group: host
       labels:
         site: {tag}
         role: host
       exec:
-        - >-
-          bash -c "apt-get update -qq
-          && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq
-          iproute2 iputils-ping traceroute tcpdump iperf3 curl >/dev/null 2>&1
-          && ip addr add {hostnet}.1{num}/24 dev eth1
-          && ip link set eth1 up
-          && ip route replace 10.0.0.0/8 via {hostnet}.1 dev eth1"
+        - ip addr add {hostnet}.1{num}/24 dev eth1
+        - ip link set eth1 up
+        - ip route replace 10.0.0.0/8 via {hostnet}.1 dev eth1
 '''.format(name=vm(site, num), ip=vm_ip(site, num), tag=tag(site),
            hostnet=cfg["hostnet"], num=num)
 

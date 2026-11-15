@@ -29,3 +29,6 @@ topology-data.json
 # EC-V image build context
 ecos/docker/*.qcow2
 ecos/*.qcow2
+
+# EC-V VM disks (bind-mounted overlays)
+disks/
