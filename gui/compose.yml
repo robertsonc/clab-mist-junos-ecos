@@ -1,0 +1,24 @@
+# Containerlab web GUI: one instance per lab host, shared by every lab on it.
+# Started by scripts/lab_up.sh; safe to run on its own:
+#   docker compose -f gui/compose.yml up -d
+#
+# The GUI only serves the UI and proxies to clab-api-server, which must be
+# installed on the host separately (see README "Web GUI"). It runs no labs
+# itself, so it needs no privileges, no docker socket and no volumes.
+name: containerlab-gui
+
+services:
+  web:
+    image: ghcr.io/srl-labs/containerlab-web:${CLAB_WEB_VERSION:-0.3.0}
+    container_name: containerlab-app
+    restart: unless-stopped
+    # Host networking so the default https://localhost:8090 API URL resolves to
+    # the lab host's own clab-api-server. This publishes the GUI on every host
+    # interface; firewall CLAB_WEB_PORT if the host is not on a trusted network.
+    network_mode: host
+    environment:
+      PORT: ${CLAB_WEB_PORT:-3001}
+      CLAB_API_URL: ${CLAB_API_URL:-https://localhost:8090}
+      # clab-api-server ships a self-signed cert by default. Set to "true" once
+      # it serves a certificate this container trusts.
+      CLAB_API_TLS_VERIFY: ${CLAB_API_TLS_VERIFY:-false}
