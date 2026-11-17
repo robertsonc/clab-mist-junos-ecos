@@ -1,0 +1,187 @@
+# ==================================================================================================================
+# DELETE MIST GENERATED DEFAULT TYPE-5 EXPORT POLICY
+# ==================================================================================================================
+
+delete groups top policy-options policy-statement evpn_export_type5
+delete groups top routing-instances corp_vrf protocols evpn ip-prefix-routes export evpn_export_type5
+delete groups top routing-instances iot_vrf protocols evpn ip-prefix-routes export evpn_export_type5
+delete groups top routing-instances guest_vrf protocols evpn ip-prefix-routes export evpn_export_type5
+
+# ===================================================================================================================
+# ADD NEW TYPE-5 EXPORT POLICY FOR EACH VRF
+# ===================================================================================================================
+
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# VRF: CORP_VRF
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+set groups top policy-options policy-statement evpn_export_type5_corp_vrf term 01_default from protocol evpn
+set groups top policy-options policy-statement evpn_export_type5_corp_vrf term 01_default from route-filter 0.0.0.0/0 exact
+set groups top policy-options policy-statement evpn_export_type5_corp_vrf term 01_default then accept
+
+set groups top policy-options policy-statement evpn_export_type5_corp_vrf term 02_aggregate from protocol evpn
+set groups top policy-options policy-statement evpn_export_type5_corp_vrf term 02_aggregate from route-filter 0.0.0.0/0 prefix-length-range /1-/24
+set groups top policy-options policy-statement evpn_export_type5_corp_vrf term 02_aggregate from route-filter 172.17.3.0/24 orlonger
+set groups top policy-options policy-statement evpn_export_type5_corp_vrf term 02_aggregate then accept
+
+set groups top policy-options policy-statement evpn_export_type5_corp_vrf term 03_ipv6 from family inet6
+set groups top policy-options policy-statement evpn_export_type5_corp_vrf term 03_ipv6 from protocol evpn
+set groups top policy-options policy-statement evpn_export_type5_corp_vrf term 03_ipv6 from route-filter 0::0/0 prefix-length-range /1-/64
+set groups top policy-options policy-statement evpn_export_type5_corp_vrf term 03_ipv6 then accept
+
+set groups top policy-options policy-statement evpn_export_type5_corp_vrf term 04_direct from protocol direct
+set groups top policy-options policy-statement evpn_export_type5_corp_vrf term 04_direct then accept
+set groups top policy-options policy-statement evpn_export_type5_corp_vrf term reject then reject
+
+
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# VRF: IOT_VRF
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+set groups top policy-options policy-statement evpn_export_type5_iot_vrf term 01_default from protocol evpn
+set groups top policy-options policy-statement evpn_export_type5_iot_vrf term 01_default from route-filter 0.0.0.0/0 exact
+set groups top policy-options policy-statement evpn_export_type5_iot_vrf term 01_default then accept
+
+set groups top policy-options policy-statement evpn_export_type5_iot_vrf term 02_aggregate from protocol evpn
+set groups top policy-options policy-statement evpn_export_type5_iot_vrf term 02_aggregate from route-filter 0.0.0.0/0 prefix-length-range /1-/24
+set groups top policy-options policy-statement evpn_export_type5_iot_vrf term 02_aggregate from route-filter 172.17.4.0/24 orlonger
+set groups top policy-options policy-statement evpn_export_type5_iot_vrf term 02_aggregate then accept
+
+set groups top policy-options policy-statement evpn_export_type5_iot_vrf term 03_ipv6 from family inet6
+set groups top policy-options policy-statement evpn_export_type5_iot_vrf term 03_ipv6 from protocol evpn
+set groups top policy-options policy-statement evpn_export_type5_iot_vrf term 03_ipv6 from route-filter 0::0/0 prefix-length-range /1-/64
+set groups top policy-options policy-statement evpn_export_type5_iot_vrf term 03_ipv6 then accept
+
+set groups top policy-options policy-statement evpn_export_type5_iot_vrf term 04_direct from protocol direct
+set groups top policy-options policy-statement evpn_export_type5_iot_vrf term 04_direct then accept
+set groups top policy-options policy-statement evpn_export_type5_iot_vrf term reject then reject
+
+
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# VRF: GUEST_VRF
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+set groups top policy-options policy-statement evpn_export_type5_guest_vrf term 01_default from protocol evpn
+set groups top policy-options policy-statement evpn_export_type5_guest_vrf term 01_default from route-filter 0.0.0.0/0 exact
+set groups top policy-options policy-statement evpn_export_type5_guest_vrf term 01_default then accept
+
+set groups top policy-options policy-statement evpn_export_type5_guest_vrf term 02_aggregate from protocol evpn
+set groups top policy-options policy-statement evpn_export_type5_guest_vrf term 02_aggregate from route-filter 0.0.0.0/0 prefix-length-range /1-/24
+set groups top policy-options policy-statement evpn_export_type5_guest_vrf term 02_aggregate from route-filter 172.17.5.0/24 orlonger
+set groups top policy-options policy-statement evpn_export_type5_guest_vrf term 02_aggregate then accept
+
+set groups top policy-options policy-statement evpn_export_type5_guest_vrf term 03_ipv6 from family inet6
+set groups top policy-options policy-statement evpn_export_type5_guest_vrf term 03_ipv6 from protocol evpn
+set groups top policy-options policy-statement evpn_export_type5_guest_vrf term 03_ipv6 from route-filter 0::0/0 prefix-length-range /1-/64
+set groups top policy-options policy-statement evpn_export_type5_guest_vrf term 03_ipv6 then accept
+
+set groups top policy-options policy-statement evpn_export_type5_guest_vrf term 04_direct from protocol direct
+set groups top policy-options policy-statement evpn_export_type5_guest_vrf term 04_direct then accept
+set groups top policy-options policy-statement evpn_export_type5_guest_vrf term reject then reject
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------
+# ASSOCIATE EACH VRF WITH ITS CORRESPONDING TYPE5 ROUTING POLICY
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+set groups top routing-instances corp_vrf protocols evpn ip-prefix-routes export evpn_export_type5_corp_vrf
+set groups top routing-instances iot_vrf protocols evpn ip-prefix-routes export evpn_export_type5_iot_vrf
+set groups top routing-instances guest_vrf protocols evpn ip-prefix-routes export evpn_export_type5_guest_vrf
+
+
+# ==========================================================================================
+# DCI INTERCONNECT
+# ===========================================================================================
+
+set groups top routing-instances corp_vrf protocols evpn interconnect vrf-target target:65000:1001
+set groups top routing-instances corp_vrf protocols evpn interconnect route-distinguisher 10.254.101.1:1001
+set groups top routing-instances iot_vrf protocols evpn interconnect vrf-target target:65000:1002
+set groups top routing-instances iot_vrf protocols evpn interconnect route-distinguisher 10.254.101.1:1002
+set groups top routing-instances guest_vrf protocols evpn interconnect vrf-target target:65000:1003
+set groups top routing-instances guest_vrf protocols evpn interconnect route-distinguisher 10.254.101.1:1003
+
+
+
+# ===============================================================================================================
+# DEFINE BORDER-LEAF1 INTERCONNECT SPECIFIC RD & RT FOR EACH VRF TO MATCH ON ROUTING POLICY
+# ===============================================================================================================
+
+set groups top policy-options route-distinguisher local_dci_rd_corp_vrf members 10.254.101.1:1001
+set groups top policy-options route-distinguisher local_dci_rd_iot_vrf members 10.254.101.1:1002
+set groups top policy-options route-distinguisher local_dci_rd_guest_vrf members 10.254.101.1:1003
+
+set groups top policy-options community local_dci_rt_corp_vrf members target:65000:1001
+set groups top policy-options community local_dci_rt_iot_vrf members target:65000:1002
+set groups top policy-options community local_dci_rt_guest_vrf members target:65000:1003
+
+# ===============================================================================================================
+# EXPORT POLICY APPLIED TO BGP PEERING BETWEEN BORDERLEAF1 AND EDGECONNECT.
+# ALL EVPN TYPE5 ROUTES THAT MATCHES BORDER-LEAF1's INTERCONNECT SPECIFIC RD AND RT FOR EACH VRF IS ACCEPTED.
+# REMAINING EVPN TYPE5 ROUTES THAT DO NOT MATCH BORDER-LEAF1's INTERCONNECT SPECIFIC RD AND RT AND ANY OTHER ROUTES ARE
+# PURPOSEFULLY SUPPRESSED USING A REJECT TERM IN END.
+# THESE MATCHED ROUTES ARE ADVERTISED USING THE ROUTER-MAC VALUE BELONGING TO BORDER-LEAF1.
+# ================================================================================================================
+
+set groups top policy-options policy-statement ec_sdwan_evpn_export term corp_vrf from family evpn
+set groups top policy-options policy-statement ec_sdwan_evpn_export term corp_vrf from nlri-route-type 5
+set groups top policy-options policy-statement ec_sdwan_evpn_export term corp_vrf from route-distinguisher local_dci_rd_corp_vrf
+set groups top policy-options policy-statement ec_sdwan_evpn_export term corp_vrf from community local_dci_rt_corp_vrf
+set groups top policy-options policy-statement ec_sdwan_evpn_export term corp_vrf then accept
+
+set groups top policy-options policy-statement ec_sdwan_evpn_export term iot_vrf from family evpn
+set groups top policy-options policy-statement ec_sdwan_evpn_export term iot_vrf from nlri-route-type 5
+set groups top policy-options policy-statement ec_sdwan_evpn_export term iot_vrf from route-distinguisher local_dci_rd_iot_vrf
+set groups top policy-options policy-statement ec_sdwan_evpn_export term iot_vrf from community local_dci_rt_iot_vrf
+set groups top policy-options policy-statement ec_sdwan_evpn_export term iot_vrf then accept
+
+set groups top policy-options policy-statement ec_sdwan_evpn_export term guest_vrf from family evpn
+set groups top policy-options policy-statement ec_sdwan_evpn_export term guest_vrf from nlri-route-type 5
+set groups top policy-options policy-statement ec_sdwan_evpn_export term guest_vrf from route-distinguisher local_dci_rd_guest_vrf
+set groups top policy-options policy-statement ec_sdwan_evpn_export term guest_vrf from community local_dci_rt_guest_vrf
+set groups top policy-options policy-statement ec_sdwan_evpn_export term guest_vrf then accept
+set groups top policy-options policy-statement ec_sdwan_evpn_export term reject then reject
+
+
+# ====================================================================================================================
+# PREFER EC1.
+# ROUTES RECEIVED FROM EC1 ARE ACCEPTED WITH A LOCAL PREF VALUE OF 1000 TO MAKE THE EXIT PATH TOWARDS EC1 MORE ATTRACTIVE.
+# ====================================================================================================================
+
+set groups top policy-options policy-statement update-local-pref1 term term1 then local-preference 1000
+set groups top policy-options policy-statement update-local-pref1 term term1 then accept
+
+
+# ====================================================================================================================
+# EBGP PEERING TO EDGECONNECT
+# ====================================================================================================================
+
+set groups top protocols bgp group ec_sdwan type external
+set groups top protocols bgp group ec_sdwan multihop ttl 2
+set groups top protocols bgp group ec_sdwan family evpn signaling
+set groups top protocols bgp group ec_sdwan local-address 10.254.101.1
+set groups top protocols bgp group ec_sdwan local-as 65200
+set groups top protocols bgp group ec_sdwan vpn-apply-export
+set groups top protocols bgp group ec_sdwan export ec_sdwan_evpn_export
+set groups top protocols bgp group ec_sdwan neighbor 198.19.6.1 peer-as 64533
+set groups top protocols bgp group ec_sdwan neighbor 198.19.6.1 import update-local-pref1
+set groups top protocols bgp group ec_sdwan neighbor 198.19.6.2 peer-as 64533
+
+# ====================================================================================================================
+# GBP PROFILE DEFINITION, GBP ENFORCEMENT TYPE AND GBP MAC/IP INTER-TAGGING
+# ====================================================================================================================
+
+delete chassis forwarding-options
+delete forwarding-options
+set groups top chassis forwarding-options vxlan-gbp-profile
+set groups top forwarding-options evpn-vxlan gbp ingress-enforcement
+set groups top forwarding-options evpn-vxlan gbp mac-ip-inter-tagging
+
+# ====================================================================================================================
+# IP PREFIX TAG PROPAGATION
+# ====================================================================================================================
+
+set groups top firewall family any filter f1 micro-segmentation
+set groups top firewall family any filter f1 term tag10001 from ip-version ipv4 address 10.6.10.0/24
+set groups top firewall family any filter f1 term tag10001 then gbp-tag 10001
+set groups top routing-instances corp_vrf forwarding-options evpn-vxlan gbp ingress-src-tag filter f1
+

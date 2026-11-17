@@ -1,0 +1,370 @@
+set version 26.2R1.7
+set system host-name TH-vjunos-ac-02
+set system root-authentication encrypted-password "<redacted>"
+set system commit synchronize
+set system commit no-delta-synchronize
+set system scripts op file mist_helper.py arguments cmd
+set system scripts op file mist_helper.py checksum sha-256 6efaea79e66cfb191bfe8cf9fff37f582c22aac2fa74f585f9ace57992d17121
+set system scripts op file mist_vccmd.py checksum sha-256 b4012cfbaa9ed42b776fa96d016dd9d1036ebe1a5706ede49567db366d5f5e4b
+set system scripts op file mist_pyagent_tools.py arguments cmd
+set system scripts op file mist_pyagent_tools.py arguments sha256sum
+set system scripts op file mist_pyagent_tools.py arguments url
+set system scripts op file mist_pyagent_tools.py arguments version
+set system scripts op file mist_pyagent_tools.py checksum sha-256 f5d27070f57e9be68261f14684f0fdc330ca15d5731b55376644ba9c543900aa
+set system scripts op file mist_debug.py arguments cmd
+set system scripts op file mist_debug.py checksum sha-256 38bd0002b5b3b7f5d3a0cd326f2b876da3ca56d68764d4fdd0b04d1e30aaf694
+set system scripts language python3
+set system scripts synchronize
+set system login user admin uid 2000
+set system login user admin class super-user
+set system login user admin authentication encrypted-password "<redacted>"
+set system login user mist full-name mist
+set system login user mist uid 63157
+set system login user mist class super-user
+set system login user mist authentication encrypted-password "<redacted>"
+set system login user mist authentication ssh-rsa "<redacted>"
+set system login user mist authentication ssh-rsa "<redacted>"
+set system login user mist authentication ssh-ecdsa "<redacted>"
+set system services netconf ssh
+set system services ssh root-login allow
+set system services ssh protocol-version v2
+set system services outbound-ssh routing-instance mgmt_junos
+set system services outbound-ssh traceoptions file outbound-ssh.log
+set system services outbound-ssh traceoptions file size 64k
+set system services outbound-ssh traceoptions file files 5
+set system services outbound-ssh traceoptions flag all
+set system services outbound-ssh client mist device-id <redacted>
+set system services outbound-ssh client mist secret "<redacted>"
+set system services outbound-ssh client mist keep-alive retry 12
+set system services outbound-ssh client mist keep-alive timeout 5
+set system services outbound-ssh client mist services netconf
+set system services outbound-ssh client mist oc-term.ac2.mist.com port 2200
+set system services outbound-ssh client mist oc-term.ac2.mist.com retry 1000
+set system services outbound-ssh client mist oc-term.ac2.mist.com timeout 60
+set system time-zone UTC
+set system management-instance
+set system authentication-order password
+set system name-server 10.0.0.3
+set system name-server 8.8.8.8 routing-instance mgmt_junos
+set system name-server 8.8.4.4 routing-instance mgmt_junos
+set system static-host-mapping oc-term.ac2.mist.com inet 3.218.167.152
+set system static-host-mapping oc-term.ac2.mist.com inet 98.94.119.178
+set system static-host-mapping oc-term.ac2.mist.com inet 44.218.238.151
+set system syslog file messages authorization any
+set system syslog file messages archive size 2m
+set system syslog file messages archive files 5
+set system syslog file interactive-commands match "!(.*mist.*)"
+set system syslog file interactive-commands archive size 2m
+set system syslog file interactive-commands archive files 5
+set system syslog file escript.log archive size 2m
+set system syslog file escript.log archive files 5
+set system syslog file op-script.log archive size 2m
+set system syslog file op-script.log archive files 5
+set system syslog file snapshot archive size 2m
+set system syslog file snapshot archive files 5
+set system ntp server 172.235.32.243
+set system ntp server 69.164.213.136
+set system ntp server 208.70.148.101
+set system ntp server 40.160.237.131
+set chassis fpc 0 pic 0 number-of-ports 56
+set security pki ca-profile mist-vpn-ca ca-identity mist-vpn-ca
+set security pki ca-profile mist-vpn-ca revocation-check disable
+set interfaces ge-0/0/0 description evpn_uplink-to-0200043b26cc
+set interfaces ge-0/0/0 mtu 9192
+set interfaces ge-0/0/0 unit 0 family inet address 10.254.0.21/31
+set interfaces ge-0/0/1 description evpn_uplink-to-020004ace869
+set interfaces ge-0/0/1 mtu 9192
+set interfaces ge-0/0/1 unit 0 family inet address 10.254.0.25/31
+set interfaces ge-0/0/2 description "TH-vm host"
+set interfaces ge-0/0/2 unit 0 family ethernet-switching vlan members corp_lan
+set interfaces ge-0/0/60 unit 0 family ethernet-switching vlan members corp_lan
+set interfaces ge-0/0/61 unit 0 family ethernet-switching vlan members iot_lan
+set interfaces ge-0/0/62 unit 0 family ethernet-switching vlan members guest_lan
+set interfaces fxp0 unit 0 family inet dhcp client-identifier user-id ascii 020004af32be-JirbwxaW
+set interfaces fxp0 unit 0 family inet dhcp retransmission-attempt 60
+set interfaces fxp0 unit 0 family inet dhcp vendor-id Juniper
+set interfaces fxp0 unit 0 family inet dhcp force-discover
+set interfaces irb unit 0 description default
+set interfaces irb unit 0 family inet dhcp client-identifier user-id ascii 020004af32be-0
+set interfaces irb unit 0 family inet dhcp retransmission-attempt 60
+set interfaces irb unit 0 family inet dhcp vendor-id Juniper
+set interfaces irb unit 0 family inet dhcp force-discover
+set interfaces irb unit 0 family inet mtu 9000
+set interfaces irb unit 510 description corp_lan
+set interfaces irb unit 510 family inet mtu 9000
+set interfaces irb unit 510 family inet address 10.5.10.1/24
+set interfaces irb unit 510 mac 00:00:5e:e4:31:57
+set interfaces irb unit 511 description iot_lan
+set interfaces irb unit 511 family inet mtu 9000
+set interfaces irb unit 511 family inet address 10.5.11.1/24
+set interfaces irb unit 511 mac 00:00:5e:e4:31:57
+set interfaces irb unit 512 description guest_lan
+set interfaces irb unit 512 family inet mtu 9000
+set interfaces irb unit 512 family inet address 10.5.12.1/24
+set interfaces irb unit 512 mac 00:00:5e:e4:31:57
+set interfaces lo0 unit 0 family inet address 10.254.100.8/32
+set interfaces lo0 unit 1 family inet address 172.17.0.2/32
+set interfaces lo0 unit 2 family inet address 172.17.2.2/32
+set interfaces lo0 unit 3 family inet address 172.17.1.2/32
+set forwarding-options storm-control-profiles default all
+set forwarding-options evpn-vxlan gbp ingress-enforcement
+set forwarding-options evpn-vxlan gbp mac-ip-inter-tagging
+set event-options generate-event get-stats-every-three-minute time-interval 180
+set event-options generate-event monitor-diskspace-now time-interval 86400
+set event-options policy log-on-snmp-trap-link-up events snmp_trap_link_up
+set event-options policy log-on-snmp-trap-link-up within 90 not events chassisd_vchassis_member_update_notice
+set event-options policy log-on-snmp-trap-link-up attributes-match "{$$.interface-name}" matches "^[^.]+$"
+set event-options policy log-on-snmp-trap-link-up then event-script mist_link_up_logger.py
+set event-options policy log-on-snmp-trap-link-down events snmp_trap_link_down
+set event-options policy log-on-snmp-trap-link-down within 90 not events chassisd_vchassis_member_update_notice
+set event-options policy log-on-snmp-trap-link-down attributes-match "{$$.interface-name}" matches "^[^.]+$"
+set event-options policy log-on-snmp-trap-link-down then event-script mist_link_down_logger.py
+set event-options policy backup-cfg-after-commit events ui_commit_completed
+set event-options policy backup-cfg-after-commit within 5 trigger on
+set event-options policy backup-cfg-after-commit within 5 trigger 1
+set event-options policy backup-cfg-after-commit then event-script mist_event_dispatcher.py
+set event-options policy backup-cfg-after-no-confirmed events ui_commit_not_confirmed
+set event-options policy backup-cfg-after-no-confirmed attributes-match ui_commit_not_confirmed.message matches .*complete
+set event-options policy backup-cfg-after-no-confirmed then event-script mist_event_dispatcher.py
+set event-options policy log-on-storm-ctrl-in-effect events l2ald_st_ctl_in_effect
+set event-options policy log-on-storm-ctrl-in-effect then event-script mist_storm_control_event_logger.py
+set event-options policy log-on-system-events events dot1xd_auth_session_deleted
+set event-options policy log-on-system-events events dot1xd_rcvd_eaplogof_athntictd
+set event-options policy log-on-system-events events dot1xd_usr_access_denied
+set event-options policy log-on-system-events events dot1xd_usr_authenticated
+set event-options policy log-on-system-events events dot1xd_usr_session_disconnected
+set event-options policy log-on-system-events events dot1xd_usr_athntictd_gst_vlan
+set event-options policy log-on-system-events events eswd_stp_state_change_info
+set event-options policy log-on-system-events events l2cpd_receive_bpdu_block_enabled
+set event-options policy log-on-system-events events authd_radius_server_status_change
+set event-options policy log-on-system-events events chassisd_snmp_trap10
+set event-options policy log-on-system-events events ddos_protocol_violation_set
+set event-options policy log-on-system-events events ddos_protocol_violation_clear
+set event-options policy log-on-system-events events evpn_bgp_peer_status_change
+set event-options policy log-on-system-events events evpn_core_isolated
+set event-options policy log-on-system-events events evpn_core_isolation_cleared
+set event-options policy log-on-system-events events evpn_duplicate_mac
+set event-options policy log-on-system-events events evpn_duplicate_suppress_mac
+set event-options policy log-on-system-events events bfdd_trap_shop_state_up
+set event-options policy log-on-system-events events bfdd_trap_shop_state_down
+set event-options policy log-on-system-events within 60 trigger until
+set event-options policy log-on-system-events within 60 trigger 10
+set event-options policy log-on-system-events then event-script mist_event_dispatcher.py
+set event-options policy log-critical-system-events events chassisd_vchassis_member_update_notice
+set event-options policy log-critical-system-events events chassisd_vchassis_member_op_notice
+set event-options policy log-critical-system-events events l2ald_mac_limit_reached_global
+set event-options policy log-critical-system-events events l2ald_mac_limit_reset_global
+set event-options policy log-critical-system-events events snmpd_trap_cold_start
+set event-options policy log-critical-system-events then event-script mist_event_dispatcher.py
+set event-options policy monitor-diskspace-policy events monitor-diskspace-now
+set event-options policy monitor-diskspace-policy then event-script mist_monitor_diskspace.py
+set event-options policy get-stats-policy events get-stats-every-three-minute
+set event-options policy get-stats-policy then event-script mist_event_dispatcher.py
+set event-options policy system-srx-route-events events rpd_ospf_nbrdown
+set event-options policy system-srx-route-events events rpd_ospf_nbrup
+set event-options policy system-srx-route-events events rpd_bgp_neighbor_state_changed
+set event-options policy system-srx-route-events then event-script mist_srx_rt_event.py
+set event-options policy log-on-vccp-port-up events vccpd_protocol_adjup
+set event-options policy log-on-vccp-port-up attributes-match "{$$.interface-name}" matches "^[^.]+"
+set event-options policy log-on-vccp-port-up then event-script mist_link_up_logger.py
+set event-options policy log-on-vccp-port-down events vccpd_protocol_adjdown
+set event-options policy log-on-vccp-port-down attributes-match "{$$.interface-name}" matches "^[^.]+"
+set event-options policy log-on-vccp-port-down then event-script mist_link_down_logger.py
+set event-options event-script file mist_event_dispatcher.py python-script-user mist
+set event-options event-script file mist_event_dispatcher.py checksum sha-256 be8cdc27d43c5e979aefa727f9f1fd4e3db6a56f8f50e6b9b757427268bc5aa5
+set event-options event-script file mist_link_up_logger.py python-script-user mist
+set event-options event-script file mist_link_up_logger.py checksum sha-256 92f3090ff5fa38343e958f64ca7d03d12dcffffa2dbff25bb47f4f77a712d641
+set event-options event-script file mist_link_down_logger.py python-script-user mist
+set event-options event-script file mist_link_down_logger.py checksum sha-256 47c2f4b0c575b2a8ead65c36ef451c7705f0b040c7c1085dd443c7a5ac7a2153
+set event-options event-script file mist_backup_cfg.py python-script-user mist
+set event-options event-script file mist_backup_cfg.py checksum sha-256 675899a892fb5498dd7c379e21273f38a50246759214d8e6c4224550cf72773c
+set event-options event-script file mist_storm_control_event_logger.py python-script-user mist
+set event-options event-script file mist_storm_control_event_logger.py checksum sha-256 871b7efa4fe7d04d86034fcdcb63624c675956d7511b2a45ebb98299632be882
+set event-options event-script file mist_link_event_capturer.py python-script-user mist
+set event-options event-script file mist_link_event_capturer.py checksum sha-256 082244cb7779a4387ab5934b934205edc3f083d549ca0d27416e974a170fc2f3
+set event-options event-script file mist_monitor_diskspace.py python-script-user mist
+set event-options event-script file mist_monitor_diskspace.py checksum sha-256 e751c8cf955c2fed7c5f38e3a6e5168c5550a1b24b272a0722421b917d697479
+set event-options event-script file mist_dynamic_port_usages.py python-script-user mist
+set event-options event-script file mist_dynamic_port_usages.py checksum sha-256 0522ba36b92f2d5b6fb9a36ff729f94cb39b2f5ee1dc3b2440b22f52f8a953dc
+set event-options event-script file mist_dynamic_port_commit.py python-script-user mist
+set event-options event-script file mist_dynamic_port_commit.py checksum sha-256 4fb25037a8ec5d57ac72f622c005baec2ab82b4f1e1a218f8eac03f6b39e71de
+set event-options event-script file mist_event_aggregator.py python-script-user mist
+set event-options event-script file mist_event_aggregator.py checksum sha-256 ca1426d833eddb1f519e7a5860cef6fedd08a2d091656add0537aceaf7a9eb7d
+set event-options event-script file mist_vcsetup_agent.py python-script-user mist
+set event-options event-script file mist_vcsetup_agent.py checksum sha-256 a6a50869c1d92e2bfe473ace86ed2ec0a4710d352cd5683673668f99b3ebb505
+set event-options event-script file mist_ssr.py python-script-user mist
+set event-options event-script file mist_ssr.py checksum sha-256 59faa393b78e526bab64cddb4a99025e290b4edeeb583376816fc799903d3ff6
+set event-options event-script file mist_srx_rt_event.py python-script-user mist
+set event-options event-script file mist_srx_rt_event.py checksum sha-256 dd6fc6d40fed12444a264139ac3825461c3309d243f3176595d9d535ad37a384
+set policy-options policy-statement ecmp_policy then load-balance per-packet
+set policy-options policy-statement ecmp_policy then accept
+set policy-options policy-statement evpn_underlay_export term 01-loopback from route-filter 10.254.100.0/24 prefix-length-range /32-/32
+set policy-options policy-statement evpn_underlay_export term 01-loopback then accept
+set policy-options policy-statement evpn_underlay_export term 02-default then reject
+set policy-options policy-statement evpn_underlay_import term 01-loopback from route-filter 10.254.100.0/24 prefix-length-range /32-/32
+set policy-options policy-statement evpn_underlay_import term 01-loopback then accept
+set policy-options policy-statement evpn_underlay_import term 02-default then reject
+set policy-options policy-statement evpn_export_type5 term 01_ipv4 from protocol evpn
+set policy-options policy-statement evpn_export_type5 term 01_ipv4 from route-filter 0.0.0.0/0 prefix-length-range /32-/32
+set policy-options policy-statement evpn_export_type5 term 01_ipv4 then accept
+set policy-options policy-statement evpn_export_type5 term 02_ipv6 from family inet6
+set policy-options policy-statement evpn_export_type5 term 02_ipv6 from protocol evpn
+set policy-options policy-statement evpn_export_type5 term 02_ipv6 from route-filter 0::0/0 prefix-length-range /128-/128
+set policy-options policy-statement evpn_export_type5 term 02_ipv6 then accept
+set policy-options policy-statement evpn_export_type5 term 03_direct from protocol direct
+set policy-options policy-statement evpn_export_type5 term 03_direct then accept
+set access radius-server 3.33.153.159 secret "<redacted>"
+set access radius-server 3.33.153.159 timeout 5
+set access radius-server 3.33.153.159 source-address 172.17.0.2
+set access radius-server 3.33.153.159 routing-instance corp_vrf
+set access radius-server 3.33.153.159 radsec-destination 895
+set access radius-server 15.197.139.214 secret "<redacted>"
+set access radius-server 15.197.139.214 timeout 5
+set access radius-server 15.197.139.214 source-address 172.17.0.2
+set access radius-server 15.197.139.214 routing-instance corp_vrf
+set access radius-server 15.197.139.214 radsec-destination 896
+set access profile dot1x accounting-order radius
+set access profile dot1x authentication-order radius
+set access profile dot1x radius authentication-server 3.33.153.159
+set access profile dot1x radius authentication-server 15.197.139.214
+set access profile dot1x radius accounting-server 3.33.153.159
+set access profile dot1x radius accounting-server 15.197.139.214
+set access profile dot1x radius options nas-identifier 8427344c-e538-45a6-91da-d49cfeb29c33020004af32be
+set access profile dot1x accounting order radius
+set access profile dot1x accounting update-interval 600
+set access radsec destination 895 address 3.33.153.159
+set access radsec destination 895 routing-instance corp_vrf
+set access radsec destination 895 port 2083
+set access radsec destination 895 source-address 172.17.0.2
+set access radsec destination 895 tls-certificate mist-nac-device-cert
+set access radsec destination 895 tls-force-ciphers low
+set access radsec destination 895 tls-min-version v1.2
+set access radsec destination 895 tls-peer-name aws-use1prod2.<uuid>
+set access radsec destination 895 tls-timeout 30
+set access radsec destination 896 address 15.197.139.214
+set access radsec destination 896 routing-instance corp_vrf
+set access radsec destination 896 port 2083
+set access radsec destination 896 source-address 172.17.0.2
+set access radsec destination 896 tls-certificate mist-nac-device-cert
+set access radsec destination 896 tls-force-ciphers low
+set access radsec destination 896 tls-min-version v1.2
+set access radsec destination 896 tls-peer-name aws-use1prod2.<uuid>
+set access radsec destination 896 tls-timeout 30
+set routing-instances mgmt_junos description management-vrf
+set routing-instances corp_vrf instance-type vrf
+set routing-instances corp_vrf routing-options multipath
+set routing-instances corp_vrf routing-options auto-export
+set routing-instances corp_vrf protocols evpn duplicate-mac-detection detection-threshold 10
+set routing-instances corp_vrf protocols evpn duplicate-mac-detection detection-window 20
+set routing-instances corp_vrf protocols evpn duplicate-mac-detection auto-recovery-time 5
+set routing-instances corp_vrf protocols evpn ip-prefix-routes advertise direct-nexthop
+set routing-instances corp_vrf protocols evpn ip-prefix-routes encapsulation vxlan
+set routing-instances corp_vrf protocols evpn ip-prefix-routes vni 11384125
+set routing-instances corp_vrf protocols evpn ip-prefix-routes export evpn_export_type5
+set routing-instances corp_vrf interface irb.510
+set routing-instances corp_vrf interface lo0.1
+set routing-instances corp_vrf route-distinguisher 10.254.100.8:101
+set routing-instances corp_vrf vrf-target target:65000:101
+set routing-instances corp_vrf vrf-table-label
+set routing-instances guest_vrf instance-type vrf
+set routing-instances guest_vrf routing-options multipath
+set routing-instances guest_vrf routing-options auto-export
+set routing-instances guest_vrf protocols evpn duplicate-mac-detection detection-threshold 10
+set routing-instances guest_vrf protocols evpn duplicate-mac-detection detection-window 20
+set routing-instances guest_vrf protocols evpn duplicate-mac-detection auto-recovery-time 5
+set routing-instances guest_vrf protocols evpn ip-prefix-routes advertise direct-nexthop
+set routing-instances guest_vrf protocols evpn ip-prefix-routes encapsulation vxlan
+set routing-instances guest_vrf protocols evpn ip-prefix-routes vni 11581948
+set routing-instances guest_vrf protocols evpn ip-prefix-routes export evpn_export_type5
+set routing-instances guest_vrf interface irb.512
+set routing-instances guest_vrf interface lo0.2
+set routing-instances guest_vrf route-distinguisher 10.254.100.8:102
+set routing-instances guest_vrf vrf-target target:65000:102
+set routing-instances guest_vrf vrf-table-label
+set routing-instances iot_vrf instance-type vrf
+set routing-instances iot_vrf routing-options multipath
+set routing-instances iot_vrf routing-options auto-export
+set routing-instances iot_vrf protocols evpn duplicate-mac-detection detection-threshold 10
+set routing-instances iot_vrf protocols evpn duplicate-mac-detection detection-window 20
+set routing-instances iot_vrf protocols evpn duplicate-mac-detection auto-recovery-time 5
+set routing-instances iot_vrf protocols evpn ip-prefix-routes advertise direct-nexthop
+set routing-instances iot_vrf protocols evpn ip-prefix-routes encapsulation vxlan
+set routing-instances iot_vrf protocols evpn ip-prefix-routes vni 16751755
+set routing-instances iot_vrf protocols evpn ip-prefix-routes export evpn_export_type5
+set routing-instances iot_vrf interface irb.511
+set routing-instances iot_vrf interface lo0.3
+set routing-instances iot_vrf route-distinguisher 10.254.100.8:103
+set routing-instances iot_vrf vrf-target target:65000:103
+set routing-instances iot_vrf vrf-table-label
+set routing-instances evpn_vs instance-type mac-vrf
+set routing-instances evpn_vs protocols evpn encapsulation vxlan
+set routing-instances evpn_vs protocols evpn default-gateway do-not-advertise
+set routing-instances evpn_vs protocols evpn duplicate-mac-detection detection-threshold 10
+set routing-instances evpn_vs protocols evpn duplicate-mac-detection detection-window 20
+set routing-instances evpn_vs protocols evpn duplicate-mac-detection auto-recovery-time 5
+set routing-instances evpn_vs protocols evpn extended-vni-list all
+set routing-instances evpn_vs vtep-source-interface lo0.0
+set routing-instances evpn_vs service-type vlan-aware
+set routing-instances evpn_vs interface ge-0/0/60.0
+set routing-instances evpn_vs interface ge-0/0/61.0
+set routing-instances evpn_vs interface ge-0/0/62.0
+set routing-instances evpn_vs interface ge-0/0/2.0
+set routing-instances evpn_vs route-distinguisher 10.254.100.8:1
+set routing-instances evpn_vs vrf-target target:65000:1
+set routing-instances evpn_vs vlans corp_lan vlan-id 510
+set routing-instances evpn_vs vlans corp_lan l3-interface irb.510
+set routing-instances evpn_vs vlans corp_lan vxlan vni 10510
+set routing-instances evpn_vs vlans default vlan-id 1
+set routing-instances evpn_vs vlans default l3-interface irb.0
+set routing-instances evpn_vs vlans default vxlan vni 10001
+set routing-instances evpn_vs vlans guest_lan vlan-id 512
+set routing-instances evpn_vs vlans guest_lan l3-interface irb.512
+set routing-instances evpn_vs vlans guest_lan vxlan vni 10512
+set routing-instances evpn_vs vlans iot_lan vlan-id 511
+set routing-instances evpn_vs vlans iot_lan l3-interface irb.511
+set routing-instances evpn_vs vlans iot_lan vxlan vni 10511
+set routing-options router-id 10.254.100.8
+set routing-options autonomous-system 65107
+set routing-options forwarding-table export ecmp_policy
+set routing-options forwarding-table chained-composite-next-hop ingress evpn
+set protocols dot1x authenticator authentication-profile-name dot1x
+set protocols dot1x authenticator interface ge-0/0/2.0 mac-radius restrict
+set protocols dot1x authenticator interface ge-0/0/2.0 mac-radius authentication-protocol pap
+set protocols bgp group evpn_underlay type external
+set protocols bgp group evpn_underlay log-updown
+set protocols bgp group evpn_underlay import evpn_underlay_import
+set protocols bgp group evpn_underlay family inet unicast
+set protocols bgp group evpn_underlay authentication-key "<redacted>"
+set protocols bgp group evpn_underlay export evpn_underlay_export
+set protocols bgp group evpn_underlay local-as 65107
+set protocols bgp group evpn_underlay multipath multiple-as
+set protocols bgp group evpn_underlay bfd-liveness-detection minimum-interval 1000
+set protocols bgp group evpn_underlay bfd-liveness-detection multiplier 3
+set protocols bgp group evpn_underlay neighbor 10.254.0.20 peer-as 65104
+set protocols bgp group evpn_underlay neighbor 10.254.0.24 peer-as 65105
+set protocols bgp group evpn_overlay type external
+set protocols bgp group evpn_overlay multihop ttl 1
+set protocols bgp group evpn_overlay multihop no-nexthop-change
+set protocols bgp group evpn_overlay local-address 10.254.100.8
+set protocols bgp group evpn_overlay log-updown
+set protocols bgp group evpn_overlay family evpn signaling
+set protocols bgp group evpn_overlay authentication-key "<redacted>"
+set protocols bgp group evpn_overlay local-as 65107
+set protocols bgp group evpn_overlay multipath multiple-as
+set protocols bgp group evpn_overlay bfd-liveness-detection minimum-interval 1000
+set protocols bgp group evpn_overlay bfd-liveness-detection multiplier 3
+set protocols bgp group evpn_overlay bfd-liveness-detection session-mode automatic
+set protocols bgp group evpn_overlay neighbor 10.254.100.5 peer-as 65104
+set protocols bgp group evpn_overlay neighbor 10.254.100.6 peer-as 65105
+set protocols bgp graceful-restart
+set protocols evpn duplicate-mac-detection auto-recovery-time 5
+set protocols lldp port-id-subtype interface-name
+set protocols lldp port-description-type interface-alias
+set protocols lldp interface all
+set protocols lldp-med interface all
+set protocols rstp interface ge-0/0/2 edge
+set protocols rstp interface ge-0/0/60 edge
+set protocols rstp interface ge-0/0/61 edge
+set protocols rstp interface ge-0/0/62 edge
+set protocols rstp interface all
+set protocols rstp bpdu-block-on-edge

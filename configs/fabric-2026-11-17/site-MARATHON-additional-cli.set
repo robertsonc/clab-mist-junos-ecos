@@ -1,0 +1,10 @@
+set system login idle-timeout 60
+delete system login idle-timeout
+set groups top system login class <*> idle-timeout 60
+set system management-instance
+set system services outbound-ssh routing-instance mgmt_junos
+set system name-server 8.8.8.8 routing-instance mgmt_junos
+set system name-server 8.8.4.4 routing-instance mgmt_junos
+set system static-host-mapping oc-term.ac2.mist.com inet 3.218.167.152
+set system static-host-mapping oc-term.ac2.mist.com inet 98.94.119.178
+set system static-host-mapping oc-term.ac2.mist.com inet 44.218.238.151
